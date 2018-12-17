@@ -1,23 +1,18 @@
-# Demo Adaptor
+package com.mbb.commerce.demo.adapter;
 
-### 适配器工程
-由Biz工程出发的微服务调用，由此工程进行适配到Dubbo或Spring Cloud的微服务接口
+import org.springframework.stereotype.Service;
 
-### 示例
-```
 /**
  * 此处写此服务调用别的服务的适配器Adapter
  */
 @Service
 public class DemoServiceConsumerAdapter {
-    
+
 //    @Autowired
 //    private DemoServiceConsumer demoServiceConsumer;
-    
+
 //    public String demoAdapter(){
 //        return demoServiceConsumer.getDemo();
 //    }
 
 }
-
-```

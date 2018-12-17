@@ -13,15 +13,11 @@
     <version>1.0.0-SNAPSHOT</version>
   </parent>
 
+
   <name>Demo Service App</name>
 
 
   <dependencies>
-    <!-- Spring Boot Starter-->
-    <dependency>
-      <groupId>org.springframework.boot</groupId>
-      <artifactId>spring-boot-starter</artifactId>
-    </dependency>
 
     <!-- Spring Boot Starter Web-->
     <dependency>
@@ -29,26 +25,26 @@
       <artifactId>spring-boot-starter-web</artifactId>
     </dependency>
 
-    <!-- Dubbo Spring Boot Starter -->
-    <dependency>
-      <groupId>com.alibaba.boot</groupId>
-      <artifactId>dubbo-spring-boot-starter</artifactId>
-    </dependency>
-    <!-- Dubbo Dependency -->
-    <dependency>
-      <groupId>com.alibaba</groupId>
-      <artifactId>dubbo</artifactId>
-    </dependency>
+    <!--&lt;!&ndash; Dubbo Spring Boot Starter &ndash;&gt;-->
+    <!--<dependency>-->
+      <!--<groupId>com.alibaba.boot</groupId>-->
+      <!--<artifactId>dubbo-spring-boot-starter</artifactId>-->
+    <!--</dependency>-->
+    <!--&lt;!&ndash; Dubbo Dependency &ndash;&gt;-->
+    <!--<dependency>-->
+      <!--<groupId>com.alibaba</groupId>-->
+      <!--<artifactId>dubbo</artifactId>-->
+    <!--</dependency>-->
 
     <!-- Spring Cloud Registry -->
     <dependency>
       <groupId>org.springframework.cloud</groupId>
       <artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
     </dependency>
-    <dependency>
-      <groupId>org.springframework.cloud</groupId>
-      <artifactId>spring-cloud-starter-consul-discovery</artifactId>
-    </dependency>
+    <!--<dependency>-->
+      <!--<groupId>org.springframework.cloud</groupId>-->
+      <!--<artifactId>spring-cloud-starter-consul-discovery</artifactId>-->
+    <!--</dependency>-->
 
     <!-- Spring Cloud Ribbon -->
     <dependency>
@@ -63,9 +59,16 @@
     </dependency>
 
     <!-- Spring Cloud Config -->
+    <!--<dependency>-->
+      <!--<groupId>org.springframework.cloud</groupId>-->
+      <!--<artifactId>spring-cloud-config-client</artifactId>-->
+    <!--</dependency>-->
+
+
     <dependency>
-      <groupId>org.springframework.cloud</groupId>
-      <artifactId>spring-cloud-config-client</artifactId>
+      <groupId>com.mbb</groupId>
+      <artifactId>demo-rest</artifactId>
+      <version>${project.version}</version>
     </dependency>
 
   </dependencies>
