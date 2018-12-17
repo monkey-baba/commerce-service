@@ -3,19 +3,25 @@
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
-  <artifactId>commerce-cloud-service</artifactId>
-  <packaging>pom</packaging>
+  <artifactId>demo-adapter</artifactId>
+
+  <packaging>jar</packaging>
 
   <parent>
     <groupId>com.mbb</groupId>
-    <artifactId>commerce-cloud</artifactId>
+    <artifactId>demo-service</artifactId>
     <version>1.0.0-SNAPSHOT</version>
-    <relativePath/>
   </parent>
 
-  <name>Commerce Cloud Service</name>
+  <name>Demo Service Adapter</name>
 
-  <modules>
-    <module>demo-service</module>
-  </modules>
+  <dependencies>
+    <!-- Bean Annotation -->
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-context</artifactId>
+    </dependency>
+
+  </dependencies>
+
 </project>
