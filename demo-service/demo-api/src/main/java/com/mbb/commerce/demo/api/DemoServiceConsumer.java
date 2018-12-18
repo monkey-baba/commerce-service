@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 public interface DemoServiceConsumer {
 
     /**
-     * feign 调用自己的 demo接口
+     * 示例： feign 调用自己的 demo接口
      * @return
      */
     @GetMapping("/api/v1/demo")

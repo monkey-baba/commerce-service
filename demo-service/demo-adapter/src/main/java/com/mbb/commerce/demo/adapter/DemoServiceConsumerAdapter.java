@@ -12,6 +12,7 @@ public class DemoServiceConsumerAdapter {
 //    private DemoServiceConsumer demoServiceConsumer;
 
 //    public String demoAdapter(){
+//        //远程调用
 //        return demoServiceConsumer.getDemo();
 //    }
 
