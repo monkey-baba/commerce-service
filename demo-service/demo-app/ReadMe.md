@@ -1,12 +1,7 @@
-# Demo App
+# {{ name | title }} App
 
 ### APP工程
 此工程是该Service的Spring boot starter入口工程，用于配置整个Service的风格
 
 此工程依赖: 
-- demo-rest
-
-### Spring Cloud 配置项
-
-
-### Dubbo 配置项
+- {{ name }}-rest

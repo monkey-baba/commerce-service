@@ -1,4 +1,4 @@
-# Demo Biz
+# {{ name | title }} Biz
 
 ### Biz工程
 此工程是业务层代码，所有的Service、Dao层业务在此工程执行

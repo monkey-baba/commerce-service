@@ -15,6 +15,5 @@
   <name>Commerce Cloud Service</name>
 
   <modules>
-    <module>demo-service</module>
   </modules>
 </project>

@@ -4,21 +4,28 @@
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
+  <artifactId>{{ name }}-api</artifactId>
+  <packaging>jar</packaging>
+
   <parent>
-    <groupId>com.mbb</groupId>
-    <artifactId>demo-service</artifactId>
+    <groupId>{{ group }}</groupId>
+    <artifactId>{{ name }}</artifactId>
     <version>1.0.0-SNAPSHOT</version>
   </parent>
 
-  <artifactId>demo-api</artifactId>
-  <packaging>jar</packaging>
-
-
-  <name>Demo Service Api</name>
-
+  <name>{{ name | title }} Service Api</name>
 
   <dependencies>
 
+    {% if platform == 'dubbo'  %}
+    <!-- Dubbo Consume -->
+    <dependency>
+      <groupId>com.alibaba</groupId>
+      <artifactId>dubbo</artifactId>
+    </dependency>
+    {% endif %}
+
+    {% if platform == 'cloud'  %}
     <!-- Feign Consume -->
     <dependency>
       <groupId>org.springframework.cloud</groupId>
@@ -31,17 +38,14 @@
       <artifactId>spring-web</artifactId>
     </dependency>
 
-    <!-- Dubbo Consume -->
-    <dependency>
-      <groupId>com.alibaba</groupId>
-      <artifactId>dubbo</artifactId>
-    </dependency>
-
+    {% if hystrix  %}
     <!-- Spring Cloud Hystrix -->
     <dependency>
       <groupId>org.springframework.cloud</groupId>
       <artifactId>spring-cloud-starter-netflix-hystrix</artifactId>
     </dependency>
+    {% endif %}
+    {% endif %}
 
   </dependencies>
 

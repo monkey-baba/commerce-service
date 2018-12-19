@@ -4,17 +4,18 @@
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
-  <artifactId>demo-rest</artifactId>
 
-  <packaging>pom</packaging>
+  <artifactId>{{ name }}-rest</artifactId>
+  <packaging>jar</packaging>
 
   <parent>
-    <groupId>com.mbb</groupId>
-    <artifactId>demo-service</artifactId>
+    <groupId>{{ group }}</groupId>
+    <artifactId>{{ name }}</artifactId>
     <version>1.0.0-SNAPSHOT</version>
   </parent>
 
-  <name>Demo Service Rest</name>
+  <name>{{ name | title }} Service Rest</name>
+
 
   <dependencies>
 
@@ -23,7 +24,7 @@
       <groupId>org.projectlombok</groupId>
       <artifactId>lombok</artifactId>
       <version>1.18.2</version>
-      <!--<optional>true</optional>-->
+      <optional>true</optional>
     </dependency>
 
     <!--Rest-->
@@ -34,8 +35,8 @@
 
     <!--依赖业务层的代码-->
     <dependency>
-      <groupId>com.mbb</groupId>
-      <artifactId>demo-biz</artifactId>
+      <groupId>{{ group }}</groupId>
+      <artifactId>{{ name }}-biz</artifactId>
       <version>${project.version}</version>
     </dependency>
 
