@@ -1,0 +1,1 @@
+package com.mbb.commerce.demo.rest.other;

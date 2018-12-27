@@ -15,5 +15,6 @@
   <name>Commerce Cloud Service</name>
 
   <modules>
+    <module>auth-service</module>
   </modules>
 </project>

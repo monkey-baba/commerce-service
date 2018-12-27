@@ -8,6 +8,8 @@
 out/
 .idea_modules/
 
+!service-generator-1.0.0.jar
+
 # CMake
 cmake-build-*/
 
