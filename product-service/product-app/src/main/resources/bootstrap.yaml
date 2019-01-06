@@ -7,7 +7,12 @@ spring:
         file-extension: yaml
   application:
     name: product
+  liquibase:
+    enabled: true
+    change-log: classpath:/db/changelog/db.changelog-master.xml
 
+mybatis:
+  mapper-locations: classpath:mapper/*.xml
 
 
 

@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<databaseChangeLog
+  xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.0.xsd">
+
+  <changeSet id="1" author="ZQian">
+    <createTable tableName="product" remarks="产品">
+      <column name="id" type="BIGINT" remarks="ID"/>
+      <column name="version" type="INT" remarks="乐观锁"/>
+      <column name="code" type="VARCHAR(32)" remarks="编码"/>
+      <column name="name" type="VARCHAR(255)" remarks="名称"/>
+      <column name="channel_id" type="BIGINT" remarks="渠道"/>
+      <column name="unit_id" type="BIGINT" remarks="单位"/>
+      <column name="approved" type="VARCHAR(32)" remarks="发布状态"/>
+      <column name="images" type="VARCHAR(4096)" remarks="图片地址"/>
+      <column name="attribute" type="JSON" remarks="商品属性"/>
+    </createTable>
+    <addPrimaryKey columnNames="id" tableName="product"/>
+  </changeSet>
+
+  <changeSet id="2" author="ZQian" runOnChange="true">
+    <createTable tableName="sku" remarks="SKU信息">
+      <column name="id" type="BIGINT" remarks="ID"/>
+      <column name="version" type="INT" remarks="乐观锁"/>
+      <column name="code" type="VARCHAR(32)" remarks="编码"/>
+      <column name="product_id" type="BIGINT" remarks="SPU"/>
+      <column name="meta" type="JSON" remarks="规格信息"/>
+    </createTable>
+    <addPrimaryKey tableName="sku" columnNames="id" />
+  </changeSet>
+
+  <changeSet id="3" author="ZQian" runOnChange="true">
+    <createTable tableName="price" remarks="价目表">
+      <column name="id" type="BIGINT" remarks="ID"/>
+      <column name="version" type="INT" remarks="乐观锁"/>
+      <column name="product_id" type="BIGINT" remarks="产品"/>
+      <column name="channel_id" type="BIGINT" remarks="销售渠道"/>
+      <column name="active" type="TINYINT(1)" remarks="是否启用"/>
+      <column name="startTime" type="DATETIME" remarks="有效期起"/>
+      <column name="endTime" type="DATETIME" remarks="有效期止"/>
+    </createTable>
+    <addPrimaryKey tableName="price" columnNames="id" />
+  </changeSet>
+
+  <changeSet id="4" author="ZQian" runOnChange="true">
+    <createTable tableName="price_row" remarks="价格行">
+      <column name="id" type="BIGINT" remarks="ID"/>
+      <column name="version" type="INT" remarks="乐观锁"/>
+      <column name="sku_id" type="BIGINT" remarks="SKU"/>
+      <column name="price_type_id" type="BIGINT" remarks="价格类型"/>
+      <column name="price" type="DECIMAL(32,8)" remarks="价格"/>
+      <column name="startTime" type="DATETIME" remarks="有效期起"/>
+      <column name="endTime" type="DATETIME" remarks="有效期止"/>
+    </createTable>
+    <addPrimaryKey tableName="price_row" columnNames="id" />
+  </changeSet>
+
+  <changeSet id="5" author="ZQian" runOnChange="true">
+    <createTable tableName="product_category" remarks="产品类别中间表">
+      <column name="id" type="BIGINT" remarks="ID"/>
+      <column name="version" type="INT" remarks="乐观锁"/>
+      <column name="product_id" type="BIGINT" remarks="SPU"/>
+      <column name="category_id" type="BIGINT" remarks="类别"/>
+    </createTable>
+    <addPrimaryKey tableName="product_category" columnNames="id" />
+  </changeSet>
+
+  <changeSet id="6" author="ZQian" runOnChange="true">
+    <createTable tableName="category" remarks="类别">
+      <column name="id" type="BIGINT" remarks="ID"/>
+      <column name="version" type="INT" remarks="乐观锁"/>
+      <column name="code" type="VARCHAR(32)" remarks="编码"/>
+      <column name="name" type="VARCHAR(255)" remarks="名称"/>
+      <column name="parent_id" type="BIGINT" remarks="父类别"/>
+    </createTable>
+    <addPrimaryKey tableName="category" columnNames="id" />
+  </changeSet>
+
+</databaseChangeLog>

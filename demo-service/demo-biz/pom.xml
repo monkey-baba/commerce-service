@@ -90,6 +90,12 @@
     </dependency>
     {% endif %}
 
+    <!--Common-->
+    <dependency>
+      <groupId>com.mbb</groupId>
+      <artifactId>commerce-common</artifactId>
+      <version>${project.version}</version>
+    </dependency>
 
   </dependencies>
 
