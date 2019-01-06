@@ -10,7 +10,7 @@ import lombok.EqualsAndHashCode;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
-@Table(name = "product")
+@Table(name = "category")
 public class CategoryModel extends BaseModel {
 
     private String code;
