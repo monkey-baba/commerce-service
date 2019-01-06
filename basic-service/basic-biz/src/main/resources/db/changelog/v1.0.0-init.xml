@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<databaseChangeLog
+  xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.0.xsd">
+
+  <changeSet id="1" author="ZQian">
+    <createTable tableName="dictionary" remarks="数据字典">
+      <column name="id" type="BIGINT" remarks="ID"/>
+      <column name="version" type="INT" remarks="乐观锁"/>
+      <column name="code" type="VARCHAR(32)" remarks="编码"/>
+      <column name="name" type="VARCHAR(255)" remarks="名称"/>
+      <column name="type" type="VARCHAR(32)" remarks="类型"/>
+    </createTable>
+    <addPrimaryKey tableName="dictionary" columnNames="id"/>
+  </changeSet>
+
+  <changeSet id="2" author="ZQian">
+    <createTable tableName="address" remarks="地址">
+      <column name="id" type="BIGINT" remarks="ID"/>
+      <column name="version" type="INT" remarks="乐观锁"/>
+      <column name="province" type="VARCHAR(32)" remarks="省编码"/>
+      <column name="city" type="VARCHAR(32)" remarks="市编码"/>
+      <column name="district" type="VARCHAR(32)" remarks="区编码"/>
+      <column name="address" type="VARCHAR(255)" remarks="详细地址"/>
+      <column name="phone" type="VARCHAR(32)" remarks="联系电话"/>
+    </createTable>
+    <addPrimaryKey tableName="address" columnNames="id"/>
+  </changeSet>
+</databaseChangeLog>

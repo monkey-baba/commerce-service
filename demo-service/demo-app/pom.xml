@@ -105,6 +105,11 @@
     {% endif %}
 
     <dependency>
+      <groupId>org.liquibase</groupId>
+      <artifactId>liquibase-core</artifactId>
+    </dependency>
+
+    <dependency>
       <groupId>{{ group }}</groupId>
       <artifactId>{{ name }}-rest</artifactId>
       <version>${project.version}</version>
