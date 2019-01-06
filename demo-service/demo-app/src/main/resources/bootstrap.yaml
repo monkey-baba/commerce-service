@@ -1,0 +1,14 @@
+---
+spring:
+{% if config == 'nacos' %}
+  cloud:
+    nacos:
+      config:
+        server-addr: ${NACOS_HOST:nacos}:${NACOS_PORT:8848}
+        file-extension: yaml
+{% endif %}
+  application:
+    name: {{ name }}
+
+
+

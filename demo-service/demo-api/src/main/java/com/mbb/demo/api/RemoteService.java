@@ -1,4 +1,4 @@
-package {{ group }}.api;
+package {{ group }}.{{ name }}.api;
 
 {% if platform == 'cloud' %}
 import org.springframework.cloud.openfeign.FeignClient;

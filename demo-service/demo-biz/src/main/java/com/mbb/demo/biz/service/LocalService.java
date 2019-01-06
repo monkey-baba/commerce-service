@@ -1,4 +1,4 @@
-package {{ group }}.biz.service;
+package {{ group }}.{{ name }}.biz.service;
 
 
 /**

@@ -41,6 +41,12 @@
     {% endif %}
 
     <!-- Spring Cloud Registry -->
+    {% if registry == 'nacos' %}
+    <dependency>
+      <groupId>org.springframework.cloud</groupId>
+      <artifactId>spring-cloud-starter-alibaba-nacos-discovery</artifactId>
+    </dependency>
+    {% endif %}
     {% if registry == 'eureka' %}
     <dependency>
       <groupId>org.springframework.cloud</groupId>

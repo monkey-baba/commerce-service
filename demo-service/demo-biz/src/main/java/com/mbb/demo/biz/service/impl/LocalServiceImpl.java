@@ -1,6 +1,6 @@
-package {{ group }}.biz.service.impl;
+package {{ group }}.{{ name }}.biz.service.impl;
 
-import {{ group }}.biz.service.LocalService;
+import {{ group }}.{{ name }}.biz.service.LocalService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 

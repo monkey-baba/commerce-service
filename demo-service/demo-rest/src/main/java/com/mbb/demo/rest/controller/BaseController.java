@@ -1,12 +1,12 @@
-package {{ group }}.rest.controller;
+package {{ group }}.{{ name }}.rest.controller;
 
-import com.mbb.commerce.common.dto.ResultDto;
+import com.mbb.common.dto.ResultDto;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @Slf4j
-@RequestMapping("/api/v1")
+@RequestMapping("/{{ name }}/api/v1")
 public class BaseController {
 
 

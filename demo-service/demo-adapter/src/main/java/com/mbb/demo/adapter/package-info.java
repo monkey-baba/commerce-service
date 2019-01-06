@@ -1,4 +1,4 @@
-package {{ group }}.adapter;
+package {{ group }}.{{ name }}.adapter;
 
 //import org.springframework.stereotype.Service;
 
