@@ -1,0 +1,20 @@
+---
+spring:
+  cloud:
+    nacos:
+      config:
+        server-addr: ${NACOS_HOST:nacos}:${NACOS_PORT:8848}
+        file-extension: yaml
+  application:
+    name: auth
+  liquibase:
+    enabled: true
+    change-log: classpath:/db/changelog/db.changelog-master.xml
+    check-change-log-location: true
+
+mybatis:
+  mapper-locations: classpath:mapper/*.xml
+
+
+
+
