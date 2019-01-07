@@ -1,5 +1,6 @@
 package com.mbb.auth.app;
 
+import org.springframework.http.ResponseEntity;
 import tk.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

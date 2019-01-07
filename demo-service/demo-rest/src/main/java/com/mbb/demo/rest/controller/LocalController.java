@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @RestController
-@RequestMapping("/{{ name }}/api/v1/local")
+@RequestMapping("/api/v1")
 public class LocalController extends BaseController {
 
     @Autowired
