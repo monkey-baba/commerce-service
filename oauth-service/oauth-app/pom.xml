@@ -5,21 +5,18 @@
   <modelVersion>4.0.0</modelVersion>
 
 
-  <artifactId>auth-app</artifactId>
+  <artifactId>oauth-app</artifactId>
   <packaging>jar</packaging>
 
   <parent>
     <groupId>com.mbb</groupId>
-    <artifactId>auth</artifactId>
+    <artifactId>oauth</artifactId>
     <version>1.0.0-SNAPSHOT</version>
   </parent>
 
-  <name>Auth Service App</name>
+  <name>Oauth Service App</name>
 
 
-  <properties>
-    <auth.version>1.0.0</auth.version>
-  </properties>
 
   <dependencies>
 
@@ -54,18 +51,22 @@
       <artifactId>spring-cloud-starter-alibaba-nacos-config</artifactId>
     </dependency>
 
-
     <dependency>
       <groupId>org.liquibase</groupId>
       <artifactId>liquibase-core</artifactId>
     </dependency>
 
     <dependency>
-      <groupId>com.mbb</groupId>
-      <artifactId>auth-rest</artifactId>
-      <version>${project.version}</version>
+      <groupId>xin.yuki</groupId>
+      <artifactId>auth-server-spring-boot-starter</artifactId>
+      <version>2.0.7.SNAPSHOT</version>
     </dependency>
 
+    <dependency>
+      <groupId>com.mbb</groupId>
+      <artifactId>oauth-rest</artifactId>
+      <version>${project.version}</version>
+    </dependency>
 
   </dependencies>
 

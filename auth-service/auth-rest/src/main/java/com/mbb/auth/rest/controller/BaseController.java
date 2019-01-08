@@ -7,7 +7,6 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @Slf4j
-@RequestMapping("/api/v1")
 public class BaseController {
 
 

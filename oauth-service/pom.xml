@@ -4,7 +4,7 @@
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>com.mbb</groupId>
-  <artifactId>auth</artifactId>
+  <artifactId>oauth</artifactId>
   <packaging>pom</packaging>
 
   <parent>
@@ -13,7 +13,7 @@
     <version>1.0.0-SNAPSHOT</version>
   </parent>
 
-  <name>Commerce Cloud Auth Service</name>
+  <name>Commerce Cloud Oauth Service</name>
 
   <repositories>
     <repository>
@@ -26,10 +26,10 @@
   </repositories>
 
   <modules>
-    <module>auth-adapter</module>
-    <module>auth-api</module>
-    <module>auth-app</module>
-    <module>auth-biz</module>
-    <module>auth-rest</module>
+    <module>oauth-adapter</module>
+    <module>oauth-api</module>
+    <module>oauth-app</module>
+    <module>oauth-biz</module>
+    <module>oauth-rest</module>
   </modules>
 </project>

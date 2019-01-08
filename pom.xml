@@ -20,5 +20,6 @@
     <module>customer-service</module>
     <module>stock-service</module>
     <module>auth-service</module>
+    <module>oauth-service</module>
   </modules>
 </project>

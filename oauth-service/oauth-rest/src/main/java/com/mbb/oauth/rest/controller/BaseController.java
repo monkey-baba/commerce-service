@@ -1,4 +1,4 @@
-package {{ group }}.{{ name }}.rest.controller;
+package com.mbb.oauth.rest.controller;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
