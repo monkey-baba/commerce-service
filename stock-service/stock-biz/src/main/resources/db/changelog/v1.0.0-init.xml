@@ -6,7 +6,7 @@
   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.0.xsd">
 
   <changeSet id="1" author="ZQian">
-    <createTable tableName="pos" remarks="门店">
+    <createTable tableName="pointofservice" remarks="服务点">
       <column name="id" type="BIGINT" remarks="ID"/>
       <column name="version" type="INT" remarks="乐观锁"/>
       <column name="code" type="VARCHAR(32)" remarks="编码"/>
@@ -14,19 +14,19 @@
       <column name="address_id" type="BIGINT" remarks="地址ID"/>
       <column name="owner" type="VARCHAR(32)" remarks="负责人"/>
       <column name="contact" type="VARCHAR(255)" remarks="联系方式"/>
+      <column name="type" type="VARCHAR(32)" remarks="类型"/>
     </createTable>
     <addPrimaryKey tableName="pos" columnNames="id"/>
   </changeSet>
 
   <changeSet id="2" author="ZQian">
-    <createTable tableName="warehouse" remarks="仓库">
+    <createTable tableName="warehouse" remarks="库位">
       <column name="id" type="BIGINT" remarks="ID"/>
       <column name="version" type="INT" remarks="乐观锁"/>
       <column name="code" type="VARCHAR(32)" remarks="编码"/>
       <column name="name" type="VARCHAR(255)" remarks="名称"/>
       <column name="active" type="TINYINT(1)" remarks="是否启用"/>
-      <column name="address_id" type="BIGINT" remarks="地址ID"/>
-      <column name="pos_id" type="BIGINT" remarks="地址ID"/>
+      <column name="pos_id" type="BIGINT" remarks="大仓ID"/>
     </createTable>
     <addPrimaryKey tableName="warehouse" columnNames="id"/>
   </changeSet>

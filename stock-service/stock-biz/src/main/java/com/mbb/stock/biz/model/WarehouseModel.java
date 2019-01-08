@@ -13,7 +13,6 @@ public class WarehouseModel extends BaseModel {
     private String code;
     private String name;
     private Boolean active;
-    private Long addressId;
     private Long posId;
 
 }
