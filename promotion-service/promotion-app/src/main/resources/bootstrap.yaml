@@ -1,0 +1,19 @@
+---
+spring:
+  cloud:
+    nacos:
+      config:
+        server-addr: ${NACOS_HOST:nacos}:${NACOS_PORT:8848}
+        file-extension: yaml
+  application:
+    name: promotion
+  liquibase:
+    enabled: true
+    change-log: classpath:/db/changelog/db.changelog-master.xml
+
+mybatis:
+  mapper-locations: classpath:mapper/*.xml
+
+
+
+
