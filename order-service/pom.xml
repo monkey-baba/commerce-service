@@ -3,24 +3,23 @@
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
-  <artifactId>commerce-cloud-service</artifactId>
+  <groupId>com.mbb</groupId>
+  <artifactId>order</artifactId>
   <packaging>pom</packaging>
 
   <parent>
     <groupId>com.mbb</groupId>
-    <artifactId>commerce-cloud</artifactId>
+    <artifactId>commerce-cloud-service</artifactId>
     <version>1.0.0-SNAPSHOT</version>
   </parent>
 
-  <name>Commerce Cloud Service</name>
+  <name>Commerce Cloud Order Service</name>
 
   <modules>
-    <module>basic-service</module>
-    <module>product-service</module>
-    <module>customer-service</module>
-    <module>stock-service</module>
-    <module>auth-service</module>
-    <module>oauth-service</module>
-    <module>order-service</module>
+    <module>order-adapter</module>
+    <module>order-api</module>
+    <module>order-app</module>
+    <module>order-biz</module>
+    <module>order-rest</module>
   </modules>
 </project>

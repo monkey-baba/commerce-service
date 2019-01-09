@@ -16,7 +16,7 @@
       <column name="contact" type="VARCHAR(255)" remarks="联系方式"/>
       <column name="type" type="VARCHAR(32)" remarks="类型"/>
     </createTable>
-    <addPrimaryKey tableName="pos" columnNames="id"/>
+    <addPrimaryKey tableName="pointofservice" columnNames="id"/>
   </changeSet>
 
   <changeSet id="2" author="ZQian">
@@ -42,5 +42,15 @@
     <addPrimaryKey tableName="stock" columnNames="id"/>
   </changeSet>
 
+
+  <changeSet id="4" author="ZQian">
+    <createTable tableName="store_pos" remarks="网店关联服务点">
+      <column name="id" type="BIGINT" remarks="ID"/>
+      <column name="version" type="INT" remarks="乐观锁"/>
+      <column name="store_id" type="BIGINT" remarks="网店"/>
+      <column name="pos_id" type="BIGINT" remarks="服务点"/>
+    </createTable>
+    <addPrimaryKey tableName="store_pos" columnNames="id"/>
+  </changeSet>
 
 </databaseChangeLog>

@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<databaseChangeLog
+  xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.0.xsd">
+
+  <changeSet id="1" author="ZQian">
+    <createTable tableName="order" remarks="订单">
+      <column name="id" type="BIGINT" remarks="ID"/>
+      <column name="version" type="INT" remarks="乐观锁"/>
+      <column name="ecs_order_id" type="VARCHAR(32)" remarks="平台订单号"/>
+      <column name="code" type="VARCHAR(32)" remarks="平台订单号"/>
+      <column name="store_id" type="BIGINT" remarks="网店"/>
+      <column name="customer_id" type="BIGINT" remarks="客户"/>
+      <column name="receiver" type="VARCHAR(32)" remarks="收货人"/>
+      <column name="receiver_phone" type="VARCHAR(32)" remarks="收货手机"/>
+      <column name="ware_id" type="BIGINT" remarks="下单门店"/>
+      <column name="total_price" type="DECIMAL(32,8)" remarks="订单金额"/>
+      <column name="sub_total" type="DECIMAL(32,8)" remarks="订单总额"/>
+      <column name="discount" type="DECIMAL(32,8)" remarks="订单折扣"/>
+      <column name="date" type="DATETIME" remarks="下单日期"/>
+      <column name="payment_date" type="DATETIME" remarks="付款日期"/>
+      <column name="status" type="VARCHAR(32)" remarks="订单状态"/>
+      <column name="order_type" type="VARCHAR(32)" remarks="订单类型"/>
+      <column name="address_id" type="BIGINT" remarks="收件地址"/>
+      <column name="platform" type="VARCHAR(32)" remarks="平台"/>
+      <column name="order_source" type="VARCHAR(32)" remarks="订单来源"/>
+      <column name="channel_id" type="BIGINT" remarks="销售渠道"/>
+      <column name="remark" type="VARCHAR(4096)" remarks="买家备注"/>
+      <column name="delivery_type" type="VARCHAR(32)" remarks="配送方式"/>
+      <column name="carrier_id" type="BIGINT" remarks="指定承运商"/>
+    </createTable>
+    <addPrimaryKey tableName="order" columnNames="id" />
+  </changeSet>
+
+  <changeSet id="2" author="ZQian">
+    <createTable tableName="order_entry" remarks="订单行">
+      <column name="id" type="BIGINT" remarks="ID"/>
+      <column name="version" type="INT" remarks="乐观锁"/>
+      <column name="sku_id" type="BIGINT" remarks="SKU"/>
+      <column name="quantity" type="BIGINT" remarks="数量"/>
+      <column name="total_price" type="DECIMAL(32,8)" remarks="单价"/>
+      <column name="base_price" type="DECIMAL(32,8)" remarks="总价"/>
+      <column name="discount" type="DECIMAL(32,8)" remarks="折扣"/>
+      <column name="order_id" type="BIGINT" remarks="订单"/>
+    </createTable>
+    <addPrimaryKey tableName="order_entry" columnNames="id" />
+  </changeSet>
+
+  <changeSet id="3" author="ZQian">
+    <createTable tableName="seller_remark" remarks="买家备注">
+      <column name="id" type="BIGINT" remarks="ID"/>
+      <column name="version" type="INT" remarks="乐观锁"/>
+      <column name="user_id" type="BIGINT" remarks="添加人"/>
+      <column name="date" type="DATETIME" remarks="添加时间"/>
+      <column name="remark" type="VARCHAR(4096)" remarks="备注"/>
+      <column name="order_id" type="BIGINT" remarks="订单"/>
+    </createTable>
+    <addPrimaryKey tableName="seller_remark" columnNames="id" />
+  </changeSet>
+
+
+  <changeSet id="4" author="ZQian">
+    <createTable tableName="invoice" remarks="发票信息">
+      <column name="id" type="BIGINT" remarks="ID"/>
+      <column name="version" type="INT" remarks="乐观锁"/>
+      <column name="applied" type="TINYINT(1)" remarks="申请开票"/>
+      <column name="type" type="VARCHAR(32)" remarks="发票类型"/>
+      <column name="title" type="VARCHAR(255)" remarks="发票抬头"/>
+      <column name="amount" type="DECIMAL(32,8)" remarks="发票金额"/>
+      <column name="order_id" type="BIGINT" remarks="订单"/>
+    </createTable>
+    <addPrimaryKey tableName="invoice" columnNames="id" />
+  </changeSet>
+
+  <changeSet id="5" author="ZQian">
+    <createTable tableName="payment" remarks="支付信息">
+      <column name="id" type="BIGINT" remarks="ID"/>
+      <column name="version" type="INT" remarks="乐观锁"/>
+      <column name="type" type="VARCHAR(32)" remarks="支付方式"/>
+      <column name="amount" type="DECIMAL(32,8)" remarks="支付金额"/>
+      <column name="date" type="DATETIME" remarks="支付时间"/>
+      <column name="serial_number" type="VARCHAR(255)" remarks="流水号"/>
+      <column name="order_id" type="BIGINT" remarks="订单"/>
+    </createTable>
+    <addPrimaryKey tableName="payment" columnNames="id" />
+  </changeSet>
+
+  <changeSet id="6" author="ZQian">
+    <createTable tableName="router_rule" remarks="路由规则">
+      <column name="id" type="BIGINT" remarks="ID"/>
+      <column name="version" type="INT" remarks="乐观锁"/>
+      <column name="code" type="VARCHAR(32)" remarks="规则编码"/>
+      <column name="name" type="VARCHAR(32)" remarks="规则名称"/>
+      <column name="enabled" type="TINYINT(1)" remarks="是否启用"/>
+      <column name="priority" type="INT" remarks="优先级"/>
+      <column name="type" type="VARCHAR(32)" remarks="规则名称"/>
+      <column name="modify_user_id" type="BIGINT" remarks="修改人"/>
+      <column name="modify_date" type="DATETIME" remarks="修改时间"/>
+    </createTable>
+    <addPrimaryKey tableName="router_rule" columnNames="id" />
+  </changeSet>
+
+
+  <changeSet id="7" author="ZQian">
+    <createTable tableName="consignment" remarks="配货单">
+      <column name="id" type="BIGINT" remarks="ID"/>
+      <column name="version" type="INT" remarks="乐观锁"/>
+      <column name="order_id" type="BIGINT" remarks="订单"/>
+      <column name="code" type="VARCHAR(32)" remarks="配货单号"/>
+      <column name="date" type="DATETIME" remarks="发货时间"/>
+      <column name="expressNum" type="VARCHAR(32)" remarks="运单号"/>
+      <column name="carrier_id" type="BIGINT" remarks="承运商"/>
+      <column name="status" type="VARCHAR(32)" remarks="状态"/>
+      <column name="pos_id" type="BIGINT" remarks="发货仓"/>
+    </createTable>
+    <addPrimaryKey tableName="consignment" columnNames="id" />
+  </changeSet>
+
+
+  <changeSet id="8" author="ZQian">
+    <createTable tableName="consignment_entry" remarks="配货单行">
+      <column name="id" type="BIGINT" remarks="ID"/>
+      <column name="version" type="INT" remarks="乐观锁"/>
+      <column name="sku_id" type="BIGINT" remarks="SKU"/>
+      <column name="order_entry_id" type="BIGINT" remarks="订单行"/>
+      <column name="shipped_quantity" type="BIGINT" remarks="发货数量"/>
+      <column name="consignment_id" type="BIGINT" remarks="配货单"/>
+    </createTable>
+    <addPrimaryKey tableName="consignment_entry" columnNames="id" />
+  </changeSet>
+</databaseChangeLog>
