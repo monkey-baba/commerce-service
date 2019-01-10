@@ -16,6 +16,8 @@ spring:
 {% if orm == 'mapper'  %}
 mybatis:
   mapper-locations: classpath:mapper/*.xml
+mapper:
+  enum-as-simple-type: true
 {% endif %}
 
 
