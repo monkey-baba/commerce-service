@@ -1,6 +1,9 @@
 ---
 logging:
   file: app.log
+  level:
+    com.alibaba.nacos.client.naming: WARN
+
 spring:
   cloud:
     nacos:
@@ -18,6 +21,3 @@ mybatis:
   mapper-locations: classpath:mapper/*.xml
 mapper:
   enum-as-simple-type: true
-
-
-
