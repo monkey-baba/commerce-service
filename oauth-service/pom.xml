@@ -17,8 +17,15 @@
 
   <repositories>
     <repository>
-      <id>sonatype-snapshot</id>
-      <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+      <id>release</id>
+      <url>http://116.247.124.34:8081/artifactory/libs-release/</url>
+      <releases>
+        <enabled>true</enabled>
+      </releases>
+    </repository>
+    <repository>
+      <id>snapshot</id>
+      <url>https://oss.sonatype.org/content/repositories/snapshots/</url>
       <snapshots>
         <enabled>true</enabled>
       </snapshots>
