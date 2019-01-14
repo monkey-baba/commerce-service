@@ -1,7 +1,11 @@
 package com.mbb.auth.rest.controller;
 
 
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import com.mbb.auth.rest.dto.UserInfoDto;
+import com.mbb.auth.rest.dto.UserListQuery;
+import com.mbb.auth.rest.dto.UserLoginDto;
 import java.security.Principal;
 import java.util.Collection;
 import java.util.List;
@@ -13,8 +17,12 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import xin.yuki.auth.core.entity.GroupModel;
 import xin.yuki.auth.core.entity.RoleModel;
 import xin.yuki.auth.core.entity.UserModel;
+import xin.yuki.auth.core.service.GroupService;
+import xin.yuki.auth.core.service.PermissionService;
+import xin.yuki.auth.core.service.RoleService;
 import xin.yuki.auth.core.service.UserService;
 
 @RestController
@@ -22,32 +30,86 @@ import xin.yuki.auth.core.service.UserService;
 public class UserController extends BaseController {
 
     @Autowired
+    private GroupService groupService;
+    @Autowired
+    private PermissionService permissionService;
+    @Autowired
+    private RoleService roleService;
+    @Autowired
     private UserService userService;
 
     @GetMapping("/info")
     public ResponseEntity info(Principal principal) {
         UserModel user = userService.findByUsername(principal.getName());
-        UserInfoDto info = new UserInfoDto();
+        UserLoginDto info = new UserLoginDto();
         info.setName(user.getName());
         info.setUsername(user.getUsername());
 
-        //Roles
+        //Groups
+        List<GroupModel> groups = groupService.findUserGroups(user.getId());
+
         final Collection<RoleModel> groupRoles =
-                CollectionUtils.emptyIfNull(user.getGroups()).stream()
-                        .flatMap(g -> g.getRoles().stream()).collect(Collectors.toList());
+                CollectionUtils.emptyIfNull(groups).stream()
+                        .flatMap(g -> {
+                            List<RoleModel> roles = roleService.findGroupRoles(g.getId());
+                            return roles.stream();
+                        }).collect(Collectors.toList());
+
         final Collection<RoleModel> allRoles = CollectionUtils
-                .union(CollectionUtils.emptyIfNull(user.getRoles()),
+                .union(CollectionUtils.emptyIfNull(roleService.findUserRoles(user.getId())),
                         groupRoles);
         info.setRoles(
                 allRoles.stream().map(RoleModel::getName).collect(Collectors.toList()));
 
         //Authorities
         final List<GrantedAuthority> premissions =
-                allRoles.stream().flatMap(role -> role.getPermissions().stream()).collect(Collectors.toList());
+                allRoles.stream().flatMap(
+                        role -> permissionService.findRolePermissions(role.getId()).stream())
+                        .collect(Collectors.toList());
         info.setAuthorities(premissions.stream().map(GrantedAuthority::getAuthority).collect(
                 Collectors.toList()));
 
         return ResponseEntity.ok(info);
-}
+    }
+
+    @GetMapping("/list")
+    public ResponseEntity info(UserListQuery query) {
+        UserModel user = new UserModel();
+        user.setUsername(query.getUsername());
+        user.setName(query.getName());
+        user.setMobileNumber(query.getMobileNumber());
+
+        PageHelper.startPage(query.getPageNum(), query.getPageSize());
+        List<UserModel> users = userService.findUserByExample(user);
+        List<UserInfoDto> list = users.stream().map(u -> {
+            UserInfoDto info = new UserInfoDto();
+            info.setUsername(u.getUsername());
+            info.setName(u.getName());
+            info.setEmail(u.getEmail());
+            info.setMobileNumber(u.getMobileNumber());
+            info.setEnabled(u.getActive());
+            List<GroupModel> groups = groupService.findUserGroups(u.getId());
+            info.setGroups(groups.stream().map(GroupModel::getName)
+                    .collect(Collectors.toList()));
+
+            final Collection<RoleModel> groupRoles =
+                    CollectionUtils.emptyIfNull(groups).stream()
+                            .flatMap(g -> {
+                                List<RoleModel> roles = roleService.findGroupRoles(g.getId());
+                                return roles.stream();
+                            }).collect(Collectors.toList());
+            final Collection<RoleModel> allRoles = CollectionUtils
+                    .union(CollectionUtils.emptyIfNull(roleService.findUserRoles(user.getId())),
+                            groupRoles);
+
+            info.setRoles(allRoles.stream().map(RoleModel::getName).collect(Collectors.toList()));
+
+            return info;
+        }).collect(Collectors.toList());
+        return ResponseEntity.ok(PageInfo.of(list));
+
+
+    }
+
 
 }
