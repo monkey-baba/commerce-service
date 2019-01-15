@@ -3,7 +3,9 @@ package com.mbb.auth.rest.controller;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.lxm.idgenerator.service.intf.IdService;
 import com.mbb.auth.rest.dto.req.UserChangePwdData;
+import com.mbb.auth.rest.dto.req.UserCreateData;
 import com.mbb.auth.rest.dto.req.UserEnableData;
 import com.mbb.auth.rest.dto.req.UserListQuery;
 import com.mbb.auth.rest.dto.req.UserUpdateData;
@@ -37,6 +39,8 @@ public class UserController extends BaseController {
 
     @Autowired
     private GroupService groupService;
+    @Autowired
+    private IdService idService;
     @Autowired
     private PermissionService permissionService;
     @Autowired
@@ -121,7 +125,7 @@ public class UserController extends BaseController {
 
     @PostMapping("/update")
     public ResponseEntity updateUser(@RequestBody UserUpdateData data) throws UserException {
-        UserModel user=userService.findById(data.getId());
+        UserModel user = userService.findById(data.getId());
         user.setId(data.getId());
         user.setMobileNumber(data.getMobileNumber());
         user.setEmail(data.getEmail());
@@ -133,16 +137,38 @@ public class UserController extends BaseController {
 
     @PostMapping("/changePwd")
     public ResponseEntity changePwd(@RequestBody UserChangePwdData data) {
-        userService.changePassword(data.getUsername(),data.getPassword());
+        userService.changePassword(data.getUsername(), data.getPassword());
         return ResponseEntity.ok("更新成功");
     }
 
     @PostMapping("/enable")
     public ResponseEntity enable(@RequestBody List<UserEnableData> datas) {
         for (UserEnableData data : datas) {
-            userService.enableUser(data.getUsername(),data.getEnabled());
+            userService.enableUser(data.getUsername(), data.getEnabled());
         }
         return ResponseEntity.ok("更新成功");
+    }
+
+    @PostMapping("/create")
+    public ResponseEntity create(@RequestBody UserCreateData data) {
+        UserModel user = new UserModel();
+        user.setId(idService.genId());
+        user.setMobileNumber(data.getMobileNumber());
+        user.setEmail(data.getEmail());
+        user.setName(data.getName());
+        user.setUsername(data.getUsername());
+        user.setActive(data.getEnabled());
+        user.setPassword(data.getPassword());
+        user.setVersion(0L);
+        userService.createUser(user);
+        UserListResp resp = new UserListResp();
+        resp.setId(user.getId());
+        resp.setEmail(user.getEmail());
+        resp.setEnabled(user.getActive());
+        resp.setMobileNumber(user.getMobileNumber());
+        resp.setName(user.getName());
+        resp.setUsername(user.getUsername());
+        return ResponseEntity.ok(resp);
     }
 
 }
