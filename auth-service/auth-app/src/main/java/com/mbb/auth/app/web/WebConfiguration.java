@@ -6,6 +6,7 @@ import com.alibaba.fastjson.serializer.ToStringSerializer;
 import com.alibaba.fastjson.support.config.FastJsonConfig;
 import com.alibaba.fastjson.support.spring.FastJsonHttpMessageConverter;
 import java.math.BigInteger;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -30,6 +31,8 @@ public class WebConfiguration implements WebMvcConfigurer {
         globalInstance.put(BigInteger.class, ToStringSerializer.instance);
 
         fastJsonConfig.setSerializeConfig(globalInstance);
+        fastJsonConfig.setDateFormat("yyyy-MM-dd HH:mm:ss");
+        fastJsonConfig.setCharset(Charset.defaultCharset());
         //设定json格式且编码为UTF-8
         converter.setSupportedMediaTypes(Collections.singletonList(MediaType.APPLICATION_JSON_UTF8));
 
