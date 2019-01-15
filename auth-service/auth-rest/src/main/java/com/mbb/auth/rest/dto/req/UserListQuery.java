@@ -1,4 +1,4 @@
-package com.mbb.auth.rest.dto;
+package com.mbb.auth.rest.dto.req;
 
 import lombok.Data;
 

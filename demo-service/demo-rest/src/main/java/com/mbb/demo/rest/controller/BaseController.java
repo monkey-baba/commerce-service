@@ -16,7 +16,7 @@ public class BaseController {
         if (log.isWarnEnabled()) {
             log.error("Handling error: " + e.getClass().getSimpleName() + ", " + e.getMessage(), e);
         }
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e);
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getClass().getSimpleName() + ", " + e.getMessage());
     }
 
 
