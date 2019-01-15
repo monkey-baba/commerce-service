@@ -138,8 +138,10 @@ public class UserController extends BaseController {
     }
 
     @PostMapping("/enable")
-    public ResponseEntity enable(@RequestBody UserEnableData data) {
-        userService.enableUser(data.getUsername(),data.getEnabled());
+    public ResponseEntity enable(@RequestBody List<UserEnableData> datas) {
+        for (UserEnableData data : datas) {
+            userService.enableUser(data.getUsername(),data.getEnabled());
+        }
         return ResponseEntity.ok("更新成功");
     }
 
