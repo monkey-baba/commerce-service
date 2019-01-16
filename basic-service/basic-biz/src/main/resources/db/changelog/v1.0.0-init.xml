@@ -16,7 +16,7 @@
   </changeSet>
 
   <changeSet id="2" author="ZQian">
-    <createTable tableName="dictionary_value" remarks="数据字典">
+    <createTable tableName="dictionary_value" remarks="数据字典值">
       <column name="id" type="BIGINT" remarks="ID"/>
       <column name="version" type="INT" remarks="乐观锁"/>
       <column name="code" type="VARCHAR(255)" remarks="编码"/>
