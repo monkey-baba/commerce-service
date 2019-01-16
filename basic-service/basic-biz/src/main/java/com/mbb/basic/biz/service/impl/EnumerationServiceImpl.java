@@ -1,12 +1,11 @@
-package com.mbb.enumeration.biz.service.impl;
+package com.mbb.basic.biz.service.impl;
 
 import com.lxm.idgenerator.service.intf.IdService;
-import com.mbb.enumeration.biz.dao.EnumerationMapper;
-import com.mbb.enumeration.biz.dto.EnumerationInfoDto;
-import com.mbb.enumeration.biz.dto.EnumerationQueryDto;
-import com.mbb.enumeration.biz.enumation.EnumerationStatus;
+import com.mbb.basic.biz.dao.EnumerationMapper;
+import com.mbb.basic.biz.dto.EnumerationInfoDto;
+import com.mbb.basic.biz.dto.EnumerationQueryDto;
 import com.mbb.enumeration.biz.model.EnumerationModel;
-import com.mbb.enumeration.biz.service.EnumerationService;
+import com.mbb.basic.biz.service.EnumerationService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.ibatis.session.RowBounds;
@@ -61,9 +60,6 @@ public class EnumerationServiceImpl implements EnumerationService {
                 enumerationModel.setId(idService.genId());
                 enumerationModel.setCode(enumerationInfoDto.getCode());
                 enumerationModel.setName(enumerationInfoDto.getName());
-                enumerationModel.setPhone(enumerationInfoDto.getPhone());
-                enumerationModel.setEmail(enumerationModel.getEmail());
-                enumerationModel.setStatus(EnumerationStatus.DISABLED);
                 enumerationModel.setVersion(1);
                 enumerationMapper.insert(enumerationModel);
             }
@@ -80,19 +76,15 @@ public class EnumerationServiceImpl implements EnumerationService {
         if (!CollectionUtils.isEmpty(enumerationModels)) {
             for (EnumerationModel enumerationModel : enumerationModels) {
                 EnumerationInfoDto enumerationInfoDto = new EnumerationInfoDto();
-                //主键
+                //ID
                 enumerationInfoDto.setId(String.valueOf(enumerationModel.getId()));
-                //客户编号
+                //编码
                 enumerationInfoDto.setCode(enumerationModel.getCode());
                 //客户名称
                 enumerationInfoDto.setName(enumerationModel.getName());
-                //手机号
-                enumerationInfoDto.setPhone(enumerationModel.getPhone());
-                //邮箱
-                enumerationInfoDto.setEmail(enumerationModel.getEmail());
-                //状态
-                EnumerationStatus status = enumerationModel.getStatus();
-//                enumerationInfoDto.setStatus();
+                //乐观锁
+                enumerationInfoDto.setVersion(enumerationModel.getVersion());
+
                 enumerationInfoDtoList.add(enumerationInfoDto);
             }
         }
@@ -100,12 +92,10 @@ public class EnumerationServiceImpl implements EnumerationService {
     }
 
     private Example mapQueryInfo(EnumerationQueryDto enumerationQueryDto) {
-        //客户编号
+        //编码
         String code = enumerationQueryDto.getCode();
-        //客户姓名
+        //名称
         String name = enumerationQueryDto.getName();
-        //手机号
-        String phone = enumerationQueryDto.getPhone();
         Example example = new Example(EnumerationModel.class);
         Example.Criteria criteria = example.createCriteria();
         if (StringUtils.isNotBlank(code)) {
@@ -113,9 +103,6 @@ public class EnumerationServiceImpl implements EnumerationService {
         }
         if (StringUtils.isNotBlank(name)) {
             criteria.andLike("name", "%" + name + "%");
-        }
-        if (StringUtils.isNotBlank(phone)) {
-            criteria.andEqualTo("phone", phone);
         }
         return example;
     }

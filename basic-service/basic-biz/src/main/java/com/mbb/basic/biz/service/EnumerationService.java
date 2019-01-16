@@ -1,7 +1,7 @@
-package com.mbb.enumeration.biz.service;
+package com.mbb.basic.biz.service;
 
-import com.mbb.enumeration.biz.dto.EnumerationInfoDto;
-import com.mbb.enumeration.biz.dto.EnumerationQueryDto;
+import com.mbb.basic.biz.dto.EnumerationInfoDto;
+import com.mbb.basic.biz.dto.EnumerationQueryDto;
 
 import java.util.List;
 
@@ -14,7 +14,7 @@ import java.util.List;
 public interface EnumerationService {
 
     /**
-     * 查询客户
+     * 查询枚举
      *
      * @param enumerationQueryDto
      * @return
@@ -22,14 +22,14 @@ public interface EnumerationService {
     List<EnumerationInfoDto> getEnumerations(EnumerationQueryDto enumerationQueryDto);
 
     /**
-     * 新增客户
+     * 新增枚举
      *
      * @param enumerationInfoDtoList
      */
     void addEnumeration(List<EnumerationInfoDto> enumerationInfoDtoList);
 
     /**
-     * 删除客户
+     * 删除枚举
      *
      * @param id
      */
