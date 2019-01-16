@@ -13,6 +13,7 @@ import com.mbb.auth.rest.dto.resp.UserListResp;
 import com.mbb.auth.rest.dto.resp.UserLoginResp;
 import java.security.Principal;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.apache.commons.collections4.CollectionUtils;
@@ -48,6 +49,11 @@ public class UserController extends BaseController {
     @Autowired
     private UserService userService;
 
+    /**
+     * 获取用户信息  做权限用
+     * @param principal
+     * @return
+     */
     @GetMapping("/info")
     public ResponseEntity info(Principal principal) {
         UserModel user = userService.findByUsername(principal.getName());
@@ -83,16 +89,27 @@ public class UserController extends BaseController {
         return ResponseEntity.ok(info);
     }
 
+    /**
+     * 用户列表
+     * @param query
+     * @return
+     */
     @GetMapping("/list")
-    public ResponseEntity info(UserListQuery query) {
+    public ResponseEntity list(UserListQuery query) {
         UserModel user = new UserModel();
         user.setUsername(query.getUsername());
         user.setName(query.getName());
         user.setMobileNumber(query.getMobileNumber());
 
+        //开启分页
         PageHelper.startPage(query.getPageNum(), query.getPageSize());
+        //查询数据
         List<UserModel> users = userService.findUserByExample(user);
-        List<UserListResp> list = users.stream().map(u -> {
+        //获取页码等信息
+        PageInfo<UserModel> origin = PageInfo.of(users);
+
+        //Model转Data
+        List<UserListResp> list = origin.getList().stream().map(u -> {
             UserListResp info = new UserListResp();
             info.setId(u.getId());
             info.setUsername(u.getUsername());
@@ -104,12 +121,13 @@ public class UserController extends BaseController {
             info.setGroups(groups.stream().map(GroupModel::getName)
                     .collect(Collectors.toList()));
 
-            final Collection<RoleModel> groupRoles =
-                    CollectionUtils.emptyIfNull(groups).stream()
-                            .flatMap(g -> {
-                                List<RoleModel> roles = roleService.findGroupRoles(g.getId());
-                                return roles.stream();
-                            }).collect(Collectors.toList());
+//            final Collection<RoleModel> groupRoles =
+//                    CollectionUtils.emptyIfNull(groups).stream()
+//                            .flatMap(g -> {
+//                                List<RoleModel> roles = roleService.findGroupRoles(g.getId());
+//                                return roles.stream();
+//                            }).collect(Collectors.toList());
+            final Collection<RoleModel> groupRoles= Collections.emptyList();
             final Collection<RoleModel> allRoles = CollectionUtils
                     .union(CollectionUtils.emptyIfNull(roleService.findUserRoles(user.getId())),
                             groupRoles);
@@ -118,7 +136,12 @@ public class UserController extends BaseController {
 
             return info;
         }).collect(Collectors.toList());
-        return ResponseEntity.ok(PageInfo.of(list));
+
+        //用data生成新的分页数据
+        PageInfo<UserListResp> result =PageInfo.of(list);
+        //把原来的总条数复制进去
+        result.setTotal(origin.getTotal());
+        return ResponseEntity.ok(result);
 
 
     }
