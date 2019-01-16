@@ -42,6 +42,12 @@
     </dependency>
 
 
+    <!-- Spring Cloud Feign -->
+    <dependency>
+      <groupId>org.springframework.cloud</groupId>
+      <artifactId>spring-cloud-starter-openfeign</artifactId>
+    </dependency>
+
     <!-- Spring Cloud Registry -->
     <dependency>
       <groupId>org.springframework.cloud</groupId>

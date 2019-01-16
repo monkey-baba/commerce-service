@@ -66,6 +66,18 @@
       <version>${project.version}</version>
     </dependency>
 
+    <dependency>
+      <groupId>com.mbb</groupId>
+      <artifactId>basic-common</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+
+    <dependency>
+      <groupId>com.mbb</groupId>
+      <artifactId>basic-adapter</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+
   </dependencies>
 
 

@@ -1,5 +1,6 @@
 package com.mbb.oauth.app;
 
+import org.springframework.cloud.openfeign.EnableFeignClients;
 import tk.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -11,6 +12,7 @@ import xin.yuki.auth.boot.EnableCloudAuthServer;
 @EnableDiscoveryClient
 @MapperScan(basePackages = "com.mbb.oauth.biz.dao")
 @EnableCloudAuthServer
+@EnableFeignClients
 public class OauthServiceApplication {
 
     public static void main(String[] args) {

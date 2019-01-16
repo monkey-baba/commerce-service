@@ -22,5 +22,6 @@
     <module>auth-app</module>
     <module>auth-biz</module>
     <module>auth-rest</module>
+    <module>auth-common</module>
   </modules>
 </project>
