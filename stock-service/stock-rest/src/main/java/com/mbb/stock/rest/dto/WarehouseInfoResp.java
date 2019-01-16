@@ -1,14 +1,14 @@
-package com.mbb.stock.biz.dto;
+package com.mbb.stock.rest.dto;
 
 import lombok.Data;
 
 @Data
-public class WarehouseInfoDto {
-    private String id;
+public class WarehouseInfoResp {
+    private Long id;
     private String code;
     private String name;
     private String active;
-    private String posId;
+    private Long posId;
     private String posAddress;
 
 }
