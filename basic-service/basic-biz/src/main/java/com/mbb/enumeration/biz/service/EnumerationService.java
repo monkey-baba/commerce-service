@@ -1,7 +1,7 @@
-package com.mbb.basic.biz.service;
+package com.mbb.enumeration.biz.service;
 
-import com.mbb.basic.biz.dto.EnumerationInfoDto;
-import com.mbb.basic.biz.dto.EnumerationQueryDto;
+import com.mbb.enumeration.biz.dto.EnumerationInfoDto;
+import com.mbb.enumeration.biz.dto.EnumerationQueryDto;
 
 import java.util.List;
 

@@ -1,4 +1,4 @@
-package com.mbb.basic.biz.dto;
+package com.mbb.enumeration.biz.dto;
 
 import lombok.Data;
 

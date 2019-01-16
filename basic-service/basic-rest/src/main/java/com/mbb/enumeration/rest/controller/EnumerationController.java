@@ -30,7 +30,7 @@ public class EnumerationController extends BaseController {
     }
 
     @PostMapping("/add")
-    public ResponseEntity addStock(@RequestBody List<EnumerationInfoDto> enumerationInfoDtoList) {
+    public ResponseEntity addEnumerations(@RequestBody List<EnumerationInfoDto> enumerationInfoDtoList) {
         enumerationService.addEnumeration(enumerationInfoDtoList);
         return ResponseEntity.ok(Boolean.TRUE);
     }

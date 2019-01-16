@@ -1,11 +1,11 @@
-package com.mbb.basic.biz.service.impl;
+package com.mbb.enumeration.biz.service.impl;
 
 import com.lxm.idgenerator.service.intf.IdService;
 import com.mbb.basic.biz.dao.EnumerationMapper;
-import com.mbb.basic.biz.dto.EnumerationInfoDto;
-import com.mbb.basic.biz.dto.EnumerationQueryDto;
+import com.mbb.enumeration.biz.dto.EnumerationInfoDto;
+import com.mbb.enumeration.biz.dto.EnumerationQueryDto;
 import com.mbb.enumeration.biz.model.EnumerationModel;
-import com.mbb.basic.biz.service.EnumerationService;
+import com.mbb.enumeration.biz.service.EnumerationService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.ibatis.session.RowBounds;
