@@ -1,7 +1,6 @@
 package com.mbb.product.biz.model;
 
 import com.mbb.common.model.BaseModel;
-import com.mbb.product.biz.enumation.ApprovedStatus;
 import java.util.List;
 import java.util.Map;
 import javax.persistence.Table;
@@ -17,7 +16,7 @@ public class ProductModel extends BaseModel {
     private String name;
     private Long channelId;
     private Long unitId;
-    private ApprovedStatus approved;
+    private Long approvedId;
     private List<String> images;
     private Map<Long,String> attribute;
 

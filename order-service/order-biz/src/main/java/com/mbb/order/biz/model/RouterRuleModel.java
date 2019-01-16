@@ -1,7 +1,6 @@
 package com.mbb.order.biz.model;
 
 import com.mbb.common.model.BaseModel;
-import com.mbb.order.biz.enumation.RouterRuleType;
 import java.util.Date;
 import javax.persistence.Table;
 import lombok.Data;
@@ -16,7 +15,7 @@ public class RouterRuleModel  extends BaseModel {
     private String name;
     private Boolean enabled;
     private Integer priority;
-    private RouterRuleType type;
+    private Long typeId;
     private Long modifyUserId;
     private Date modifyDate;
 }

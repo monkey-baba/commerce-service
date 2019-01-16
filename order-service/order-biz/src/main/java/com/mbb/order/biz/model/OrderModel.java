@@ -1,11 +1,6 @@
 package com.mbb.order.biz.model;
 
 import com.mbb.common.model.BaseModel;
-import com.mbb.order.biz.enumation.DeliveryType;
-import com.mbb.order.biz.enumation.OrderPlatform;
-import com.mbb.order.biz.enumation.OrderSource;
-import com.mbb.order.biz.enumation.OrderStauts;
-import com.mbb.order.biz.enumation.OrderType;
 import java.util.Date;
 import javax.persistence.Table;
 import lombok.Data;
@@ -28,14 +23,14 @@ public class OrderModel extends BaseModel {
     private Double discount;
     private Date date;
     private Date paymentDate;
-    private OrderStauts status;
-    private OrderType orderType;
+    private Long statusId;
+    private Long orderTypeId;
     private Long addressId;
-    private OrderPlatform platform;
-    private OrderSource orderSource;
+    private Long platformId;
+    private Long orderSourceId;
     private Long channelId;
     private String remark;
-    private DeliveryType deliveryType;
+    private Long deliveryTypeId;
     private Long carrierId;
 
 

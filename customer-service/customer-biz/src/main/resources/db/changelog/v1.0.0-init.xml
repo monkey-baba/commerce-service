@@ -13,7 +13,7 @@
       <column name="name" type="VARCHAR(255)" remarks="名称"/>
       <column name="phone" type="VARCHAR(32)" remarks="手机"/>
       <column name="email" type="VARCHAR(255)" remarks="邮箱"/>
-      <column name="status" type="VARCHAR(32)" remarks="状态"/>
+      <column name="status_id" type="BIGINT" remarks="状态"/>
     </createTable>
     <addPrimaryKey tableName="customer" columnNames="id"/>
   </changeSet>

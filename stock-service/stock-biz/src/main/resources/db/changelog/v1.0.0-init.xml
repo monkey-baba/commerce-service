@@ -14,7 +14,7 @@
       <column name="address_id" type="BIGINT" remarks="地址ID"/>
       <column name="owner" type="VARCHAR(32)" remarks="负责人"/>
       <column name="contact" type="VARCHAR(255)" remarks="联系方式"/>
-      <column name="type" type="VARCHAR(32)" remarks="类型"/>
+      <column name="type_id" type="BIGINT" remarks="类型(门店或大仓)"/>
     </createTable>
     <addPrimaryKey tableName="pointofservice" columnNames="id"/>
   </changeSet>

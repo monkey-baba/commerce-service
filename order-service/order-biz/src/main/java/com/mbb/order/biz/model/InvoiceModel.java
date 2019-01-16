@@ -1,7 +1,6 @@
 package com.mbb.order.biz.model;
 
 import com.mbb.common.model.BaseModel;
-import com.mbb.order.biz.enumation.InvoiceType;
 import javax.persistence.Table;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -12,7 +11,7 @@ import lombok.EqualsAndHashCode;
 public class InvoiceModel extends BaseModel {
 
     private Boolean applied;
-    private InvoiceType type;
+    private Long typeId;
     private String title;
     private Double amount;
     private Long orderId;

@@ -13,7 +13,7 @@
       <column name="name" type="VARCHAR(255)" remarks="名称"/>
       <column name="channel_id" type="BIGINT" remarks="渠道"/>
       <column name="unit_id" type="BIGINT" remarks="单位"/>
-      <column name="approved" type="VARCHAR(32)" remarks="发布状态"/>
+      <column name="approved_id" type="BIGINT" remarks="发布状态"/>
       <column name="images" type="VARCHAR(4096)" remarks="图片地址"/>
       <column name="attribute" type="JSON" remarks="商品属性"/>
     </createTable>
