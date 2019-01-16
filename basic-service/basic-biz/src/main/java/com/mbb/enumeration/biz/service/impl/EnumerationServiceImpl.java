@@ -2,9 +2,10 @@ package com.mbb.enumeration.biz.service.impl;
 
 import com.lxm.idgenerator.service.intf.IdService;
 import com.mbb.basic.biz.dao.EnumerationMapper;
+import com.mbb.basic.biz.model.DictionaryModel;
 import com.mbb.enumeration.biz.dto.EnumerationInfoDto;
 import com.mbb.enumeration.biz.dto.EnumerationQueryDto;
-import com.mbb.enumeration.biz.model.EnumerationModel;
+import com.mbb.enumeration.biz.model.DictionaryModel;
 import com.mbb.enumeration.biz.service.EnumerationService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -46,22 +47,22 @@ public class EnumerationServiceImpl implements EnumerationService {
         Example example = mapQueryInfo(enumerationQueryDto);
         //封装分页参数
         RowBounds rowBounds = mapRowBounds(enumerationQueryDto);
-        List<EnumerationModel> enumerationModels = enumerationMapper.selectByExampleAndRowBounds(example, rowBounds);
-        logger.info("enumeration size====" + enumerationModels.size());
+        List<DictionaryModel> dictionaryModels = enumerationMapper.selectByExampleAndRowBounds(example, rowBounds);
+        logger.info("enumeration size====" + dictionaryModels.size());
         //处理返回结果
-        return dealResult(enumerationModels);
+        return dealResult(dictionaryModels);
     }
 
     @Override
     public void addEnumeration(List<EnumerationInfoDto> enumerationInfoDtoList) {
         if (!CollectionUtils.isEmpty(enumerationInfoDtoList)) {
             for (EnumerationInfoDto enumerationInfoDto : enumerationInfoDtoList) {
-                EnumerationModel enumerationModel = new EnumerationModel();
-                enumerationModel.setId(idService.genId());
-                enumerationModel.setCode(enumerationInfoDto.getCode());
-                enumerationModel.setName(enumerationInfoDto.getName());
-                enumerationModel.setVersion(1);
-                enumerationMapper.insert(enumerationModel);
+                DictionaryModel dictionaryModel = new DictionaryModel();
+                dictionaryModel.setId(idService.genId());
+                dictionaryModel.setCode(enumerationInfoDto.getCode());
+                dictionaryModel.setName(enumerationInfoDto.getName());
+                dictionaryModel.setVersion(1);
+                enumerationMapper.insert(dictionaryModel);
             }
         }
     }
@@ -71,19 +72,19 @@ public class EnumerationServiceImpl implements EnumerationService {
         enumerationMapper.deleteByPrimaryKey(id);
     }
 
-    private List<EnumerationInfoDto> dealResult(List<EnumerationModel> enumerationModels) {
+    private List<EnumerationInfoDto> dealResult(List<DictionaryModel> dictionaryModels) {
         List<EnumerationInfoDto> enumerationInfoDtoList = new ArrayList<>();
-        if (!CollectionUtils.isEmpty(enumerationModels)) {
-            for (EnumerationModel enumerationModel : enumerationModels) {
+        if (!CollectionUtils.isEmpty(dictionaryModels)) {
+            for (DictionaryModel dictionaryModel : dictionaryModels) {
                 EnumerationInfoDto enumerationInfoDto = new EnumerationInfoDto();
                 //ID
-                enumerationInfoDto.setId(String.valueOf(enumerationModel.getId()));
+                enumerationInfoDto.setId(String.valueOf(dictionaryModel.getId()));
                 //编码
-                enumerationInfoDto.setCode(enumerationModel.getCode());
+                enumerationInfoDto.setCode(dictionaryModel.getCode());
                 //客户名称
-                enumerationInfoDto.setName(enumerationModel.getName());
+                enumerationInfoDto.setName(dictionaryModel.getName());
                 //乐观锁
-                enumerationInfoDto.setVersion(enumerationModel.getVersion());
+                enumerationInfoDto.setVersion(dictionaryModel.getVersion());
 
                 enumerationInfoDtoList.add(enumerationInfoDto);
             }
@@ -96,7 +97,7 @@ public class EnumerationServiceImpl implements EnumerationService {
         String code = enumerationQueryDto.getCode();
         //名称
         String name = enumerationQueryDto.getName();
-        Example example = new Example(EnumerationModel.class);
+        Example example = new Example(DictionaryModel.class);
         Example.Criteria criteria = example.createCriteria();
         if (StringUtils.isNotBlank(code)) {
             criteria.andLike("code", "%" + code + "%");
