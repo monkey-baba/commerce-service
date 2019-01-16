@@ -13,6 +13,4 @@ public class DictionaryModel extends BaseModel {
 
     private String code;
     private String name;
-    private DictionaryType type;
-
 }

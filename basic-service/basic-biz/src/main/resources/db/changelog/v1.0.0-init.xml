@@ -9,14 +9,29 @@
     <createTable tableName="dictionary" remarks="数据字典">
       <column name="id" type="BIGINT" remarks="ID"/>
       <column name="version" type="INT" remarks="乐观锁"/>
-      <column name="code" type="VARCHAR(32)" remarks="编码"/>
+      <column name="code" type="VARCHAR(255)" remarks="编码"/>
       <column name="name" type="VARCHAR(255)" remarks="名称"/>
-      <column name="type" type="VARCHAR(32)" remarks="类型"/>
     </createTable>
     <addPrimaryKey tableName="dictionary" columnNames="id"/>
   </changeSet>
 
   <changeSet id="2" author="ZQian">
+    <createTable tableName="dictionary_value" remarks="数据字典">
+      <column name="id" type="BIGINT" remarks="ID"/>
+      <column name="version" type="INT" remarks="乐观锁"/>
+      <column name="code" type="VARCHAR(255)" remarks="编码"/>
+      <column name="name" type="VARCHAR(255)" remarks="名称"/>
+      <column name="description" type="VARCHAR(255)" remarks="描述"/>
+      <column name="type_id" type="BIGINT" remarks="字典ID"/>
+      <column name="attribute1" type="VARCHAR(255)" remarks="预留字段1"/>
+      <column name="attribute2" type="VARCHAR(255)" remarks="预留字段2"/>
+      <column name="attribute3" type="VARCHAR(255)" remarks="预留字段3"/>
+      <column name="active" type="TINYINT(1)" remarks="是否启用"/>
+    </createTable>
+    <addPrimaryKey tableName="dictionary_value" columnNames="id"/>
+  </changeSet>
+
+  <changeSet id="3" author="ZQian">
     <createTable tableName="address" remarks="地址">
       <column name="id" type="BIGINT" remarks="ID"/>
       <column name="version" type="INT" remarks="乐观锁"/>
