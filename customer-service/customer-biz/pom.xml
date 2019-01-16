@@ -66,6 +66,12 @@
       <version>${project.version}</version>
     </dependency>
 
+    <dependency>
+      <groupId>xin.yuki</groupId>
+      <artifactId>id-generator-spring-boot-starter</artifactId>
+      <version>2.3</version>
+    </dependency>
+
   </dependencies>
 
 
