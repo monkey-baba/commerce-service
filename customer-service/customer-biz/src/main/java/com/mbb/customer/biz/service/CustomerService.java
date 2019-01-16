@@ -1,7 +1,6 @@
 package com.mbb.customer.biz.service;
 
-import com.mbb.customer.biz.dto.CustomerInfoDto;
-import com.mbb.customer.biz.dto.CustomerQueryDto;
+import com.mbb.customer.biz.model.CustomerModel;
 
 import java.util.List;
 
@@ -16,17 +15,17 @@ public interface CustomerService {
     /**
      * 查询客户
      *
-     * @param customerQueryDto
+     * @param customerModel
      * @return
      */
-    List<CustomerInfoDto> getCustomers(CustomerQueryDto customerQueryDto);
+    List<CustomerModel> getCustomers(CustomerModel customerModel);
 
     /**
      * 新增客户
      *
-     * @param customerInfoDtoList
+     * @param customerModel
      */
-    void addCustomer(List<CustomerInfoDto> customerInfoDtoList);
+    void createStock(CustomerModel customerModel);
 
     /**
      * 删除客户
@@ -34,4 +33,5 @@ public interface CustomerService {
      * @param id
      */
     void deleteCustomer(String id);
+
 }

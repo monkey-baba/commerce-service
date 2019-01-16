@@ -1,6 +1,5 @@
 package com.mbb.product.biz.data;
 
-import com.mbb.product.biz.enumation.ApprovedStatus;
 import lombok.Data;
 
 import java.util.List;
@@ -11,7 +10,6 @@ public class ProductData {
     private String name;
     private Long channelId;
     private Long unitId;
-    private ApprovedStatus approved;
     private List<String> images;
     private Map<Long,String> attribute;
 

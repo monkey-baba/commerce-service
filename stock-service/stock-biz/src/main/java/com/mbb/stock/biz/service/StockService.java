@@ -1,7 +1,6 @@
 package com.mbb.stock.biz.service;
 
-import com.mbb.stock.biz.dto.StockInfoDto;
-import com.mbb.stock.biz.dto.StockQueryDto;
+import com.mbb.stock.biz.model.StockModel;
 
 import java.util.List;
 
@@ -16,17 +15,17 @@ public interface StockService {
     /**
      * 库存查询
      *
-     * @param stockQueryDto
+     * @param stockModel
      * @return
      */
-    List<StockInfoDto> getStocks(StockQueryDto stockQueryDto);
+    List<StockModel> getStocks(StockModel stockModel);
 
     /**
      * 新增库存
      *
-     * @param stockInfoDtoList
+     * @param stockModel
      */
-    void addStock(List<StockInfoDto> stockInfoDtoList);
+    void createStock(StockModel stockModel);
 
     /**
      * 删除库存
@@ -34,7 +33,5 @@ public interface StockService {
      * @param id
      */
     void deleteStock(String id);
-
-    List<StockInfoDto> getAllStocks();
 
 }

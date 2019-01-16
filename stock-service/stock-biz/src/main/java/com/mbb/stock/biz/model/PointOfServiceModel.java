@@ -16,5 +16,7 @@ public class PointOfServiceModel extends BaseModel {
     private String owner;
     private String contact;
     private Long typeId;
+    private Long statusId;
+    private Long classifyId;
 
 }
