@@ -1,6 +1,7 @@
 package com.mbb.dictionaryvalue.biz.service;
 import com.mbb.dictionaryvalue.biz.dto.DictionaryValueInfoDto;
 import com.mbb.dictionaryvalue.biz.dto.DictionaryValueQueryDto;
+import com.mbb.dictionaryvalue.biz.dto.DictionaryValueResponse;
 
 import java.util.List;
 
@@ -20,7 +21,7 @@ public interface DictionaryValueService {
      * @param dictionaryValueQueryDto
      * @return
      */
-    List<DictionaryValueInfoDto> getDictionaryValues(DictionaryValueQueryDto dictionaryValueQueryDto);
+    List<DictionaryValueResponse> getDictionaryValues(DictionaryValueQueryDto dictionaryValueQueryDto);
 
     /**
      * 新增枚举

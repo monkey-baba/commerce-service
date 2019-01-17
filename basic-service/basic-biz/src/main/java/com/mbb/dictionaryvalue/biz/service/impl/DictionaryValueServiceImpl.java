@@ -42,7 +42,7 @@ public class DictionaryValueServiceImpl implements DictionaryValueService {
 
 
     @Override
-    public List<DictionaryValueInfoDto> getDictionaryValues(DictionaryValueQueryDto dictionaryValueQueryDto) {
+    public List<DictionaryValueResponse> getDictionaryValues(DictionaryValueQueryDto dictionaryValueQueryDto) {
         //封装查询Example
         Example example = mapQueryInfo(dictionaryValueQueryDto);
         //封装分页参数
