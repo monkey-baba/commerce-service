@@ -1,21 +1,14 @@
 package com.mbb.dictionary.rest.controller;
 
-import com.github.pagehelper.PageHelper;
-import com.github.pagehelper.PageInfo;
-import com.mbb.basic.biz.model.DictionaryValueValueModel;
 import com.mbb.basic.rest.controller.BaseController;
-import com.mbb.dictionaryValue.biz.dto.DictionaryValueInfoDto;
-import com.mbb.dictionaryValue.biz.dto.DictionaryValueListQuery;
-import com.mbb.dictionaryValue.biz.dto.DictionaryValueListResp;
-import com.mbb.dictionaryValue.biz.dto.DictionaryValueQueryDto;
-import com.mbb.dictionaryValue.biz.service.DictionaryValueService;
+import com.mbb.dictionaryvalue.biz.dto.DictionaryValueInfoDto;
+import com.mbb.dictionaryvalue.biz.dto.DictionaryValueQueryDto;
+import com.mbb.dictionaryvalue.biz.service.DictionaryValueService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.stream.Collectors;
-
 /**
  * ${DESCRIPTION}
  *
@@ -24,7 +17,7 @@ import java.util.stream.Collectors;
  */
 @RestController
 @RequestMapping("api/v1/dictionaryValue")
-public class DictionaryValueValueController extends BaseController {
+public class DictionaryValueController extends BaseController {
 
     @Autowired
     private DictionaryValueService dictionaryValueService;

@@ -3,6 +3,7 @@ package com.mbb.basic.biz.service.impl;
 import com.lxm.idgenerator.service.intf.IdService;
 import com.mbb.basic.biz.dao.DictionaryMapper;
 import com.mbb.basic.biz.dto.DictionaryInfoDto;
+import com.mbb.basic.biz.dto.DictionaryInfoResponse;
 import com.mbb.basic.biz.dto.DictionaryQueryDto;
 import com.mbb.basic.biz.model.DictionaryModel;
 import com.mbb.basic.biz.service.DictionaryService;
@@ -41,7 +42,7 @@ public class DictionaryServiceImpl implements DictionaryService {
 
 
     @Override
-    public List<DictionaryInfoDto> getDictionarys(DictionaryQueryDto dictionaryQueryDto) {
+    public List<DictionaryInfoResponse> getDictionarys(DictionaryQueryDto dictionaryQueryDto) {
         //封装查询Example
         Example example = mapQueryInfo(dictionaryQueryDto);
         //封装分页参数
@@ -53,13 +54,13 @@ public class DictionaryServiceImpl implements DictionaryService {
     }
 
     @Override
-    public void addDictionary(List<DictionaryInfoDto> dictionaryInfoDtoList) {
-        if (!CollectionUtils.isEmpty(dictionaryInfoDtoList)) {
-            for (DictionaryInfoDto dictionaryInfoDto : dictionaryInfoDtoList) {
+    public void addDictionary(List<DictionaryInfoDto> dictionaryResponseList) {
+        if (!CollectionUtils.isEmpty(dictionaryResponseList)) {
+            for (DictionaryInfoDto dictionaryResponse : dictionaryResponseList) {
                 DictionaryModel dictionaryModel = new DictionaryModel();
                 dictionaryModel.setId(idService.genId());
-                dictionaryModel.setCode(dictionaryInfoDto.getCode());
-                dictionaryModel.setName(dictionaryInfoDto.getName());
+                dictionaryModel.setCode(dictionaryResponse.getCode());
+                dictionaryModel.setName(dictionaryResponse.getName());
                 dictionaryModel.setVersion(1);
                 dictionaryMapper.insert(dictionaryModel);
             }
@@ -71,26 +72,26 @@ public class DictionaryServiceImpl implements DictionaryService {
         dictionaryMapper.deleteByPrimaryKey(id);
     }
 
-    private List<DictionaryInfoDto> dealResult(List<DictionaryModel> dictionaryModels) {
-        List<DictionaryInfoDto> dictionaryInfoDtoList = new ArrayList<>();
+    private List<DictionaryInfoResponse> dealResult(List<DictionaryModel> dictionaryModels) {
+        List<DictionaryInfoResponse> dictionaryResponseList = new ArrayList<>();
         if (!CollectionUtils.isEmpty(dictionaryModels)) {
             for (DictionaryModel dictionaryModel : dictionaryModels) {
-                DictionaryInfoDto dictionaryInfoDto = new DictionaryInfoDto();
+                DictionaryInfoResponse dictionaryResponse = new DictionaryInfoResponse();
                 //ID
-                dictionaryInfoDto.setId(String.valueOf(dictionaryModel.getId()));
+                dictionaryResponse.setId(String.valueOf(dictionaryModel.getId()));
                 //编码
-                dictionaryInfoDto.setCode(dictionaryModel.getCode());
+                dictionaryResponse.setCode(dictionaryModel.getCode());
                 //客户名称
-                dictionaryInfoDto.setName(dictionaryModel.getName());
+                dictionaryResponse.setName(dictionaryModel.getName());
                 //乐观锁
                 if(dictionaryModel.getVersion()!=null){
-                    dictionaryInfoDto.setVersion(dictionaryModel.getVersion().toString());
+                    dictionaryResponse.setVersion(dictionaryModel.getVersion().toString());
                 }
 
-                dictionaryInfoDtoList.add(dictionaryInfoDto);
+                dictionaryResponseList.add(dictionaryResponse);
             }
         }
-        return dictionaryInfoDtoList;
+        return dictionaryResponseList;
     }
 
     private Example mapQueryInfo(DictionaryQueryDto dictionaryQueryDto) {
