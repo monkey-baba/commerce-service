@@ -5,6 +5,7 @@ import com.github.pagehelper.PageInfo;
 import com.lxm.idgenerator.service.intf.IdService;
 import com.mbb.stock.biz.model.WarehouseModel;
 import com.mbb.stock.biz.service.WarehouseService;
+import com.mbb.stock.rest.dto.StockInfoResp;
 import com.mbb.stock.rest.dto.WarehouseCreateData;
 import com.mbb.stock.rest.dto.WarehouseInfoResp;
 import com.mbb.stock.rest.dto.WarehouseListQuery;
@@ -44,7 +45,11 @@ public class WarehouseController {
         //获取页码等信息
         PageInfo<WarehouseModel> origin = PageInfo.of(warehouses);
         //从model转data
-        List<WarehouseInfoResp> stockInfoRespList = dealResult(origin);
+        List<WarehouseInfoResp> stockInfoRespList = origin.getList().stream().map(warehouse -> {
+            WarehouseInfoResp warehouseInfoResp = new WarehouseInfoResp();
+            convert(warehouse, warehouseInfoResp);
+            return warehouseInfoResp;
+        }).collect(Collectors.toList());
         //用data生成新的分页数据
         PageInfo<WarehouseInfoResp> result = PageInfo.of(stockInfoRespList);
         result.setTotal(origin.getTotal());
@@ -69,12 +74,7 @@ public class WarehouseController {
         warehouseModel.setVersion(0);
         warehouseService.createWarehouse(warehouseModel);
         WarehouseInfoResp warehouseInfoResp = new WarehouseInfoResp();
-        warehouseInfoResp.setId(warehouseModel.getId());
-        warehouseInfoResp.setCode(warehouseModel.getCode());
-        warehouseInfoResp.setName(warehouseModel.getName());
-        Boolean activeBoolean = warehouseModel.getActive();
-        warehouseInfoResp.setActive(activeBoolean != null && activeBoolean ? "1" : "0");
-        warehouseInfoResp.setPosId(warehouseModel.getPosId());
+        convert(warehouseModel, warehouseInfoResp);
         return ResponseEntity.ok(warehouseInfoResp);
     }
 
@@ -84,25 +84,20 @@ public class WarehouseController {
         return ResponseEntity.ok(Boolean.TRUE);
     }
 
-    private List<WarehouseInfoResp> dealResult(PageInfo<WarehouseModel> warehouses) {
-        List<WarehouseInfoResp> warehouseInfoRespList = warehouses.getList().stream().map(warehouseModel -> {
-            WarehouseInfoResp warehouseInfoResp = new WarehouseInfoResp();
-            //主键
-            warehouseInfoResp.setId(warehouseModel.getId());
-            //仓库编码
-            warehouseInfoResp.setCode(warehouseModel.getCode());
-            //仓库名称
-            warehouseInfoResp.setName(warehouseModel.getName());
-            //是否启用
-            Boolean active = warehouseModel.getActive();
-            warehouseInfoResp.setActive(active != null && active ? "1" : "0");
-            //所属供货点
-            warehouseInfoResp.setPosId(warehouseModel.getPosId());
-            //仓库地址
-            return warehouseInfoResp;
-
-        }).collect(Collectors.toList());
-        return warehouseInfoRespList;
+    private WarehouseInfoResp convert(WarehouseModel warehouseModel, WarehouseInfoResp warehouseInfoResp) {
+        //主键
+        warehouseInfoResp.setId(warehouseModel.getId());
+        //仓库编码
+        warehouseInfoResp.setCode(warehouseModel.getCode());
+        //仓库名称
+        warehouseInfoResp.setName(warehouseModel.getName());
+        //是否启用
+        Boolean active = warehouseModel.getActive();
+        warehouseInfoResp.setActive(active != null && active ? "1" : "0");
+        //所属供货点
+        warehouseInfoResp.setPosId(warehouseModel.getPosId());
+        //仓库地址
+        return warehouseInfoResp;
     }
 
 }

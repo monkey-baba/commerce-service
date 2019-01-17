@@ -2,7 +2,6 @@ package com.mbb.stock.biz.service.impl;
 
 import com.lxm.idgenerator.service.intf.IdService;
 import com.mbb.stock.biz.dao.WarehouseMapper;
-import com.mbb.stock.biz.model.StockModel;
 import com.mbb.stock.biz.model.WarehouseModel;
 import com.mbb.stock.biz.service.WarehouseService;
 import lombok.extern.slf4j.Slf4j;
@@ -60,7 +59,7 @@ public class WarehouseServiceImpl implements WarehouseService {
         String code = warehouseModel.getCode();
         //仓库名称
         String name = warehouseModel.getName();
-        Example example = new Example(StockModel.class);
+        Example example = new Example(WarehouseModel.class);
         Example.Criteria criteria = example.createCriteria();
         if (StringUtils.isNotBlank(code)) {
             criteria.andLike("code", "%" + code + "%");

@@ -43,13 +43,13 @@ public class DictionaryServiceImpl implements DictionaryService {
 
     @Override
     public List<DictionaryInfoResponse> getDictionarys(DictionaryQueryDto dictionaryQueryDto) {
-        //å°è£…æŸ¥è¯¢Example
+        //·â×°²éÑ¯Example
         Example example = mapQueryInfo(dictionaryQueryDto);
-        //å°è£…åˆ†é¡µå‚æ•°
+        //·â×°·ÖÒ³²ÎÊı
         RowBounds rowBounds = mapRowBounds(dictionaryQueryDto);
         List<DictionaryModel> dictionaryModels = dictionaryMapper.selectByExampleAndRowBounds(example, rowBounds);
         logger.info("dictionary size====" + dictionaryModels.size());
-        //å¤„ç†è¿”å›ç»“æœ
+        //´¦Àí·µ»Ø½á¹û
         return dealResult(dictionaryModels);
     }
 
@@ -79,11 +79,11 @@ public class DictionaryServiceImpl implements DictionaryService {
                 DictionaryInfoResponse dictionaryResponse = new DictionaryInfoResponse();
                 //ID
                 dictionaryResponse.setId(String.valueOf(dictionaryModel.getId()));
-                //ç¼–ç 
+                //±àÂë
                 dictionaryResponse.setCode(dictionaryModel.getCode());
-                //å®¢æˆ·åç§°
+                //¿Í»§Ãû³Æ
                 dictionaryResponse.setName(dictionaryModel.getName());
-                //ä¹è§‚é”
+                //ÀÖ¹ÛËø
                 if(dictionaryModel.getVersion()!=null){
                     dictionaryResponse.setVersion(dictionaryModel.getVersion().toString());
                 }
@@ -95,9 +95,9 @@ public class DictionaryServiceImpl implements DictionaryService {
     }
 
     private Example mapQueryInfo(DictionaryQueryDto dictionaryQueryDto) {
-        //ç¼–ç 
+        //±àÂë
         String code = dictionaryQueryDto.getCode();
-        //åç§°
+        //Ãû³Æ
         String name = dictionaryQueryDto.getName();
         Example example = new Example(DictionaryModel.class);
         Example.Criteria criteria = example.createCriteria();

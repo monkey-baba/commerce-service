@@ -78,6 +78,19 @@
       <version>${project.version}</version>
     </dependency>
 
+    <!--Common-->
+    <dependency>
+      <groupId>com.mbb</groupId>
+      <artifactId>auth-adapter</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+
+    <dependency>
+      <groupId>com.mbb</groupId>
+      <artifactId>auth-common</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+
     <dependency>
       <groupId>xin.yuki</groupId>
       <artifactId>auth-manager-spring-boot-starter</artifactId>

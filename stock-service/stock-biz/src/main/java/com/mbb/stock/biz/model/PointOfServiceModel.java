@@ -1,6 +1,7 @@
 package com.mbb.stock.biz.model;
 
 import com.mbb.common.model.BaseModel;
+import com.mbb.stock.common.enumation.PosType;
 import javax.persistence.Table;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -15,7 +16,7 @@ public class PointOfServiceModel extends BaseModel {
     private Long addressId;
     private String owner;
     private String contact;
-    private Long typeId;
+    private PosType posType;
     private Long statusId;
     private Long classifyId;
 

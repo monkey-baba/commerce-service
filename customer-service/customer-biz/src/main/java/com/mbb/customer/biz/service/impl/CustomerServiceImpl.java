@@ -50,8 +50,23 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
-    public void deleteCustomer(String id) {
-        customerMapper.deleteByPrimaryKey(id);
+    public void deleteCustomer(String code) {
+        logger.info("code==" + code);
+        Example example = new Example(CustomerModel.class);
+        Example.Criteria criteria = example.createCriteria();
+        criteria.andEqualTo("code", code);
+        CustomerModel customerModel = customerMapper.selectOneByExample(example);
+        customerMapper.deleteByPrimaryKey(customerModel);
+    }
+
+    @Override
+    public CustomerModel findById(Long id) {
+        return customerMapper.selectByPrimaryKey(id);
+    }
+
+    @Override
+    public void updateCustomer(CustomerModel customerModel) {
+        this.customerMapper.updateByPrimaryKey(customerModel);
     }
 
     private Example mapQueryInfo(CustomerModel customerModel) {

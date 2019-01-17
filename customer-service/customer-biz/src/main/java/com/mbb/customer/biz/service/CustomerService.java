@@ -30,8 +30,23 @@ public interface CustomerService {
     /**
      * 删除客户
      *
-     * @param id
+     * @param code
      */
-    void deleteCustomer(String id);
+    void deleteCustomer(String code);
+
+    /**
+     * 根据id查找客户
+     *
+     * @param id
+     * @return
+     */
+    CustomerModel findById(Long id);
+
+    /**
+     * 更新客户
+     *
+     * @param customerModel
+     */
+    void updateCustomer(CustomerModel customerModel);
 
 }

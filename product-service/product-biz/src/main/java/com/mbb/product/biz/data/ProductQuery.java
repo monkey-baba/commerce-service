@@ -6,7 +6,8 @@ import lombok.Data;
 public class ProductQuery {
     private String code;
     private String name;
-    private String category;
-    private String channel;
-    private String approvalStatus;
+    private Long channelId;
+    private Long approvedId;
+    private Integer pageNum;
+    private Integer pageSize;
 }

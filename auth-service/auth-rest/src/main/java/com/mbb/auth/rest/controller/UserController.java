@@ -16,6 +16,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -36,6 +37,7 @@ import xin.yuki.auth.core.service.UserService;
 
 @RestController
 @RequestMapping("/api/v1/user")
+@Slf4j
 public class UserController extends BaseController {
 
     @Autowired
@@ -191,6 +193,8 @@ public class UserController extends BaseController {
         resp.setMobileNumber(user.getMobileNumber());
         resp.setName(user.getName());
         resp.setUsername(user.getUsername());
+        resp.setRoles(Collections.emptyList());
+        resp.setGroups(Collections.emptyList());
         return ResponseEntity.ok(resp);
     }
 

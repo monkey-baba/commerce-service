@@ -47,6 +47,12 @@
     {% endif %}
     {% endif %}
 
+    <dependency>
+      <groupId>{{ group }}</groupId>
+      <artifactId>{{ name }}-common</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+
   </dependencies>
 
 
