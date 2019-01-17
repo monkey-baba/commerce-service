@@ -1,4 +1,4 @@
-package com.mbb.enumeration.rest.controller;
+package com.mbb.dictionary.rest.controller;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;

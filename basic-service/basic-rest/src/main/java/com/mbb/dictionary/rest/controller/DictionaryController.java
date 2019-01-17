@@ -1,11 +1,9 @@
 package com.mbb.dictionary.rest.controller;
 
+import com.mbb.basic.biz.dto.DictionaryInfoDto;
+import com.mbb.basic.biz.dto.DictionaryQueryDto;
+import com.mbb.basic.biz.service.DictionaryService;
 import com.mbb.basic.rest.controller.BaseController;
-import com.mbb.dictionary.biz.dto.DictionaryListQuery;
-import com.mbb.dictionary.biz.dto.DictionaryListResp;
-import com.mbb.dictionary.biz.dto.DictionaryInfoDto;
-import com.mbb.dictionary.biz.dto.DictionaryQueryDto;
-import com.mbb.dictionary.biz.service.DictionaryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
