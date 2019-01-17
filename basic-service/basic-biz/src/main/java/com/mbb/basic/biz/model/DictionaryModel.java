@@ -1,6 +1,5 @@
 package com.mbb.basic.biz.model;
 
-import com.mbb.basic.biz.enumation.DictionaryType;
 import com.mbb.common.model.BaseModel;
 import javax.persistence.Table;
 import lombok.Data;
@@ -13,6 +12,4 @@ public class DictionaryModel extends BaseModel {
 
     private String code;
     private String name;
-    private String id;
-    private String version;
 }

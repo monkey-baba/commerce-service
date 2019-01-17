@@ -1,9 +1,9 @@
-package com.mbb.enumeration.biz.dto;
+package com.mbb.dictionaryvalue.biz.dto;
 
 import lombok.Data;
 
 @Data
-public class EnumerationQueryDto {
+public class DictionaryValueQueryDto {
 
     private String id;
     private String version;

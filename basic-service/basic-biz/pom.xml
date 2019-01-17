@@ -65,6 +65,12 @@
       <artifactId>commerce-common</artifactId>
       <version>${project.version}</version>
     </dependency>
+      <dependency>
+          <groupId>com.lxm</groupId>
+          <artifactId>id-generator-interface</artifactId>
+          <version>2.3</version>
+          <scope>compile</scope>
+      </dependency>
 
   </dependencies>
 

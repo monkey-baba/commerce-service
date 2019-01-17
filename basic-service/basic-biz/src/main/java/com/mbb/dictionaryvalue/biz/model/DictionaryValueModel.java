@@ -1,13 +1,14 @@
-package com.mbb.basic.biz.model;
+package com.mbb.dictionaryValuevalue.biz.model;
 
 import com.mbb.common.model.BaseModel;
-import javax.persistence.Table;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
+import javax.persistence.Table;
+
 @EqualsAndHashCode(callSuper = true)
 @Data
-@Table(name = "dictionary_value")
+@Table(name = "dictionaryValue_value")
 public class DictionaryValueModel extends BaseModel {
 
     private String code;
