@@ -2,36 +2,16 @@ package com.mbb.stock.biz.dto;
 
 public class StoreInfoDto {
     private String name;
-    private String address;
-    private String status;
 
-    public String getClassifyid() {
-        return classifyid;
+    public Long getClassifyid() {
+        return Classifyid;
     }
 
-    public void setClassifyid(String classifyid) {
-        this.classifyid = classifyid;
+    public void setClassifyid(Long classifyid) {
+        Classifyid = classifyid;
     }
 
-    private String classifyid;
-    public String getContact() {
-        return contact;
-    }
-
-    public void setContact(String contact) {
-        this.contact = contact;
-    }
-
-    private String contact;
-    public String getCode() {
-        return code;
-    }
-
-    public void setCode(String code) {
-        this.code = code;
-    }
-
-    private String code;
+    private Long Classifyid;
     public String getName() {
         return name;
     }
@@ -40,20 +20,36 @@ public class StoreInfoDto {
         this.name = name;
     }
 
-    public String getAddress() {
+    public Long getAddress() {
         return address;
     }
 
-    public void setAddress(String address) {
+    public void setAddress(Long address) {
         this.address = address;
     }
 
-    public String getStatus() {
+    public Long getStatus() {
         return status;
     }
 
-    public void setStatus(String status) {
+    public void setStatus(Long status) {
         this.status = status;
+    }
+
+    public String getContact() {
+        return contact;
+    }
+
+    public void setContact(String contact) {
+        this.contact = contact;
+    }
+
+    public String getCode() {
+        return code;
+    }
+
+    public void setCode(String code) {
+        this.code = code;
     }
 
     public String getOwner() {
@@ -64,5 +60,9 @@ public class StoreInfoDto {
         this.owner = owner;
     }
 
+    private Long address;
+    private Long status;
+    private String contact;
+    private String code;
     private String owner;
 }

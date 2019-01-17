@@ -35,15 +35,11 @@ public class StoreServiceImpl implements StoreService {
     private IdService idService;
 
     @Override
-    public List<StoreInfoDto> getStores(StoreListQuery storeListQuery) {
-        //封装查询Example
-        Example example = mapQueryInfo(storeListQuery);
-        //封装分页参数
-        RowBounds rowBounds = mapRowBounds(storeListQuery);
-        List<PointOfServiceModel> storeModels = storeMapper.selectByExampleAndRowBounds(example, rowBounds);
+    public List<PointOfServiceModel> getStores(PointOfServiceModel storeModel) {
+        Example example = mapQueryInfo(storeModel);
+        List<PointOfServiceModel> storeModels = storeMapper.selectByExample(example);
         logger.info("stock size====" + storeModels.size());
-        //处理返回结果
-        return dealResult(storeModels);
+        return storeModels;
     }
 
     @Override
@@ -63,14 +59,14 @@ public class StoreServiceImpl implements StoreService {
                 storeModel.setCode(storeInfoDto.getCode());
                 String name=storeInfoDto.getName();
                 storeModel.setName(StringUtils.isBlank(name) ? null : name);
-                String  classifyid=storeInfoDto.getClassifyid();
-                storeModel.setClassifyId(StringUtils.isBlank(classifyid) ? null : Long.valueOf(classifyid));
+                Long  classifyid=storeInfoDto.getClassifyid();
+                storeModel.setClassifyId(classifyid);
                 String contact=storeInfoDto.getContact();
                 storeModel.setContact(StringUtils.isBlank(contact) ? null :contact);
-                String address = storeInfoDto.getAddress();
-                storeModel.setAddressId(StringUtils.isBlank(address) ? null : Long.valueOf(address));
-                String status = storeInfoDto.getStatus();
-                storeModel.setStatusId(StringUtils.isBlank(status) ? null : Long.valueOf(status));
+                Long address = storeInfoDto.getAddress();
+                storeModel.setAddressId(address);
+                Long status = storeInfoDto.getStatus();
+                storeModel.setStatusId(status);
                 String owner = storeInfoDto.getOwner();
                 storeModel.setOwner(StringUtils.isBlank(owner) ? null : owner);
                 storeMapper.insert(storeModel);
@@ -88,10 +84,10 @@ public class StoreServiceImpl implements StoreService {
                 storeInfoDto.setName(String.valueOf(name == null ? "" : name));
                 //门店地址
                 Long address=storeModel.getAddressId();
-                storeInfoDto.setAddress(String.valueOf(address == null ? "" : String.valueOf(address)));
+                storeInfoDto.setAddress(address);
                 //门店状态
                 Long status=storeModel.getAddressId();
-                storeInfoDto.setStatus(String.valueOf(status == null ? "" : String.valueOf(status)));
+                storeInfoDto.setStatus(status);
                 //门店负责人
                 String owner=storeModel.getOwner();
                 storeInfoDto.setOwner(String.valueOf(owner == null ? "" : owner));
@@ -104,19 +100,19 @@ public class StoreServiceImpl implements StoreService {
 
 
 
-    private Example mapQueryInfo(StoreListQuery storeListQuery) {
+    private Example mapQueryInfo(PointOfServiceModel storeModel) {
         //门店名称
-        String name = storeListQuery.getName();
+        String name = storeModel.getName();
         //门店编码
-        String code = storeListQuery.getCode();
+        String code = storeModel.getCode();
         //门店分类
-        String type = storeListQuery.getType();
+        Long type = storeModel.getClassifyId();
         //门店状态
-        String status = storeListQuery.getStatus();
+        Long status = storeModel.getStatusId();
         //门店负责人
-        String owner = storeListQuery.getOwner();
+        String owner = storeModel.getOwner();
 
-        Example example = new Example(StockModel.class);
+        Example example = new Example(PointOfServiceModel.class);
         Example.Criteria criteria = example.createCriteria();
         if (StringUtils.isNotBlank(code)) {
             criteria.andLike("code", "%" + code + "%");

@@ -5,7 +5,44 @@ public class StoreListQuery {
     private String code;
     private String type;
     private String owner;
+    private String classification;
 
+    public String getClassification() {
+        return classification;
+    }
+
+    public void setClassification(String classification) {
+        this.classification = classification;
+    }
+
+    public String getPeople() {
+        return people;
+    }
+
+    public void setPeople(String people) {
+        this.people = people;
+    }
+
+    public Integer getPageNum() {
+        return pageNum;
+    }
+
+    public void setPageNum(Integer pageNum) {
+        this.pageNum = pageNum;
+    }
+
+    public Integer getPageSize() {
+        return pageSize;
+    }
+
+    public void setPageSize(Integer pageSize) {
+        this.pageSize = pageSize;
+    }
+
+    private String people;
+    private String status;
+    private Integer pageNum;
+    private Integer pageSize;
     public String getName() {
         return name;
     }
@@ -54,6 +91,5 @@ public class StoreListQuery {
         this.offset = offset;
     }
 
-    private String status;
     private String offset;
 }
