@@ -25,7 +25,7 @@ public class DictionaryController extends BaseController {
     private DictionaryService dictionaryService;
 
 
-    @PostMapping("/info")
+    @GetMapping("/info")
     public ResponseEntity getDictionarys(@RequestBody DictionaryQueryDto dictionaryQueryDto) {
         List<DictionaryInfoResponse> dictionaryInfoDtoList = dictionaryService.getDictionarys(dictionaryQueryDto);
         return ResponseEntity.ok(dictionaryInfoDtoList);
