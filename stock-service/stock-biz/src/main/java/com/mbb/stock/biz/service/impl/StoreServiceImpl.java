@@ -3,8 +3,6 @@ package com.mbb.stock.biz.service.impl;
 import com.lxm.idgenerator.service.intf.IdService;
 import com.mbb.stock.biz.dao.StockMapper;
 import com.mbb.stock.biz.dao.StoreMapper;
-import com.mbb.stock.biz.dto.StockInfoDto;
-import com.mbb.stock.biz.dto.StockQueryDto;
 import com.mbb.stock.biz.dto.StoreInfoDto;
 import com.mbb.stock.biz.dto.StoreListQuery;
 import com.mbb.stock.biz.model.PointOfServiceModel;

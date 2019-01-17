@@ -1,6 +1,5 @@
 package com.mbb.stock.rest.controller;
 
-import com.mbb.stock.biz.dto.StockInfoDto;
 import com.mbb.stock.biz.dto.StoreInfoDto;
 import com.mbb.stock.biz.service.StoreService;
 import org.springframework.beans.factory.annotation.Autowired;

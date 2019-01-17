@@ -1,6 +1,5 @@
 package com.mbb.stock.biz.service;
 
-import com.mbb.stock.biz.dto.StockInfoDto;
 import com.mbb.stock.biz.dto.StoreInfoDto;
 import com.mbb.stock.biz.dto.StoreListQuery;
 import java.util.List;
