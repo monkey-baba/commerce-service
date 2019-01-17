@@ -12,6 +12,7 @@ import com.mbb.auth.rest.dto.resp.GroupListResp;
 import com.mbb.auth.rest.dto.resp.UserChangeGroupResp;
 import com.mbb.auth.rest.dto.resp.UserGroupData;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -84,9 +85,6 @@ public class GroupController extends BaseController {
     }
 
 
-    /**
-     * 用户列表
-     */
     @GetMapping("/list")
     public ResponseEntity list(GroupListQuery query) {
         GroupModel group = new GroupModel();
@@ -146,6 +144,7 @@ public class GroupController extends BaseController {
         resp.setCode(group.getCode());
         resp.setName(group.getName());
         resp.setDescription(group.getDescription());
+        resp.setRoles(Collections.emptyList());
         return ResponseEntity.ok(resp);
     }
 
