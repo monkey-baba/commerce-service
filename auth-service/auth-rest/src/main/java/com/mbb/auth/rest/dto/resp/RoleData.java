@@ -3,7 +3,7 @@ package com.mbb.auth.rest.dto.resp;
 import lombok.Data;
 
 @Data
-public class UserRoleData {
+public class RoleData {
 
     private String label;
     private Long key;

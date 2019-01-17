@@ -4,6 +4,6 @@ import java.util.List;
 import lombok.Data;
 
 @Data
-public class UserChangeRoleResp {
+public class ChangeRoleResp {
     private List<String> roleNames;
 }
