@@ -1,6 +1,5 @@
 package com.mbb.basic.biz.model;
 
-import com.mbb.basic.biz.enumation.DictionaryType;
 import com.mbb.common.model.BaseModel;
 import javax.persistence.Table;
 import lombok.Data;

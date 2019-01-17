@@ -21,5 +21,6 @@
     <module>customer-app</module>
     <module>customer-biz</module>
     <module>customer-rest</module>
+    <module>customer-common</module>
   </modules>
 </project>

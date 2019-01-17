@@ -11,6 +11,7 @@
       <column name="version" type="INT" remarks="乐观锁"/>
       <column name="code" type="VARCHAR(255)" remarks="编码"/>
       <column name="name" type="VARCHAR(255)" remarks="名称"/>
+      <column name="editable" type="TINYINT(1)" remarks="可编辑"/>
     </createTable>
     <addPrimaryKey tableName="dictionary" columnNames="id"/>
   </changeSet>
@@ -42,5 +43,150 @@
       <column name="phone" type="VARCHAR(32)" remarks="联系电话"/>
     </createTable>
     <addPrimaryKey tableName="address" columnNames="id"/>
+  </changeSet>
+
+  <changeSet id="4" author="ZQian">
+    <comment>创建字典的基础数据</comment>
+    <insert tableName="dictionary">
+      <column name="id">1</column>
+      <column name="version">1</column>
+      <column name="code">PRODUCT_ATTR</column>
+      <column name="name">商品属性</column>
+      <column name="editable">0</column>
+    </insert>
+    <insert tableName="dictionary">
+      <column name="id">2</column>
+      <column name="version">1</column>
+      <column name="code">SKU_SPEC</column>
+      <column name="name">SKU规格</column>
+      <column name="editable">0</column>
+    </insert>
+    <insert tableName="dictionary">
+      <column name="id">3</column>
+      <column name="version">1</column>
+      <column name="code">CHANNEL</column>
+      <column name="name">销售渠道</column>
+      <column name="editable">0</column>
+    </insert>
+    <insert tableName="dictionary">
+      <column name="id">4</column>
+      <column name="version">1</column>
+      <column name="code">UNIT</column>
+      <column name="name">单位</column>
+      <column name="editable">0</column>
+    </insert>
+    <insert tableName="dictionary">
+      <column name="id">5</column>
+      <column name="version">1</column>
+      <column name="code">PRICE_TYPE</column>
+      <column name="name">价格类型</column>
+      <column name="editable">0</column>
+    </insert>
+    <insert tableName="dictionary">
+      <column name="id">6</column>
+      <column name="version">1</column>
+      <column name="code">BASESTORE</column>
+      <column name="name">网店</column>
+      <column name="editable">0</column>
+    </insert>
+    <insert tableName="dictionary">
+      <column name="id">7</column>
+      <column name="version">1</column>
+      <column name="code">POS_TYPE</column>
+      <column name="name">POS类型</column>
+      <column name="editable">0</column>
+    </insert>
+    <insert tableName="dictionary">
+      <column name="id">8</column>
+      <column name="version">1</column>
+      <column name="code">APPROVED_STATUS</column>
+      <column name="name">产品发布状态</column>
+      <column name="editable">0</column>
+    </insert>
+    <insert tableName="dictionary">
+      <column name="id">9</column>
+      <column name="version">1</column>
+      <column name="code">POS_CLASSIFY</column>
+      <column name="name">门店分类</column>
+      <column name="editable">0</column>
+    </insert>
+    <insert tableName="dictionary">
+      <column name="id">10</column>
+      <column name="version">1</column>
+      <column name="code">POS_STATUS</column>
+      <column name="name">门店状态</column>
+      <column name="editable">0</column>
+    </insert>
+    <insert tableName="dictionary">
+      <column name="id">11</column>
+      <column name="version">1</column>
+      <column name="code">ORDER_STATUS</column>
+      <column name="name">订单状态</column>
+      <column name="editable">0</column>
+    </insert>
+    <insert tableName="dictionary">
+      <column name="id">12</column>
+      <column name="version">1</column>
+      <column name="code">ORDER_TYPE</column>
+      <column name="name">订单类型</column>
+      <column name="editable">0</column>
+    </insert>
+    <insert tableName="dictionary">
+      <column name="id">13</column>
+      <column name="version">1</column>
+      <column name="code">PLATFORM</column>
+      <column name="name">平台</column>
+      <column name="editable">0</column>
+    </insert>
+    <insert tableName="dictionary">
+      <column name="id">14</column>
+      <column name="version">1</column>
+      <column name="code">ORDER_SOURCE</column>
+      <column name="name">订单来源</column>
+      <column name="editable">0</column>
+    </insert>
+    <insert tableName="dictionary">
+      <column name="id">15</column>
+      <column name="version">1</column>
+      <column name="code">DELIVERY_TYPE</column>
+      <column name="name">配送方式</column>
+      <column name="editable">0</column>
+    </insert>
+    <insert tableName="dictionary">
+      <column name="id">16</column>
+      <column name="version">1</column>
+      <column name="code">CARRIER</column>
+      <column name="name">承运商</column>
+      <column name="editable">0</column>
+    </insert>
+    <insert tableName="dictionary">
+      <column name="id">17</column>
+      <column name="version">1</column>
+      <column name="code">INVOICE_TYPE</column>
+      <column name="name">发票类型</column>
+      <column name="editable">0</column>
+    </insert>
+    <insert tableName="dictionary">
+      <column name="id">18</column>
+      <column name="version">1</column>
+      <column name="code">PAYMENT_TYPE</column>
+      <column name="name">支付方式</column>
+      <column name="editable">0</column>
+    </insert>
+    <insert tableName="dictionary">
+      <column name="id">19</column>
+      <column name="version">1</column>
+      <column name="code">ROUTER_RULE_TYPE</column>
+      <column name="name">路由规则类型</column>
+      <column name="editable">0</column>
+    </insert>
+    <insert tableName="dictionary">
+      <column name="id">20</column>
+      <column name="version">1</column>
+      <column name="code">CONSIGNMENT_STATUS</column>
+      <column name="name">配货单状态</column>
+      <column name="editable">0</column>
+    </insert>
+
   </changeSet>
 </databaseChangeLog>

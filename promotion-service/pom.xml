@@ -21,5 +21,6 @@
     <module>promotion-app</module>
     <module>promotion-biz</module>
     <module>promotion-rest</module>
+    <module>promotion-common</module>
   </modules>
 </project>

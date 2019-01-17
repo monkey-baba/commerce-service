@@ -66,11 +66,19 @@
     </dependency>
     {% endif %}
 
-    <!-- Spring Cloud Ribbon -->
     {% if ribbon  %}
+    <!-- Spring Cloud Ribbon -->
     <dependency>
       <groupId>org.springframework.cloud</groupId>
       <artifactId>spring-cloud-starter-netflix-ribbon</artifactId>
+    </dependency>
+    {% endif %}
+
+    {% if feign  %}
+    <!-- Spring Cloud Feign -->
+    <dependency>
+      <groupId>org.springframework.cloud</groupId>
+      <artifactId>spring-cloud-starter-openfeign</artifactId>
     </dependency>
     {% endif %}
 

@@ -17,7 +17,12 @@
 
   <dependencies>
 
-
+    <dependency>
+      <groupId>org.projectlombok</groupId>
+      <artifactId>lombok</artifactId>
+      <version>1.18.2</version>
+      <optional>true</optional>
+    </dependency>
     <!-- Feign Consume -->
     <dependency>
       <groupId>org.springframework.cloud</groupId>
@@ -34,6 +39,12 @@
     <dependency>
       <groupId>org.springframework.cloud</groupId>
       <artifactId>spring-cloud-starter-netflix-hystrix</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>com.mbb</groupId>
+      <artifactId>basic-common</artifactId>
+      <version>${project.version}</version>
     </dependency>
 
   </dependencies>

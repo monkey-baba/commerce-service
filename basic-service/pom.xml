@@ -21,5 +21,6 @@
     <module>basic-app</module>
     <module>basic-biz</module>
     <module>basic-rest</module>
+    <module>basic-common</module>
   </modules>
 </project>

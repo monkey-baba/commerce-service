@@ -36,6 +36,12 @@
       <artifactId>spring-cloud-starter-netflix-hystrix</artifactId>
     </dependency>
 
+    <dependency>
+      <groupId>com.mbb</groupId>
+      <artifactId>auth-common</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+
   </dependencies>
 
 

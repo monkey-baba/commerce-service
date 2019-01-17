@@ -1,7 +1,5 @@
 package com.mbb.stock.biz.service;
 
-import com.mbb.stock.biz.dto.WarehouseInfoDto;
-import com.mbb.stock.biz.dto.WarehouseQueryDto;
 import com.mbb.stock.biz.model.WarehouseModel;
 
 import java.util.List;
@@ -17,17 +15,17 @@ public interface WarehouseService {
     /**
      * 仓库查询
      *
-     * @param warehouseQueryDto
+     * @param warehouseModel
      * @return
      */
-    List<WarehouseInfoDto> getWarehouses(WarehouseQueryDto warehouseQueryDto);
+    List<WarehouseModel> getWarehouses(WarehouseModel warehouseModel);
 
     /**
      * 新增仓库
      *
-     * @param warehouseInfoDtoList
+     * @param warehouseModel
      */
-    void addWarehouse(List<WarehouseInfoDto> warehouseInfoDtoList);
+    void createWarehouse(WarehouseModel warehouseModel);
 
     /**
      * 删除仓库
@@ -35,4 +33,5 @@ public interface WarehouseService {
      * @param id
      */
     void deleteWarehouse(String id);
+
 }

@@ -21,5 +21,6 @@
     <module>stock-app</module>
     <module>stock-biz</module>
     <module>stock-rest</module>
+    <module>stock-common</module>
   </modules>
 </project>

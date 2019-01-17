@@ -21,5 +21,6 @@
     <module>product-app</module>
     <module>product-biz</module>
     <module>product-rest</module>
+    <module>product-common</module>
   </modules>
 </project>

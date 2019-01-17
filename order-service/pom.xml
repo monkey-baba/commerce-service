@@ -21,5 +21,6 @@
     <module>order-app</module>
     <module>order-biz</module>
     <module>order-rest</module>
+    <module>order-common</module>
   </modules>
 </project>
