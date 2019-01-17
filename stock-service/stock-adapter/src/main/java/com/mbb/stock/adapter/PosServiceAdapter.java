@@ -16,9 +16,9 @@ public class PosServiceAdapter {
     @Autowired
     private DictValueApi dictValueApi;
 
-    public List<DictValueData> getPosType(){
+    public List<DictValueData> getPosClassify(){
         //远程调用
-        return dictValueApi.getPosType();
+        return dictValueApi.getPosClassify();
     }
 
 }
