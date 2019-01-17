@@ -3,11 +3,10 @@ package com.mbb.product.biz.data;
 import lombok.Data;
 
 @Data
-public class ProductQuery {
+public class ProductUpdateData {
     private String code;
+    private Long id;
     private String name;
     private Long channelId;
     private Long approvedId;
-    private Integer pageNum;
-    private Integer pageSize;
 }
