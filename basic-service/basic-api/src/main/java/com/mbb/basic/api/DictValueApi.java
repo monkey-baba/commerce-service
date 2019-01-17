@@ -19,7 +19,7 @@ public interface DictValueApi {
      * @return result
      */
     @GetMapping("/api/v1/dict/values")
-    List<DictValueData> getDictValues(@RequestParam("type") String type);
+        List<DictValueData> getDictValues(@RequestParam("type") String type);
 
     default List<DictValueData> getPosType() {
         return getDictValues(DictionaryType.POS_TYPE.name());
