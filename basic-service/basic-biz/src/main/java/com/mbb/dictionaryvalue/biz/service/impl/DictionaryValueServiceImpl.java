@@ -5,6 +5,7 @@ import com.mbb.dictionaryValuevalue.biz.model.DictionaryValueModel;
 import com.mbb.dictionaryvalue.biz.dao.DictionaryValueMapper;
 import com.mbb.dictionaryvalue.biz.dto.DictionaryValueInfoDto;
 import com.mbb.dictionaryvalue.biz.dto.DictionaryValueQueryDto;
+import com.mbb.dictionaryvalue.biz.dto.DictionaryValueResponse;
 import com.mbb.dictionaryvalue.biz.service.DictionaryValueService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.session.RowBounds;
@@ -71,21 +72,35 @@ public class DictionaryValueServiceImpl implements DictionaryValueService {
         dictionaryValueMapper.deleteByPrimaryKey(id);
     }
 
-    private List<DictionaryValueInfoDto> dealResult(List<DictionaryValueModel> dictionaryValueModels) {
-        List<DictionaryValueInfoDto> dictionaryValueInfoDtoList = new ArrayList<>();
+    private List<DictionaryValueResponse> dealResult(List<DictionaryValueModel> dictionaryValueModels) {
+        List<DictionaryValueResponse> dictionaryValueInfoDtoList = new ArrayList<>();
         if (!CollectionUtils.isEmpty(dictionaryValueModels)) {
             for (DictionaryValueModel dictionaryValueModel : dictionaryValueModels) {
-                DictionaryValueInfoDto dictionaryValueInfoDto = new DictionaryValueInfoDto();
+                DictionaryValueResponse dictionaryValueInfoDto = new DictionaryValueResponse();
                 //ID
                 dictionaryValueInfoDto.setId(String.valueOf(dictionaryValueModel.getId()));
-                //编码
-                dictionaryValueInfoDto.setCode(dictionaryValueModel.getCode());
-                //客户名称
-                dictionaryValueInfoDto.setName(dictionaryValueModel.getName());
                 //乐观锁
                 if(dictionaryValueModel.getVersion()!=null){
                     dictionaryValueInfoDto.setVersion(dictionaryValueModel.getVersion().toString());
                 }
+                //值
+                dictionaryValueInfoDto.setCode(dictionaryValueModel.getCode());
+                //含义
+                dictionaryValueInfoDto.setName(dictionaryValueModel.getName());
+                //描述
+                dictionaryValueInfoDto.setDescription(dictionaryValueModel.getDescription());
+                //排序号
+                if(dictionaryValueModel.getTypeId()!=null) {
+                    dictionaryValueInfoDto.setType_id(dictionaryValueModel.getTypeId().toString());
+                }
+                //预留字段1
+                dictionaryValueInfoDto.setAttribute1(dictionaryValueModel.getAttribute1());
+                //预留字段2
+                dictionaryValueInfoDto.setAttribute2(dictionaryValueModel.getAttribute2());
+                //预留字段3
+                dictionaryValueInfoDto.setAttribute3(dictionaryValueModel.getAttribute3());
+                //是否启用
+                dictionaryValueInfoDto.setActive(dictionaryValueModel.getActive());
 
                 dictionaryValueInfoDtoList.add(dictionaryValueInfoDto);
             }
@@ -96,15 +111,10 @@ public class DictionaryValueServiceImpl implements DictionaryValueService {
     private Example mapQueryInfo(DictionaryValueQueryDto dictionaryValueQueryDto) {
         //编码
         String code = dictionaryValueQueryDto.getCode();
-        //名称
-        String name = dictionaryValueQueryDto.getName();
         Example example = new Example(DictionaryValueModel.class);
         Example.Criteria criteria = example.createCriteria();
         if (!StringUtils.isEmpty(code)) {
             criteria.andLike("code", "%" + code + "%");
-        }
-        if (!StringUtils.isEmpty(name)) {
-            criteria.andLike("name", "%" + name + "%");
         }
         return example;
     }

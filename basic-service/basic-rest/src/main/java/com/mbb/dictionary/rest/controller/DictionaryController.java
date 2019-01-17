@@ -1,6 +1,7 @@
 package com.mbb.dictionary.rest.controller;
 
 import com.mbb.basic.biz.dto.DictionaryInfoDto;
+import com.mbb.basic.biz.dto.DictionaryInfoResponse;
 import com.mbb.basic.biz.dto.DictionaryQueryDto;
 import com.mbb.basic.biz.service.DictionaryService;
 import com.mbb.basic.rest.controller.BaseController;
@@ -26,7 +27,7 @@ public class DictionaryController extends BaseController {
 
     @PostMapping("/info")
     public ResponseEntity getDictionarys(@RequestBody DictionaryQueryDto dictionaryQueryDto) {
-        List<DictionaryInfoDto> dictionaryInfoDtoList = dictionaryService.getDictionarys(dictionaryQueryDto);
+        List<DictionaryInfoResponse> dictionaryInfoDtoList = dictionaryService.getDictionarys(dictionaryQueryDto);
         return ResponseEntity.ok(dictionaryInfoDtoList);
     }
 

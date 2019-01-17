@@ -3,7 +3,7 @@ package com.mbb.dictionaryvalue.biz.dto;
 import lombok.Data;
 
 @Data
-public class DictionaryValueInfoDto {
+public class DictionaryValueResponse {
     private String id;
     private String version;
     private String code;

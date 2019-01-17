@@ -3,6 +3,7 @@ package com.mbb.dictionary.rest.controller;
 import com.mbb.basic.rest.controller.BaseController;
 import com.mbb.dictionaryvalue.biz.dto.DictionaryValueInfoDto;
 import com.mbb.dictionaryvalue.biz.dto.DictionaryValueQueryDto;
+import com.mbb.dictionaryvalue.biz.dto.DictionaryValueResponse;
 import com.mbb.dictionaryvalue.biz.service.DictionaryValueService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -25,7 +26,7 @@ public class DictionaryValueController extends BaseController {
     
     @PostMapping("/info")
     public ResponseEntity getDictionaryValue(@RequestBody DictionaryValueQueryDto dictionaryValueQueryDto) {
-        List<DictionaryValueInfoDto> dictionaryValueInfoDtoList = dictionaryValueService.getDictionaryValues(dictionaryValueQueryDto);
+        List<DictionaryValueResponse> dictionaryValueInfoDtoList = dictionaryValueService.getDictionaryValues(dictionaryValueQueryDto);
         return ResponseEntity.ok(dictionaryValueInfoDtoList);
     }
 
