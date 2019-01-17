@@ -44,7 +44,11 @@ public class StockController extends BaseController {
         //获取页码等信息
         PageInfo<StockModel> origin = PageInfo.of(stocks);
         //从model转data
-        List<StockInfoResp> stockInfoRespList = dealResult(origin);
+        List<StockInfoResp> stockInfoRespList = origin.getList().stream().map(stock -> {
+            StockInfoResp stockInfoResp = new StockInfoResp();
+            convert(stock, stockInfoResp);
+            return stockInfoResp;
+        }).collect(Collectors.toList());
         //用data生成新的分页数据
         PageInfo<StockInfoResp> result = PageInfo.of(stockInfoRespList);
         result.setTotal(origin.getTotal());
@@ -61,10 +65,7 @@ public class StockController extends BaseController {
         stockModel.setVersion(0);
         stockService.createStock(stockModel);
         StockInfoResp stockInfoResp = new StockInfoResp();
-        stockInfoResp.setId(stockModel.getId());
-        stockInfoResp.setSkuId(stockModel.getSkuId());
-        stockInfoResp.setWarehouseId(stockModel.getWarehouseId());
-        stockInfoResp.setAvailable(stockModel.getAvailable());
+        convert(stockModel, stockInfoResp);
         return ResponseEntity.ok(stockInfoResp);
     }
 
@@ -74,21 +75,18 @@ public class StockController extends BaseController {
         return ResponseEntity.ok("删除成功");
     }
 
-    private List<StockInfoResp> dealResult(PageInfo<StockModel> stocks) {
-        List<StockInfoResp> stockInfoRespList = stocks.getList().stream().map(stock -> {
-            StockInfoResp stockInfoResp = new StockInfoResp();
-            //主键
-            stockInfoResp.setId(stock.getId());
-            //商品编码
-            stockInfoResp.setSkuId(stock.getSkuId());
-            //商品名称
-//                stockInfoResp.setSkuName();
-            //仓库编码
-            stockInfoResp.setWarehouseId(stock.getWarehouseId());
-            //可用量
-            stockInfoResp.setAvailable(stock.getAvailable());
-            return stockInfoResp;
-        }).collect(Collectors.toList());
-        return stockInfoRespList;
+    private StockInfoResp convert(StockModel stockModel, StockInfoResp stockInfoResp) {
+        //主键
+        stockInfoResp.setId(stockModel.getId());
+        //商品编码
+        stockInfoResp.setSkuId(stockModel.getSkuId());
+        //商品名称
+        //stockInfoResp.setSkuName();
+        //仓库编码
+        stockInfoResp.setWarehouseId(stockModel.getWarehouseId());
+        //可用量
+        stockInfoResp.setAvailable(stockModel.getAvailable());
+        return stockInfoResp;
     }
+
 }
