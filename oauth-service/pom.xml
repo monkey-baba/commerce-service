@@ -40,4 +40,13 @@
     <module>oauth-rest</module>
     <module>oauth-common</module>
   </modules>
+
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.jfrog.buildinfo</groupId>
+        <artifactId>artifactory-maven-plugin</artifactId>
+      </plugin>
+    </plugins>
+  </build>
 </project>

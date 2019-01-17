@@ -193,6 +193,8 @@ public class UserController extends BaseController {
         resp.setMobileNumber(user.getMobileNumber());
         resp.setName(user.getName());
         resp.setUsername(user.getUsername());
+        resp.setRoles(Collections.emptyList());
+        resp.setGroups(Collections.emptyList());
         return ResponseEntity.ok(resp);
     }
 
