@@ -1,6 +1,6 @@
 package com.mbb.stock.adapter;
 
-import com.mbb.basic.api.PosServiceApi;
+import com.mbb.basic.api.DictValueApi;
 import com.mbb.basic.common.dto.DictValueData;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,11 +14,11 @@ public class PosServiceAdapter {
 
 
     @Autowired
-    private PosServiceApi posServiceApi;
+    private DictValueApi dictValueApi;
 
     public List<DictValueData> getPosType(){
         //远程调用
-        return posServiceApi.getPosType();
+        return dictValueApi.getPosType();
     }
 
 }
