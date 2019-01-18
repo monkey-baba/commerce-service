@@ -89,7 +89,6 @@ public class CustomerController extends BaseController {
         for (CustomerDeleteData data : datas) {
             customerService.deleteCustomer(data.getCode());
         }
-
         return ResponseEntity.ok("删除成功");
     }
 

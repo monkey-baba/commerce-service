@@ -29,8 +29,18 @@ public class CustomerServiceImpl implements CustomerService {
     @Autowired
     private CustomerMapper customerMapper;
 
-    @Autowired
-    private IdService idService;
+    @Override
+    public CustomerModel findById(Long id) {
+        return customerMapper.selectByPrimaryKey(id);
+    }
+
+    @Override
+    public CustomerModel findByCode(String code) {
+        Example example = new Example(CustomerModel.class);
+        Example.Criteria criteria = example.createCriteria();
+        criteria.andEqualTo("code", code);
+        return customerMapper.selectOneByExample(example);
+    }
 
 
     @Override
@@ -52,16 +62,8 @@ public class CustomerServiceImpl implements CustomerService {
     @Override
     public void deleteCustomer(String code) {
         logger.info("code==" + code);
-        Example example = new Example(CustomerModel.class);
-        Example.Criteria criteria = example.createCriteria();
-        criteria.andEqualTo("code", code);
-        CustomerModel customerModel = customerMapper.selectOneByExample(example);
+        CustomerModel customerModel = this.findByCode(code);
         customerMapper.deleteByPrimaryKey(customerModel);
-    }
-
-    @Override
-    public CustomerModel findById(Long id) {
-        return customerMapper.selectByPrimaryKey(id);
     }
 
     @Override
