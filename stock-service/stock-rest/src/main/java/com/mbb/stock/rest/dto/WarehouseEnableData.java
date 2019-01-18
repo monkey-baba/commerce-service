@@ -6,13 +6,12 @@ import lombok.Data;
  * ${DESCRIPTION}
  *
  * @author lf
- * @create 2019-01-16 16:30
+ * @create 2019-01-18 14:33
  */
 @Data
-public class WarehouseCreateData {
+public class WarehouseEnableData {
+
     private String code;
-    private String name;
+
     private Boolean enabled;
-    private Long posId;
-    private String posAddress;
 }

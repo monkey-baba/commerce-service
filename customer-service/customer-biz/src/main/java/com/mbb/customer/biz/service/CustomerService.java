@@ -11,6 +11,21 @@ import java.util.List;
  * @create 2019-01-08 15:37
  */
 public interface CustomerService {
+    /**
+     * 根据id查找客户
+     *
+     * @param id
+     * @return
+     */
+    CustomerModel findById(Long id);
+
+    /**
+     * 根据编号查找客户
+     *
+     * @param code
+     * @return
+     */
+    CustomerModel findByCode(String code);
 
     /**
      * 查询客户
@@ -33,14 +48,6 @@ public interface CustomerService {
      * @param code
      */
     void deleteCustomer(String code);
-
-    /**
-     * 根据id查找客户
-     *
-     * @param id
-     * @return
-     */
-    CustomerModel findById(Long id);
 
     /**
      * 更新客户
