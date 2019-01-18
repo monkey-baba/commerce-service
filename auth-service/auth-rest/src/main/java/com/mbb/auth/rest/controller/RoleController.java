@@ -4,6 +4,7 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.lxm.idgenerator.service.intf.IdService;
 import com.mbb.auth.rest.dto.req.GroupChangeRoleData;
+import com.mbb.auth.rest.dto.req.RoleChangeRoleData;
 import com.mbb.auth.rest.dto.req.RoleCreateData;
 import com.mbb.auth.rest.dto.req.RoleDeleteData;
 import com.mbb.auth.rest.dto.req.RoleListQuery;
@@ -187,4 +188,68 @@ public class RoleController extends BaseController {
                 datas.stream().map(RoleDeleteData::getId).collect(Collectors.toList()));
         return ResponseEntity.ok("删除成功");
     }
+
+
+    @GetMapping("/parentRole")
+    public ResponseEntity parentRole(@RequestParam Long id) {
+        List<Long> parentRoles = roleService.findParentRoles(id).stream().map(RoleModel::getId)
+                .collect(Collectors.toList());
+
+        List<Long> childRoles = roleService.findAllChildRoles(id).stream().map(RoleModel::getId)
+                .collect(Collectors.toList());
+
+        //排除掉已经被设置成子角色的
+        List<RoleModel> allRoles = roleService.findAll().stream()
+                .filter(r -> !childRoles.contains(r.getId())).filter(
+                        r -> !r.getId().equals(id)
+                ).collect(Collectors.toList());
+        return ResponseEntity.ok(allRoles.stream().map(r -> {
+            RoleData data = new RoleData();
+            data.setKey(r.getId());
+            data.setLabel(r.getCode() + "-" + r.getName());
+            data.setExists(parentRoles.contains(r.getId()));
+            return data;
+        }).collect(Collectors.toList()));
+    }
+
+
+    @GetMapping("/childRole")
+    public ResponseEntity childRole(@RequestParam Long id) {
+
+        List<Long> parentRoles = roleService.findAllParentRoles(id).stream().map(RoleModel::getId)
+                .collect(Collectors.toList());
+
+        List<Long> childRoles = roleService.findChildRoles(id).stream().map(RoleModel::getId)
+                .collect(Collectors.toList());
+        //排除掉已经被设置成父角色的
+        List<RoleModel> allRoles = roleService.findAll().stream()
+                .filter(r -> !parentRoles.contains(r.getId())).filter(
+                        r -> !r.getId().equals(id)
+                ).collect(Collectors.toList());
+        return ResponseEntity.ok(allRoles.stream().map(r -> {
+            RoleData data = new RoleData();
+            data.setKey(r.getId());
+            data.setLabel(r.getCode() + "-" + r.getName());
+            data.setExists(childRoles.contains(r.getId()));
+            return data;
+        }).collect(Collectors.toList()));
+    }
+
+
+    @PostMapping("/changeParentRole")
+    public ResponseEntity changeParentRole(@RequestBody RoleChangeRoleData data) {
+        //更新父角色
+        roleService.changeParentRoles(data.getRoleId(), data.getRoles());
+        return ResponseEntity.ok("更新成功");
+
+    }
+
+    @PostMapping("/changeChildRole")
+    public ResponseEntity changeChildRole(@RequestBody RoleChangeRoleData data) {
+        //更新子角色
+        roleService.changeChildRoles(data.getRoleId(), data.getRoles());
+        return ResponseEntity.ok("更新成功");
+
+    }
+
 }
