@@ -1,7 +1,7 @@
 package com.mbb.basic.biz.dictionaryvalue.biz.service.impl;
 
 import com.lxm.idgenerator.service.intf.IdService;
-import com.mbb.basic.biz.dictionaryvalue.biz.dao.DictionaryValueMapper;
+import com.mbb.basic.biz.dao.DictionaryValueMapper;
 import com.mbb.basic.biz.dictionaryvalue.biz.dto.DictionaryValueInfoDto;
 import com.mbb.basic.biz.dictionaryvalue.biz.dto.DictionaryValueQueryDto;
 import com.mbb.basic.biz.dictionaryvalue.biz.dto.DictionaryValueResponse;

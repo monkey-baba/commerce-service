@@ -1,6 +1,7 @@
 package com.mbb.basic.rest.controller;
 
 
+import com.mbb.basic.biz.dictionaryvalue.biz.model.DictionaryValueModel;
 import com.mbb.basic.biz.dto.DictionaryInfoDto;
 import com.mbb.basic.biz.dto.DictionaryInfoResponse;
 import com.mbb.basic.biz.dto.DictionaryQueryDto;
@@ -10,7 +11,6 @@ import com.mbb.basic.common.dto.DictValueData;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import com.mbb.dictionaryvalue.biz.model.DictionaryValueModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cglib.beans.BeanCopier;
 import org.springframework.http.ResponseEntity;
