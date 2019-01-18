@@ -7,6 +7,7 @@ import com.mbb.basic.biz.dto.DictionaryInfoResponse;
 import com.mbb.basic.biz.dto.DictionaryQueryDto;
 import com.mbb.basic.biz.model.DictionaryModel;
 import com.mbb.basic.biz.service.DictionaryService;
+import com.mbb.dictionaryvalue.biz.model.DictionaryValueModel;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.session.RowBounds;
 import org.apache.logging.log4j.LogManager;
@@ -16,6 +17,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 import tk.mybatis.mapper.entity.Example;
+import tk.mybatis.mapper.util.Sqls;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,13 +45,13 @@ public class DictionaryServiceImpl implements DictionaryService {
 
     @Override
     public List<DictionaryInfoResponse> getDictionarys(DictionaryQueryDto dictionaryQueryDto) {
-        //·â×°²éÑ¯Example
+        //ï¿½ï¿½×°ï¿½ï¿½Ñ¯Example
         Example example = mapQueryInfo(dictionaryQueryDto);
-        //·â×°·ÖÒ³²ÎÊý
+        //ï¿½ï¿½×°ï¿½ï¿½Ò³ï¿½ï¿½ï¿½ï¿½
         RowBounds rowBounds = mapRowBounds(dictionaryQueryDto);
         List<DictionaryModel> dictionaryModels = dictionaryMapper.selectByExampleAndRowBounds(example, rowBounds);
         logger.info("dictionary size====" + dictionaryModels.size());
-        //´¦Àí·µ»Ø½á¹û
+        //ï¿½ï¿½ï¿½ï¿½ï¿½Ø½ï¿½ï¿½
         return dealResult(dictionaryModels);
     }
 
@@ -79,11 +81,11 @@ public class DictionaryServiceImpl implements DictionaryService {
                 DictionaryInfoResponse dictionaryResponse = new DictionaryInfoResponse();
                 //ID
                 dictionaryResponse.setId(String.valueOf(dictionaryModel.getId()));
-                //±àÂë
+                //ï¿½ï¿½ï¿½ï¿½
                 dictionaryResponse.setCode(dictionaryModel.getCode());
-                //¿Í»§Ãû³Æ
+                //ï¿½Í»ï¿½ï¿½ï¿½ï¿½ï¿½
                 dictionaryResponse.setName(dictionaryModel.getName());
-                //ÀÖ¹ÛËø
+                //ï¿½Ö¹ï¿½ï¿½ï¿½
                 if(dictionaryModel.getVersion()!=null){
                     dictionaryResponse.setVersion(dictionaryModel.getVersion().toString());
                 }
@@ -95,9 +97,9 @@ public class DictionaryServiceImpl implements DictionaryService {
     }
 
     private Example mapQueryInfo(DictionaryQueryDto dictionaryQueryDto) {
-        //±àÂë
+        //ï¿½ï¿½ï¿½ï¿½
         String code = dictionaryQueryDto.getCode();
-        //Ãû³Æ
+        //ï¿½ï¿½ï¿½ï¿½
         String name = dictionaryQueryDto.getName();
         Example example = new Example(DictionaryModel.class);
         Example.Criteria criteria = example.createCriteria();
@@ -115,5 +117,18 @@ public class DictionaryServiceImpl implements DictionaryService {
         Integer offset = StringUtils.isEmpty(queryOffset) ? 0 : Integer.valueOf(queryOffset);
         RowBounds rowBounds = new RowBounds(offset, limit);
         return rowBounds;
+    }
+
+    @Override
+    public List<DictionaryValueModel> findDictValues(String type) {
+        Example.Builder dict = Example.builder(DictionaryModel.class);
+        dict.where(Sqls.custom().andEqualTo("code",type));
+        DictionaryModel dictModel = dictionaryMapper.selectOneByExample(dict.build());
+        if (dictModel == null){
+            return Collections.emptyList();
+        }
+        Builder values = Example.builder(DictionaryValueModel.class);
+        values.where(Sqls.custom().andEqualTo("typeId",dictModel.getId()));
+        return dictionaryValueMapper.selectByExample(values.build());
     }
 }
