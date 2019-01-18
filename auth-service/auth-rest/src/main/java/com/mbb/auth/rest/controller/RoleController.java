@@ -1,17 +1,25 @@
 package com.mbb.auth.rest.controller;
 
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
+import com.lxm.idgenerator.service.intf.IdService;
 import com.mbb.auth.rest.dto.req.GroupChangeRoleData;
+import com.mbb.auth.rest.dto.req.RoleCreateData;
+import com.mbb.auth.rest.dto.req.RoleDeleteData;
+import com.mbb.auth.rest.dto.req.RoleListQuery;
+import com.mbb.auth.rest.dto.req.RoleUpdateData;
 import com.mbb.auth.rest.dto.req.UserChangeRoleData;
-import com.mbb.auth.rest.dto.resp.RoleData;
 import com.mbb.auth.rest.dto.resp.ChangeRoleResp;
+import com.mbb.auth.rest.dto.resp.RoleData;
+import com.mbb.auth.rest.dto.resp.RoleListResp;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -19,7 +27,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import xin.yuki.auth.core.entity.RoleModel;
-import xin.yuki.auth.core.service.GroupService;
+import xin.yuki.auth.core.exception.GroupException;
+import xin.yuki.auth.core.exception.RoleException;
 import xin.yuki.auth.core.service.RoleService;
 
 @RestController
@@ -27,14 +36,14 @@ import xin.yuki.auth.core.service.RoleService;
 public class RoleController extends BaseController {
 
     @Autowired
-    private GroupService groupService;
-
+    private IdService idService;
     @Autowired
     private RoleService roleService;
 
     @GetMapping("/userRole")
     public ResponseEntity userGroup(@RequestParam Long id) {
-        Stream<Long> userRoles = roleService.findUserRoles(id).stream().map(RoleModel::getId);
+        List<Long> userRoles = roleService.findUserRoles(id).stream().map(RoleModel::getId).collect(
+                Collectors.toList());
 
         List<RoleModel> allRoles = roleService.findAll();
 
@@ -42,21 +51,22 @@ public class RoleController extends BaseController {
             RoleData data = new RoleData();
             data.setKey(r.getId());
             data.setLabel(r.getCode() + "-" + r.getName());
-            data.setExists(userRoles.anyMatch(rid -> rid.equals(r.getId())));
+            data.setExists(userRoles.contains(r.getId()));
             return data;
         }).collect(Collectors.toList()));
     }
 
     @GetMapping("/groupRole")
     public ResponseEntity groupRole(@RequestParam Long id) {
-        Stream<Long> groupRoles = roleService.findGroupRoles(id).stream().map(RoleModel::getId);
+        List<Long> groupRoles = roleService.findGroupRoles(id).stream().map(RoleModel::getId)
+                .collect(Collectors.toList());
 
         List<RoleModel> allRoles = roleService.findAll();
         return ResponseEntity.ok(allRoles.stream().map(r -> {
             RoleData data = new RoleData();
             data.setKey(r.getId());
             data.setLabel(r.getCode() + "-" + r.getName());
-            data.setExists(groupRoles.anyMatch(rid -> rid.equals(r.getId())));
+            data.setExists(groupRoles.contains(r.getId()));
             return data;
         }).collect(Collectors.toList()));
     }
@@ -96,5 +106,85 @@ public class RoleController extends BaseController {
         resp.setRoleNames(groupRoles.stream().map(RoleModel::getName).collect(Collectors.toList()));
         return ResponseEntity.ok(resp);
 
+    }
+
+
+    @GetMapping("/list")
+    public ResponseEntity list(RoleListQuery query) {
+        RoleModel role = new RoleModel();
+        role.setCode(query.getCode());
+        role.setName(query.getName());
+
+        //开启分页
+        PageHelper.startPage(query.getPageNum(), query.getPageSize());
+        //查询数据
+        List<RoleModel> roles = roleService.findRoleByExample(role);
+        //获取页码等信息
+        PageInfo<RoleModel> origin = PageInfo.of(roles);
+
+        //Model转Data
+        List<RoleListResp> list = origin.getList().stream().map(r -> {
+            RoleListResp info = new RoleListResp();
+            info.setId(r.getId());
+            info.setName(r.getName());
+            info.setCode(r.getCode());
+            info.setDescription(r.getDescription());
+
+            Collection<RoleModel> parents = CollectionUtils
+                    .emptyIfNull(roleService.findParentRoles(r.getId()));
+            info.setParents(parents.stream().map(RoleModel::getName).collect(Collectors.toList()));
+
+            Collection<RoleModel> children = CollectionUtils
+                    .emptyIfNull(roleService.findChildRoles(r.getId()));
+            info.setChildren(
+                    children.stream().map(RoleModel::getName).collect(Collectors.toList()));
+
+            return info;
+        }).collect(Collectors.toList());
+
+        //用data生成新的分页数据
+        PageInfo<RoleListResp> result = PageInfo.of(list);
+        //把原来的总条数复制进去
+        result.setTotal(origin.getTotal());
+        return ResponseEntity.ok(result);
+
+    }
+
+    @PostMapping("/update")
+    public ResponseEntity updateUser(@RequestBody RoleUpdateData data) throws RoleException {
+        RoleModel role = roleService.findById(data.getId());
+        role.setId(data.getId());
+        role.setCode(data.getCode());
+        role.setName(data.getName());
+        role.setDescription(data.getDescription());
+        roleService.updateRole(role);
+        return ResponseEntity.ok("更新成功");
+    }
+
+
+    @PostMapping("/create")
+    public ResponseEntity create(@RequestBody RoleCreateData data) {
+        RoleModel role = new RoleModel();
+        role.setId(idService.genId());
+        role.setName(data.getName());
+        role.setCode(data.getCode());
+        role.setDescription(data.getDescription());
+        role.setVersion(0L);
+        roleService.createRole(role);
+        RoleListResp resp = new RoleListResp();
+        resp.setId(role.getId());
+        resp.setCode(role.getCode());
+        resp.setName(role.getName());
+        resp.setDescription(role.getDescription());
+        resp.setChildren(Collections.emptyList());
+        resp.setParents(Collections.emptyList());
+        return ResponseEntity.ok(resp);
+    }
+
+    @DeleteMapping("/delete")
+    public ResponseEntity delete(@RequestBody List<RoleDeleteData> datas) throws GroupException {
+        roleService.deleteRoles(
+                datas.stream().map(RoleDeleteData::getId).collect(Collectors.toList()));
+        return ResponseEntity.ok("删除成功");
     }
 }

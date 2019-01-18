@@ -15,9 +15,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 import org.apache.commons.collections4.CollectionUtils;
-import org.apache.ibatis.annotations.Delete;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -46,7 +44,8 @@ public class GroupController extends BaseController {
 
     @GetMapping("/userGroup")
     public ResponseEntity userGroup(@RequestParam Long id) {
-        Stream<Long> userGroups = groupService.findUserGroups(id).stream().map(GroupModel::getId);
+        List<Long> userGroups = groupService.findUserGroups(id).stream().map(GroupModel::getId)
+                .collect(Collectors.toList());
 
         List<GroupModel> allGroups = groupService.findAll();
 
@@ -54,7 +53,7 @@ public class GroupController extends BaseController {
             UserGroupData data = new UserGroupData();
             data.setKey(g.getId());
             data.setLabel(g.getCode() + "-" + g.getName());
-            data.setExists(userGroups.anyMatch(gid -> gid.equals(g.getId())));
+            data.setExists(userGroups.contains(g.getId()));
             return data;
         }).collect(Collectors.toList()));
     }
