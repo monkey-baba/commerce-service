@@ -1,4 +1,4 @@
-package com.mbb.dictionary.rest.controller;
+package com.mbb.basic.rest.controller;
 
 import com.mbb.basic.rest.controller.BaseController;
 import com.mbb.dictionaryvalue.biz.dto.DictionaryValueInfoDto;
@@ -17,7 +17,7 @@ import java.util.List;
  * @create 2019-01-08 15:33
  */
 @RestController
-@RequestMapping("api/v1/dictionaryValue")
+@RequestMapping("/api/v1/dictionaryValue")
 public class DictionaryValueController extends BaseController {
 
     @Autowired
