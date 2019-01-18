@@ -3,6 +3,7 @@ package com.mbb.basic.biz.service;
 import com.mbb.basic.biz.dto.DictionaryInfoDto;
 import com.mbb.basic.biz.dto.DictionaryInfoResponse;
 import com.mbb.basic.biz.dto.DictionaryQueryDto;
+import com.mbb.basic.biz.model.DictionaryModel;
 import com.mbb.dictionaryvalue.biz.model.DictionaryValueModel;;
 
 import java.util.List;
@@ -38,5 +39,5 @@ public interface DictionaryService {
     void deleteDictionary(String id);
 
 
-    List<DictionaryValueModel> findDictValues(String type);
+    List<DictionaryModel> findDictValues(String type);
 }

@@ -20,6 +20,7 @@ import tk.mybatis.mapper.entity.Example;
 import tk.mybatis.mapper.util.Sqls;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -45,13 +46,13 @@ public class DictionaryServiceImpl implements DictionaryService {
 
     @Override
     public List<DictionaryInfoResponse> getDictionarys(DictionaryQueryDto dictionaryQueryDto) {
-        //��װ��ѯExample
+        //
         Example example = mapQueryInfo(dictionaryQueryDto);
-        //��װ��ҳ����
+        //
         RowBounds rowBounds = mapRowBounds(dictionaryQueryDto);
         List<DictionaryModel> dictionaryModels = dictionaryMapper.selectByExampleAndRowBounds(example, rowBounds);
         logger.info("dictionary size====" + dictionaryModels.size());
-        //�����ؽ��
+        //
         return dealResult(dictionaryModels);
     }
 
@@ -81,11 +82,11 @@ public class DictionaryServiceImpl implements DictionaryService {
                 DictionaryInfoResponse dictionaryResponse = new DictionaryInfoResponse();
                 //ID
                 dictionaryResponse.setId(String.valueOf(dictionaryModel.getId()));
-                //����
+                //
                 dictionaryResponse.setCode(dictionaryModel.getCode());
-                //�ͻ�����
+                //
                 dictionaryResponse.setName(dictionaryModel.getName());
-                //�ֹ���
+                //
                 if(dictionaryModel.getVersion()!=null){
                     dictionaryResponse.setVersion(dictionaryModel.getVersion().toString());
                 }
@@ -97,9 +98,9 @@ public class DictionaryServiceImpl implements DictionaryService {
     }
 
     private Example mapQueryInfo(DictionaryQueryDto dictionaryQueryDto) {
-        //����
+        //
         String code = dictionaryQueryDto.getCode();
-        //����
+        //
         String name = dictionaryQueryDto.getName();
         Example example = new Example(DictionaryModel.class);
         Example.Criteria criteria = example.createCriteria();
@@ -120,15 +121,15 @@ public class DictionaryServiceImpl implements DictionaryService {
     }
 
     @Override
-    public List<DictionaryValueModel> findDictValues(String type) {
+    public List<DictionaryModel> findDictValues(String type) {
         Example.Builder dict = Example.builder(DictionaryModel.class);
         dict.where(Sqls.custom().andEqualTo("code",type));
         DictionaryModel dictModel = dictionaryMapper.selectOneByExample(dict.build());
         if (dictModel == null){
             return Collections.emptyList();
         }
-        Builder values = Example.builder(DictionaryValueModel.class);
+        Example.Builder values = Example.builder(DictionaryValueModel.class);
         values.where(Sqls.custom().andEqualTo("typeId",dictModel.getId()));
-        return dictionaryValueMapper.selectByExample(values.build());
+        return dictionaryMapper.selectByExample(values.build());
     }
 }

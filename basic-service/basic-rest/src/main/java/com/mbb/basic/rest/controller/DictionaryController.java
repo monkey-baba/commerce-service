@@ -1,6 +1,7 @@
 package com.mbb.basic.rest.controller;
 
 
+import com.mbb.basic.biz.model.DictionaryModel;
 import com.mbb.basic.biz.service.DictionaryService;
 import com.mbb.basic.common.dto.DictValueData;
 import java.util.List;
@@ -30,7 +31,7 @@ public class DictionaryController {
     @GetMapping("/values")
     public ResponseEntity values(@RequestParam String type){
 
-        List<DictionaryValueModel> values = dictionaryService.findDictValues(type);
+        List<DictionaryModel> values = dictionaryService.findDictValues(type);
         List<DictValueData> result = values.stream().map(value -> {
             DictValueData dictValueData = new DictValueData();
             BeanCopier.create(DictionaryValueModel.class, DictValueData.class, false)
