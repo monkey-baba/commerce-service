@@ -2,12 +2,12 @@ package com.mbb.basic.biz.service.impl;
 
 import com.lxm.idgenerator.service.intf.IdService;
 import com.mbb.basic.biz.dao.DictionaryMapper;
+import com.mbb.basic.biz.dictionaryvalue.biz.model.DictionaryValueModel;
 import com.mbb.basic.biz.dto.DictionaryInfoDto;
 import com.mbb.basic.biz.dto.DictionaryInfoResponse;
 import com.mbb.basic.biz.dto.DictionaryQueryDto;
 import com.mbb.basic.biz.model.DictionaryModel;
 import com.mbb.basic.biz.service.DictionaryService;
-import com.mbb.dictionaryvalue.biz.model.DictionaryValueModel;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.session.RowBounds;
 import org.apache.logging.log4j.LogManager;
@@ -128,7 +128,7 @@ public class DictionaryServiceImpl implements DictionaryService {
         if (dictModel == null){
             return Collections.emptyList();
         }
-        Example.Builder values = Example.builder(DictionaryValueModel.class);
+        Example.Builder values = Example.builder(DictionaryModel.class);
         values.where(Sqls.custom().andEqualTo("typeId",dictModel.getId()));
         return dictionaryMapper.selectByExample(values.build());
     }

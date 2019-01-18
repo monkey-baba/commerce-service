@@ -1,6 +1,7 @@
-package com.mbb.dictionaryvalue.biz.dao;
+package com.mbb.basic.biz.dictionaryvalue.biz.dao;
 
-import com.mbb.dictionaryvalue.biz.model.DictionaryValueModel;
+
+import com.mbb.basic.biz.dictionaryvalue.biz.model.DictionaryValueModel;
 import tk.mybatis.mapper.common.Mapper;
 
 /**

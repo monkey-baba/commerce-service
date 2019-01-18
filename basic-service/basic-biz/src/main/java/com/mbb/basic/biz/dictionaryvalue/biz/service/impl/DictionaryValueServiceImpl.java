@@ -1,12 +1,12 @@
-package com.mbb.dictionaryvalue.biz.service.impl;
+package com.mbb.basic.biz.dictionaryvalue.biz.service.impl;
 
 import com.lxm.idgenerator.service.intf.IdService;
-import com.mbb.dictionaryvalue.biz.dao.DictionaryValueMapper;
-import com.mbb.dictionaryvalue.biz.dto.DictionaryValueInfoDto;
-import com.mbb.dictionaryvalue.biz.dto.DictionaryValueQueryDto;
-import com.mbb.dictionaryvalue.biz.dto.DictionaryValueResponse;
-import com.mbb.dictionaryvalue.biz.model.DictionaryValueModel;
-import com.mbb.dictionaryvalue.biz.service.DictionaryValueService;
+import com.mbb.basic.biz.dictionaryvalue.biz.dao.DictionaryValueMapper;
+import com.mbb.basic.biz.dictionaryvalue.biz.dto.DictionaryValueInfoDto;
+import com.mbb.basic.biz.dictionaryvalue.biz.dto.DictionaryValueQueryDto;
+import com.mbb.basic.biz.dictionaryvalue.biz.dto.DictionaryValueResponse;
+import com.mbb.basic.biz.dictionaryvalue.biz.model.DictionaryValueModel;
+import com.mbb.basic.biz.dictionaryvalue.biz.service.DictionaryValueService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.session.RowBounds;
 import org.apache.logging.log4j.LogManager;
@@ -54,7 +54,7 @@ public class DictionaryValueServiceImpl implements DictionaryValueService {
     }
 
     @Override
-    public void addDictionaryValue(List<com.mbb.dictionaryvalue.biz.dto.DictionaryValueInfoDto> dictionaryValueInfoDtoList) {
+    public void addDictionaryValue(List<DictionaryValueInfoDto> dictionaryValueInfoDtoList) {
         if (!CollectionUtils.isEmpty(dictionaryValueInfoDtoList)) {
             for (DictionaryValueInfoDto dictionaryValueInfoDto : dictionaryValueInfoDtoList) {
                 DictionaryValueModel dictionaryValueModel = new DictionaryValueModel();

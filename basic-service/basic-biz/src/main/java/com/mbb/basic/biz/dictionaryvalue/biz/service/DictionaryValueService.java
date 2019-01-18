@@ -1,7 +1,8 @@
-package com.mbb.dictionaryvalue.biz.service;
-import com.mbb.dictionaryvalue.biz.dto.DictionaryValueInfoDto;
-import com.mbb.dictionaryvalue.biz.dto.DictionaryValueQueryDto;
-import com.mbb.dictionaryvalue.biz.dto.DictionaryValueResponse;
+package com.mbb.basic.biz.dictionaryvalue.biz.service;
+
+import com.mbb.basic.biz.dictionaryvalue.biz.dto.DictionaryValueInfoDto;
+import com.mbb.basic.biz.dictionaryvalue.biz.dto.DictionaryValueQueryDto;
+import com.mbb.basic.biz.dictionaryvalue.biz.dto.DictionaryValueResponse;
 
 import java.util.List;
 
@@ -13,6 +14,7 @@ import java.util.List;
  * @author lf
  * @create 2019-01-08 15:37
  */
+
 public interface DictionaryValueService {
 
     /**

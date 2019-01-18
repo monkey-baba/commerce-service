@@ -1,4 +1,4 @@
-package com.mbb.dictionaryvalue.biz.model;
+package com.mbb.basic.biz.dictionaryvalue.biz.model;
 
 import com.mbb.common.model.BaseModel;
 import lombok.Data;

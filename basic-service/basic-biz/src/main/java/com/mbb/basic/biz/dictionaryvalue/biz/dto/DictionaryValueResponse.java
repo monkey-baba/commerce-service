@@ -1,4 +1,4 @@
-package com.mbb.dictionaryvalue.biz.dto;
+package com.mbb.basic.biz.dictionaryvalue.biz.dto;
 
 import lombok.Data;
 
