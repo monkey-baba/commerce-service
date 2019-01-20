@@ -8,4 +8,5 @@ public class DictionaryInfoResponse {
     private String version;
     private String code;
     private String name;
+    private long totalSize;
 }

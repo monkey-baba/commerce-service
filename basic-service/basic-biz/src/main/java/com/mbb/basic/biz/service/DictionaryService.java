@@ -4,7 +4,6 @@ import com.mbb.basic.biz.dto.DictionaryInfoDto;
 import com.mbb.basic.biz.dto.DictionaryInfoResponse;
 import com.mbb.basic.biz.dto.DictionaryQueryDto;
 import com.mbb.basic.biz.model.DictionaryModel;
-import com.mbb.dictionaryvalue.biz.model.DictionaryValueModel;;
 
 import java.util.List;
 
@@ -27,9 +26,9 @@ public interface DictionaryService {
     /**
      * 新增枚举
      *
-     * @param dictionaryInfoDtoList
+     * @param dictionaryInfoDto
      */
-    void addDictionary(List<DictionaryInfoDto> dictionaryInfoDtoList);
+    void addDictionary(DictionaryInfoDto dictionaryInfoDto);
 
     /**
      * 删除枚举

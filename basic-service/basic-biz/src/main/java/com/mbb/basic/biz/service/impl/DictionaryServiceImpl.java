@@ -1,5 +1,6 @@
 package com.mbb.basic.biz.service.impl;
 
+import com.github.pagehelper.PageInfo;
 import com.lxm.idgenerator.service.intf.IdService;
 import com.mbb.basic.biz.dao.DictionaryMapper;
 import com.mbb.basic.biz.dictionaryvalue.biz.model.DictionaryValueModel;
@@ -19,6 +20,7 @@ import org.springframework.util.StringUtils;
 import tk.mybatis.mapper.entity.Example;
 import tk.mybatis.mapper.util.Sqls;
 
+import javax.servlet.http.HttpSession;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -43,6 +45,9 @@ public class DictionaryServiceImpl implements DictionaryService {
     @Autowired
     private IdService idService;
 
+    @Autowired
+    private HttpSession sessionService;
+
 
     @Override
     public List<DictionaryInfoResponse> getDictionarys(DictionaryQueryDto dictionaryQueryDto) {
@@ -52,23 +57,24 @@ public class DictionaryServiceImpl implements DictionaryService {
         RowBounds rowBounds = mapRowBounds(dictionaryQueryDto);
         List<DictionaryModel> dictionaryModels = dictionaryMapper.selectByExampleAndRowBounds(example, rowBounds);
         logger.info("dictionary size====" + dictionaryModels.size());
-        //
-        return dealResult(dictionaryModels);
+        //获取页码等信息
+        PageInfo<DictionaryModel> origin = PageInfo.of(dictionaryModels);
+        sessionService.setAttribute("dictionaryTotalSize", origin.getTotal());
+       return dealResult(dictionaryModels);
     }
 
     @Override
-    public void addDictionary(List<DictionaryInfoDto> dictionaryResponseList) {
-        if (!CollectionUtils.isEmpty(dictionaryResponseList)) {
-            for (DictionaryInfoDto dictionaryResponse : dictionaryResponseList) {
+    public void addDictionary(DictionaryInfoDto dictionaryResponse) {
+        if (dictionaryResponse!=null&&!StringUtils.isEmpty(dictionaryResponse.getCode())) {
                 DictionaryModel dictionaryModel = new DictionaryModel();
                 dictionaryModel.setId(idService.genId());
                 dictionaryModel.setCode(dictionaryResponse.getCode());
                 dictionaryModel.setName(dictionaryResponse.getName());
                 dictionaryModel.setVersion(1);
+                dictionaryModel.setEditable(Integer.valueOf(0));
                 dictionaryMapper.insert(dictionaryModel);
             }
         }
-    }
 
     @Override
     public void deleteDictionary(String id) {
