@@ -92,10 +92,10 @@ public class WarehouseServiceImpl implements WarehouseService {
         Example example = new Example(WarehouseModel.class);
         Example.Criteria criteria = example.createCriteria();
         if (StringUtils.isNotBlank(code)) {
-            criteria.andLike("code", "%" + code + "%");
+            criteria.andLike("code", code + "%");
         }
         if (StringUtils.isNotBlank(name)) {
-            criteria.andLike("name", "%" + name + "%");
+            criteria.andLike("name", name + "%");
         }
         return example;
     }

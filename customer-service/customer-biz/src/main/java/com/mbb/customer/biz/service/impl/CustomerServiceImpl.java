@@ -81,13 +81,13 @@ public class CustomerServiceImpl implements CustomerService {
         Example example = new Example(CustomerModel.class);
         Example.Criteria criteria = example.createCriteria();
         if (StringUtils.isNotBlank(code)) {
-            criteria.andLike("code", "%" + code + "%");
+            criteria.andLike("code", code + "%");
         }
         if (StringUtils.isNotBlank(name)) {
-            criteria.andLike("name", "%" + name + "%");
+            criteria.andLike("name", name + "%");
         }
         if (StringUtils.isNotBlank(phone)) {
-            criteria.andEqualTo("phone", phone);
+            criteria.andLike("phone", phone + "%");
         }
         return example;
     }

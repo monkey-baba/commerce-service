@@ -1,5 +1,6 @@
 package com.mbb.order.biz.service;
 
+import com.mbb.basic.common.dto.DictValueData;
 import com.mbb.order.biz.model.OrderModel;
 
 import java.util.List;
@@ -20,4 +21,6 @@ public interface OrderService {
     List<OrderModel> getOrders(OrderModel orderModel);
 
     void createOrder(OrderModel orderModel);
+
+    List<DictValueData> getEnums(String type);
 }

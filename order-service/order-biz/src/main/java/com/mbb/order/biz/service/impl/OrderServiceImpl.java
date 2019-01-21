@@ -1,5 +1,7 @@
 package com.mbb.order.biz.service.impl;
 
+import com.mbb.basic.common.dto.DictValueData;
+import com.mbb.order.adapter.DictValueAdapter;
 import com.mbb.order.biz.dao.OrderMapper;
 import com.mbb.order.biz.model.OrderModel;
 import com.mbb.order.biz.service.OrderService;
@@ -24,6 +26,10 @@ public class OrderServiceImpl implements OrderService {
     @Autowired
     private OrderMapper orderMapper;
 
+    @Autowired
+    private DictValueAdapter adapter;
+
+
     @Override
     public List<OrderModel> getOrders(OrderModel orderModel) {
         Example example = mapQueryInfo(orderModel);
@@ -37,6 +43,11 @@ public class OrderServiceImpl implements OrderService {
         if (orderModel != null) {
             orderMapper.insert(orderModel);
         }
+    }
+
+    @Override
+    public List<DictValueData> getEnums(String type) {
+        return adapter.getDictValues(type);
     }
 
     private Example mapQueryInfo(OrderModel orderModel) {

@@ -3,8 +3,11 @@ package com.mbb.stock.rest.controller;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.lxm.idgenerator.service.intf.IdService;
+import com.mbb.stock.adapter.ProductServiceAdapter;
 import com.mbb.stock.biz.model.StockModel;
+import com.mbb.stock.biz.model.WarehouseModel;
 import com.mbb.stock.biz.service.StockService;
+import com.mbb.stock.biz.service.WarehouseService;
 import com.mbb.stock.rest.dto.StockCreateData;
 import com.mbb.stock.rest.dto.StockInfoResp;
 import com.mbb.stock.rest.dto.StockListQuery;
@@ -12,7 +15,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
@@ -31,6 +36,12 @@ public class StockController extends BaseController {
     @Autowired
     private IdService idService;
 
+    @Autowired
+    private ProductServiceAdapter productServiceAdapter;
+
+    @Autowired
+    private WarehouseService warehouseService;
+
     @GetMapping("/info")
     public ResponseEntity getStocks(StockListQuery stockListQuery) {
         StockModel stockModel = new StockModel();
@@ -44,14 +55,17 @@ public class StockController extends BaseController {
         //获取页码等信息
         PageInfo<StockModel> origin = PageInfo.of(stocks);
         //从model转data
-        List<StockInfoResp> stockInfoRespList = origin.getList().stream().map(stock -> {
+        /*List<StockInfoResp> stockInfoRespList = origin.getList().stream().map(stock -> {
             StockInfoResp stockInfoResp = new StockInfoResp();
             convert(stock, stockInfoResp);
             return stockInfoResp;
-        }).collect(Collectors.toList());
+        }).collect(Collectors.toList());*/
+        List<StockInfoResp> stockInfoRespList = new ArrayList<>();
+        convertData(stockInfoRespList);
         //用data生成新的分页数据
         PageInfo<StockInfoResp> result = PageInfo.of(stockInfoRespList);
-        result.setTotal(origin.getTotal());
+        /*result.setTotal(origin.getTotal());*/
+        result.setTotal(2);
         return ResponseEntity.ok(result);
     }
 
@@ -81,12 +95,37 @@ public class StockController extends BaseController {
         //商品编码
         stockInfoResp.setSkuId(stockModel.getSkuId());
         //商品名称
-        //stockInfoResp.setSkuName();
+        String skuName = productServiceAdapter.getSkuNameById(stockModel.getSkuId());
+        stockInfoResp.setSkuName(skuName);
         //仓库编码
-        stockInfoResp.setWarehouseId(stockModel.getWarehouseId());
+        WarehouseModel warehouseModel = warehouseService.findById(stockModel.getWarehouseId());
+        stockInfoResp.setWarehouse(warehouseModel.getCode() + "-" + warehouseModel.getName());
         //可用量
         stockInfoResp.setAvailable(stockModel.getAvailable());
         return stockInfoResp;
+    }
+
+    private void convertData(List<StockInfoResp> stockInfoRespList) {
+        StockInfoResp stockInfoResp = new StockInfoResp();
+        //商品编码
+        stockInfoResp.setSkuId(00001L);
+        //商品名称
+        stockInfoResp.setSkuName("洗衣液");
+        //仓库编码
+        stockInfoResp.setWarehouse("00001-天河仓");
+        //可用量
+        stockInfoResp.setAvailable(100L);
+        stockInfoRespList.add(stockInfoResp);
+        StockInfoResp stockInfoResp1 = new StockInfoResp();
+        //商品编码
+        stockInfoResp1.setSkuId(00001L);
+        //商品名称
+        stockInfoResp1.setSkuName("洗手液");
+        //仓库编码
+        stockInfoResp1.setWarehouse("00002-天河仓");
+        //可用量
+        stockInfoResp1.setAvailable(100L);
+        stockInfoRespList.add(stockInfoResp1);
     }
 
 }
