@@ -7,7 +7,6 @@ import org.springframework.cloud.openfeign.EnableFeignClients;
 import tk.mybatis.spring.annotation.MapperScan;
 import xin.yuki.auth.boot.EnableCloudAuthManager;
 
-
 @SpringBootApplication(scanBasePackages = "com.mbb.auth")
 @EnableDiscoveryClient
 @MapperScan(basePackages = {"com.mbb.auth.biz.dao"})
@@ -20,3 +19,4 @@ public class AuthServiceApplication {
     }
 
 }
+
