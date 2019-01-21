@@ -22,7 +22,7 @@ public interface DictValueApi {
     List<DictValueData> getDictValues(@RequestParam("type") String type);
 
     @GetMapping("/api/v1/dict/value")
-    List<DictValueData> getDictValue(@RequestParam("id")Long id);
+    DictValueData getDictValue(@RequestParam("id")Long id);
 
     default List<DictValueData> getPosType() {
         return getDictValues(DictionaryType.POS_TYPE.name());
