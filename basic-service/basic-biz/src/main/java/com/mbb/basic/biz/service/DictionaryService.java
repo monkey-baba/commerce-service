@@ -1,5 +1,6 @@
 package com.mbb.basic.biz.service;
 
+import com.mbb.basic.biz.dictionaryvalue.biz.model.DictionaryValueModel;
 import com.mbb.basic.biz.dto.DictionaryInfoDto;
 import com.mbb.basic.biz.dto.DictionaryInfoResponse;
 import com.mbb.basic.biz.dto.DictionaryQueryDto;
@@ -38,5 +39,5 @@ public interface DictionaryService {
     void deleteDictionary(String id);
 
 
-    List<DictionaryModel> findDictValues(String type);
+    List<DictionaryValueModel> findDictValues(String type);
 }

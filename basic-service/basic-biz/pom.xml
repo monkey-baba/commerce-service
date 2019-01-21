@@ -65,12 +65,6 @@
       <artifactId>commerce-common</artifactId>
       <version>${project.version}</version>
     </dependency>
-      <dependency>
-          <groupId>com.lxm</groupId>
-          <artifactId>id-generator-interface</artifactId>
-          <version>2.3</version>
-          <scope>compile</scope>
-      </dependency>
 
     <dependency>
       <groupId>com.mbb</groupId>
@@ -83,10 +77,12 @@
       <artifactId>basic-adapter</artifactId>
       <version>${project.version}</version>
     </dependency>
-      <dependency>
-          <groupId>org.apache.tomcat.embed</groupId>
-          <artifactId>tomcat-embed-core</artifactId>
-      </dependency>
+
+    <dependency>
+      <groupId>xin.yuki</groupId>
+      <artifactId>id-generator-spring-boot-starter</artifactId>
+      <version>2.3-2</version>
+    </dependency>
 
   </dependencies>
 

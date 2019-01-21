@@ -3,12 +3,16 @@ package com.mbb.basic.biz.service.impl;
 import com.github.pagehelper.PageInfo;
 import com.lxm.idgenerator.service.intf.IdService;
 import com.mbb.basic.biz.dao.DictionaryMapper;
+import com.mbb.basic.biz.dao.DictionaryValueMapper;
 import com.mbb.basic.biz.dictionaryvalue.biz.model.DictionaryValueModel;
 import com.mbb.basic.biz.dto.DictionaryInfoDto;
 import com.mbb.basic.biz.dto.DictionaryInfoResponse;
 import com.mbb.basic.biz.dto.DictionaryQueryDto;
 import com.mbb.basic.biz.model.DictionaryModel;
 import com.mbb.basic.biz.service.DictionaryService;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.session.RowBounds;
 import org.apache.logging.log4j.LogManager;
@@ -18,12 +22,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 import tk.mybatis.mapper.entity.Example;
+import tk.mybatis.mapper.entity.Example.Builder;
 import tk.mybatis.mapper.util.Sqls;
-
-import javax.servlet.http.HttpSession;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 
 /**
  * ${DESCRIPTION}
@@ -43,10 +43,14 @@ public class DictionaryServiceImpl implements DictionaryService {
     private DictionaryMapper dictionaryMapper;
 
     @Autowired
-    private IdService idService;
+    private DictionaryValueMapper dictionaryValueMapper;
+
 
     @Autowired
-    private HttpSession sessionService;
+    private IdService idService;
+
+//    @Autowired
+//    private HttpSession sessionService;
 
 
     @Override
@@ -59,7 +63,7 @@ public class DictionaryServiceImpl implements DictionaryService {
         logger.info("dictionary size====" + dictionaryModels.size());
         //获取页码等信息
         PageInfo<DictionaryModel> origin = PageInfo.of(dictionaryModels);
-        sessionService.setAttribute("dictionaryTotalSize", origin.getTotal());
+//        sessionService.setAttribute("dictionaryTotalSize", origin.getTotal());
        return dealResult(dictionaryModels);
     }
 
@@ -127,15 +131,19 @@ public class DictionaryServiceImpl implements DictionaryService {
     }
 
     @Override
-    public List<DictionaryModel> findDictValues(String type) {
-        Example.Builder dict = Example.builder(DictionaryModel.class);
+    public List<DictionaryValueModel> findDictValues(String type) {
+        Builder dict = Example.builder(DictionaryModel.class);
         dict.where(Sqls.custom().andEqualTo("code",type));
         DictionaryModel dictModel = dictionaryMapper.selectOneByExample(dict.build());
         if (dictModel == null){
             return Collections.emptyList();
         }
-        Example.Builder values = Example.builder(DictionaryModel.class);
+        Builder values = Example.builder(DictionaryValueModel.class);
         values.where(Sqls.custom().andEqualTo("typeId",dictModel.getId()));
-        return dictionaryMapper.selectByExample(values.build());
+        return dictionaryValueMapper.selectByExample(values.build());
     }
+
+
+
+
 }

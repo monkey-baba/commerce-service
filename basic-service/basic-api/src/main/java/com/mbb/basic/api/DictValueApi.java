@@ -19,7 +19,10 @@ public interface DictValueApi {
      * @return result
      */
     @GetMapping("/api/v1/dict/values")
-        List<DictValueData> getDictValues(@RequestParam("type") String type);
+    List<DictValueData> getDictValues(@RequestParam("type") String type);
+
+    @GetMapping("/api/v1/dict/value")
+    List<DictValueData> getDictValue(@RequestParam("type") String type, @RequestParam("id")Long id);
 
     default List<DictValueData> getPosType() {
         return getDictValues(DictionaryType.POS_TYPE.name());
@@ -28,9 +31,11 @@ public interface DictValueApi {
     default List<DictValueData> getChannel() {
         return getDictValues(DictionaryType.CHANNEL.name());
     }
+
     default List<DictValueData> getProductAttr() {
         return getDictValues(DictionaryType.PRODUCT_ATTR.name());
     }
+
     default List<DictValueData> getSkuSpec() {
         return getDictValues(DictionaryType.SKU_SPEC.name());
     }
@@ -50,39 +55,51 @@ public interface DictValueApi {
     default List<DictValueData> getPosClassify() {
         return getDictValues(DictionaryType.POS_CLASSIFY.name());
     }
+
     default List<DictValueData> getPosStatus() {
         return getDictValues(DictionaryType.POS_STATUS.name());
     }
+
     default List<DictValueData> getBaseStore() {
         return getDictValues(DictionaryType.BASESTORE.name());
     }
+
     default List<DictValueData> getOrderStatus() {
         return getDictValues(DictionaryType.ORDER_STATUS.name());
     }
+
     default List<DictValueData> getOrderType() {
         return getDictValues(DictionaryType.ORDER_TYPE.name());
     }
+
     default List<DictValueData> getPlatform() {
         return getDictValues(DictionaryType.PLATFORM.name());
     }
+
     default List<DictValueData> getOrderSource() {
         return getDictValues(DictionaryType.ORDER_SOURCE.name());
     }
+
     default List<DictValueData> getDeliveryType() {
         return getDictValues(DictionaryType.DELIVERY_TYPE.name());
     }
+
     default List<DictValueData> getCarrier() {
         return getDictValues(DictionaryType.CARRIER.name());
     }
+
     default List<DictValueData> getInvoiceType() {
         return getDictValues(DictionaryType.INVOICE_TYPE.name());
     }
+
     default List<DictValueData> getPaymentType() {
         return getDictValues(DictionaryType.PAYMENT_TYPE.name());
     }
+
     default List<DictValueData> getRouterRuleType() {
         return getDictValues(DictionaryType.ROUTER_RULE_TYPE.name());
     }
+
     default List<DictValueData> getConsignmentStatus() {
         return getDictValues(DictionaryType.CONSIGNMENT_STATUS.name());
     }
