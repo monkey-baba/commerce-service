@@ -1,10 +1,9 @@
-package com.mbb.basic.biz.dictionaryvalue.biz.model;
+package com.mbb.basic.biz.model;
 
 import com.mbb.common.model.BaseModel;
+import javax.persistence.Table;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-
-import javax.persistence.Table;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
