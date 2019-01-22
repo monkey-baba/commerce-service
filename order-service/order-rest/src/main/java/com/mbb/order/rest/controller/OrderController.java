@@ -24,7 +24,7 @@ import java.util.stream.Collectors;
  * @create 2019-01-17 18:02
  */
 @RestController
-@RequestMapping("api/v1/order")
+@RequestMapping("/api/v1/order")
 public class OrderController extends BaseController {
     @Autowired
     private OrderService orderService;

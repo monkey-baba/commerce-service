@@ -27,7 +27,7 @@ import java.util.stream.Collectors;
  * @create 2019-01-08 15:33
  */
 @RestController
-@RequestMapping("api/v1/stock")
+@RequestMapping("/api/v1/stock")
 public class StockController extends BaseController {
 
     @Autowired
@@ -108,23 +108,23 @@ public class StockController extends BaseController {
     private void convertData(List<StockInfoResp> stockInfoRespList) {
         StockInfoResp stockInfoResp = new StockInfoResp();
         //商品编码
-        stockInfoResp.setSkuId(00001L);
+        stockInfoResp.setSkuId(621634L);
         //商品名称
-        stockInfoResp.setSkuName("洗衣液");
+        stockInfoResp.setSkuName("ECCO爱步舒适透气商务皮鞋621634");
         //仓库编码
-        stockInfoResp.setWarehouse("00001-天河仓");
+        stockInfoResp.setWarehouse("华东001库");
         //可用量
-        stockInfoResp.setAvailable(100L);
+        stockInfoResp.setAvailable(996L);
         stockInfoRespList.add(stockInfoResp);
         StockInfoResp stockInfoResp1 = new StockInfoResp();
         //商品编码
-        stockInfoResp1.setSkuId(00001L);
+        stockInfoResp1.setSkuId(400514L);
         //商品名称
-        stockInfoResp1.setSkuName("洗手液");
+        stockInfoResp1.setSkuName("ECCO爱步春夏休闲皮鞋男400514");
         //仓库编码
-        stockInfoResp1.setWarehouse("00002-天河仓");
+        stockInfoResp1.setWarehouse("华东002库");
         //可用量
-        stockInfoResp1.setAvailable(100L);
+        stockInfoResp1.setAvailable(623L);
         stockInfoRespList.add(stockInfoResp1);
     }
 

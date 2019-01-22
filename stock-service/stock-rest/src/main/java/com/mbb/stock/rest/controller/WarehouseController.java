@@ -20,7 +20,7 @@ import java.util.stream.Collectors;
  * @create 2019-01-10 17:41
  */
 @RestController
-@RequestMapping("api/v1/warehouse")
+@RequestMapping("/api/v1/warehouse")
 public class WarehouseController {
 
     @Autowired
