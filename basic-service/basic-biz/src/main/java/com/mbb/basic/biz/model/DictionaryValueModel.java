@@ -7,7 +7,7 @@ import lombok.EqualsAndHashCode;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
-@Table(name = "dictionaryValue_value")
+@Table(name = "dictionary_value")
 public class DictionaryValueModel extends BaseModel {
 
     private String code;
