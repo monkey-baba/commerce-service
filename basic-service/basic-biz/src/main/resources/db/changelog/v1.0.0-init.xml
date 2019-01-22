@@ -187,6 +187,13 @@
       <column name="name">配货单状态</column>
       <column name="editable">0</column>
     </insert>
+    <insert tableName="dictionary">
+      <column name="id">21</column>
+      <column name="version">1</column>
+      <column name="code">CUS_STATUS</column>
+      <column name="name">客户状态</column>
+      <column name="editable">0</column>
+    </insert>
 
   </changeSet>
 </databaseChangeLog>

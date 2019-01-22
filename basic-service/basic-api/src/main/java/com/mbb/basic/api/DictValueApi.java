@@ -103,4 +103,8 @@ public interface DictValueApi {
     default List<DictValueData> getConsignmentStatus() {
         return getDictValues(DictionaryType.CONSIGNMENT_STATUS.name());
     }
+
+    default List<DictValueData> getCustomerStatus() {
+        return getDictValues(DictionaryType.CUS_STATUS.name());
+    }
 }
