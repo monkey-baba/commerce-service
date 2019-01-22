@@ -13,11 +13,15 @@ import com.mbb.auth.rest.dto.req.UserChangeRoleData;
 import com.mbb.auth.rest.dto.resp.ChangeRoleResp;
 import com.mbb.auth.rest.dto.resp.RoleData;
 import com.mbb.auth.rest.dto.resp.RoleListResp;
+import com.mbb.auth.rest.dto.resp.RoleSelectResp;
+import com.mbb.auth.rest.dto.resp.RoleTreeResp;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.collections4.ListUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -252,4 +256,49 @@ public class RoleController extends BaseController {
 
     }
 
+
+    @GetMapping("/tree")
+    public ResponseEntity tree() {
+        //更新子角色
+        List<RoleModel> roles = roleService.findRootRoles();
+        List<RoleTreeResp> resp = getChildRoleTree(ListUtils.emptyIfNull(roles));
+        return ResponseEntity.ok(resp);
+
+    }
+
+    /**
+     * 从根获取角色树
+     * @param roots
+     * @return
+     */
+    private List<RoleTreeResp> getChildRoleTree(List<RoleModel> roots) {
+        List<RoleTreeResp> list=new ArrayList<>();
+        for (RoleModel root : roots) {
+            RoleTreeResp role = new RoleTreeResp();
+            role.setId(root.getId());
+            role.setLabel(root.getCode() + "-" + root.getName());
+            List<RoleModel> childRoles = roleService.findChildRoles(root.getId());
+            if (CollectionUtils.isNotEmpty(childRoles)){
+                List<RoleTreeResp> childRoleTree = getChildRoleTree(childRoles);
+                role.setChildren(childRoleTree);
+            }
+            list.add(role);
+        }
+
+        return list;
+    }
+
+    @GetMapping("/findRoleByName")
+    public ResponseEntity findRoleByName(@RequestParam String name) {
+        //更新子角色
+        List<RoleModel> roles = roleService.findByNameOrCode(name);
+        List<RoleSelectResp> resp = roles.stream().map(r -> {
+            RoleSelectResp role = new RoleSelectResp();
+            role.setKey(r.getId());
+            role.setLabel(r.getCode() + "-" + r.getName());
+            return role;
+        }).collect(Collectors.toList());
+        return ResponseEntity.ok(resp);
+
+    }
 }
