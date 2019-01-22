@@ -18,8 +18,8 @@ public class RouterRuleBaseData {
     private String name;
     private Boolean enabled;
     private Integer priority;
-    private String typeId;
-    private Long modifyUserId;
+    private String routerRuleDisplayName;
+    private String modifyUserName;
     private Date modifyDate;
 
 }
