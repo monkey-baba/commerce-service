@@ -8,7 +8,7 @@ import lombok.EqualsAndHashCode;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
-@Table(name = "order")
+@Table(name = "`order`")
 public class OrderModel extends BaseModel {
 
     private String ecsOrderId;

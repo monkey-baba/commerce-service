@@ -12,7 +12,7 @@ import lombok.Data;
 public class WarehouseCreateData {
     private String code;
     private String name;
-    private String active;
+    private Boolean enabled;
     private Long posId;
     private String posAddress;
 }

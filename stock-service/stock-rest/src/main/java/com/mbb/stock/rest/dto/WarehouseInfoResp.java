@@ -7,7 +7,7 @@ public class WarehouseInfoResp {
     private Long id;
     private String code;
     private String name;
-    private String active;
+    private Boolean enabled;
     private Long posId;
     private String posAddress;
 

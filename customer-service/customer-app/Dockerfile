@@ -5,7 +5,7 @@ COPY . /app/
 
 WORKDIR /app
 
-RUN mvn clean package -U -DskipTests
+RUN mvn clean install package -U -DskipTests
 
 
 ENV JAVA_OPTS="-Xmx256M -Xms256M"

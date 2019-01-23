@@ -29,8 +29,18 @@ public class CustomerServiceImpl implements CustomerService {
     @Autowired
     private CustomerMapper customerMapper;
 
-    @Autowired
-    private IdService idService;
+    @Override
+    public CustomerModel findById(Long id) {
+        return customerMapper.selectByPrimaryKey(id);
+    }
+
+    @Override
+    public CustomerModel findByCode(String code) {
+        Example example = new Example(CustomerModel.class);
+        Example.Criteria criteria = example.createCriteria();
+        criteria.andEqualTo("code", code);
+        return customerMapper.selectOneByExample(example);
+    }
 
 
     @Override
@@ -50,8 +60,15 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
-    public void deleteCustomer(String id) {
-        customerMapper.deleteByPrimaryKey(id);
+    public void deleteCustomer(String code) {
+        logger.info("code==" + code);
+        CustomerModel customerModel = this.findByCode(code);
+        customerMapper.deleteByPrimaryKey(customerModel);
+    }
+
+    @Override
+    public void updateCustomer(CustomerModel customerModel) {
+        this.customerMapper.updateByPrimaryKey(customerModel);
     }
 
     private Example mapQueryInfo(CustomerModel customerModel) {
@@ -64,13 +81,13 @@ public class CustomerServiceImpl implements CustomerService {
         Example example = new Example(CustomerModel.class);
         Example.Criteria criteria = example.createCriteria();
         if (StringUtils.isNotBlank(code)) {
-            criteria.andLike("code", "%" + code + "%");
+            criteria.andLike("code", code + "%");
         }
         if (StringUtils.isNotBlank(name)) {
-            criteria.andLike("name", "%" + name + "%");
+            criteria.andLike("name", name + "%");
         }
         if (StringUtils.isNotBlank(phone)) {
-            criteria.andEqualTo("phone", phone);
+            criteria.andLike("phone", phone + "%");
         }
         return example;
     }

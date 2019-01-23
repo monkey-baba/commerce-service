@@ -9,6 +9,4 @@
 
   <include file="db/changelog/v1.0.0-init.xml" />
 
-
-
 </databaseChangeLog>

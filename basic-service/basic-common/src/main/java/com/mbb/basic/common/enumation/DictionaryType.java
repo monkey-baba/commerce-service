@@ -81,5 +81,9 @@ public enum DictionaryType {
      * 配货单状态
      */
     CONSIGNMENT_STATUS,
+    /**
+     * 客户状态
+     */
+    CUS_STATUS,
     ;
 }

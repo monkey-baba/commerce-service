@@ -45,56 +45,31 @@ public class UserController extends BaseController {
     @Autowired
     private IdService idService;
     @Autowired
-    private PermissionService permissionService;
-    @Autowired
     private RoleService roleService;
     @Autowired
     private UserService userService;
 
     /**
      * 获取用户信息  做权限用
-     * @param principal
-     * @return
      */
     @GetMapping("/info")
     public ResponseEntity info(Principal principal) {
-        UserModel user = userService.findByUsername(principal.getName());
+        UserModel user = userService.userDetailsInfo(principal.getName());
         UserLoginResp info = new UserLoginResp();
         info.setName(user.getName());
         info.setUsername(user.getUsername());
         info.setId(user.getId());
-
-        //Groups
-        List<GroupModel> groups = groupService.findUserGroups(user.getId());
-
-        final Collection<RoleModel> groupRoles =
-                CollectionUtils.emptyIfNull(groups).stream()
-                        .flatMap(g -> {
-                            List<RoleModel> roles = roleService.findGroupRoles(g.getId());
-                            return roles.stream();
-                        }).collect(Collectors.toList());
-
-        final Collection<RoleModel> allRoles = CollectionUtils
-                .union(CollectionUtils.emptyIfNull(roleService.findUserRoles(user.getId())),
-                        groupRoles);
         info.setRoles(
-                allRoles.stream().map(RoleModel::getName).collect(Collectors.toList()));
+                user.getRoles().stream().map(RoleModel::getName).collect(Collectors.toList()));
 
-        //Authorities
-        final List<GrantedAuthority> premissions =
-                allRoles.stream().flatMap(
-                        role -> permissionService.findRolePermissions(role.getId()).stream())
-                        .collect(Collectors.toList());
-        info.setAuthorities(premissions.stream().map(GrantedAuthority::getAuthority).collect(
-                Collectors.toList()));
-
+        info.setAuthorities(
+                user.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(
+                        Collectors.toList()));
         return ResponseEntity.ok(info);
     }
 
     /**
      * 用户列表
-     * @param query
-     * @return
      */
     @GetMapping("/list")
     public ResponseEntity list(UserListQuery query) {
@@ -129,9 +104,9 @@ public class UserController extends BaseController {
 //                                List<RoleModel> roles = roleService.findGroupRoles(g.getId());
 //                                return roles.stream();
 //                            }).collect(Collectors.toList());
-            final Collection<RoleModel> groupRoles= Collections.emptyList();
+            final Collection<RoleModel> groupRoles = Collections.emptyList();
             final Collection<RoleModel> allRoles = CollectionUtils
-                    .union(CollectionUtils.emptyIfNull(roleService.findUserRoles(user.getId())),
+                    .union(CollectionUtils.emptyIfNull(roleService.findUserRoles(u.getId())),
                             groupRoles);
 
             info.setRoles(allRoles.stream().map(RoleModel::getName).collect(Collectors.toList()));
@@ -140,7 +115,7 @@ public class UserController extends BaseController {
         }).collect(Collectors.toList());
 
         //用data生成新的分页数据
-        PageInfo<UserListResp> result =PageInfo.of(list);
+        PageInfo<UserListResp> result = PageInfo.of(list);
         //把原来的总条数复制进去
         result.setTotal(origin.getTotal());
         return ResponseEntity.ok(result);

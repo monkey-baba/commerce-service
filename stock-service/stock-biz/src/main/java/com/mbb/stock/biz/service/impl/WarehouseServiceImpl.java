@@ -2,7 +2,6 @@ package com.mbb.stock.biz.service.impl;
 
 import com.lxm.idgenerator.service.intf.IdService;
 import com.mbb.stock.biz.dao.WarehouseMapper;
-import com.mbb.stock.biz.model.StockModel;
 import com.mbb.stock.biz.model.WarehouseModel;
 import com.mbb.stock.biz.service.WarehouseService;
 import lombok.extern.slf4j.Slf4j;
@@ -26,20 +25,33 @@ import java.util.List;
 @Slf4j
 public class WarehouseServiceImpl implements WarehouseService {
 
-    private static final Logger logger = LogManager.getLogger(WarehouseServiceImpl.class);
-
     @Autowired
     private WarehouseMapper warehouseMapper;
 
-    @Autowired
-    private IdService idService;
+    @Override
+    public WarehouseModel findById(Long id) {
+        return warehouseMapper.selectByPrimaryKey(id);
+    }
+
+    @Override
+    public WarehouseModel findByCode(String code) {
+        Example example = new Example(WarehouseModel.class);
+        Example.Criteria criteria = example.createCriteria();
+        criteria.andEqualTo("code", code);
+        return warehouseMapper.selectOneByExample(example);
+    }
+
+    @Override
+    public List<WarehouseModel> findAllWarehouses() {
+        return warehouseMapper.selectAll();
+    }
 
     @Override
     public List<WarehouseModel> getWarehouses(WarehouseModel warehouseModel) {
         //封装查询Example
         Example example = mapQueryInfo(warehouseModel);
         List<WarehouseModel> warehouseModels = warehouseMapper.selectByExample(example);
-        logger.info("warehouse size====" + warehouseModels.size());
+        log.info("warehouse size====" + warehouseModels.size());
         return warehouseModels;
     }
 
@@ -51,8 +63,25 @@ public class WarehouseServiceImpl implements WarehouseService {
     }
 
     @Override
-    public void deleteWarehouse(String id) {
-        warehouseMapper.deleteByPrimaryKey(id);
+    public void deleteWarehouse(String code) {
+        log.info("code==" + code);
+        Example example = new Example(WarehouseModel.class);
+        Example.Criteria criteria = example.createCriteria();
+        criteria.andEqualTo("code", code);
+        WarehouseModel warehouseModel = warehouseMapper.selectOneByExample(example);
+        warehouseMapper.deleteByPrimaryKey(warehouseModel);
+    }
+
+    @Override
+    public void enableWarehouse(String code, Boolean enabled) {
+        WarehouseModel warehouseModel = this.findByCode(code);
+        warehouseModel.setActive(enabled);
+        this.warehouseMapper.updateByPrimaryKey(warehouseModel);
+    }
+
+    @Override
+    public void updateWarehouse(WarehouseModel warehouseModel) {
+        this.warehouseMapper.updateByPrimaryKey(warehouseModel);
     }
 
     private Example mapQueryInfo(WarehouseModel warehouseModel) {
@@ -60,13 +89,13 @@ public class WarehouseServiceImpl implements WarehouseService {
         String code = warehouseModel.getCode();
         //仓库名称
         String name = warehouseModel.getName();
-        Example example = new Example(StockModel.class);
+        Example example = new Example(WarehouseModel.class);
         Example.Criteria criteria = example.createCriteria();
         if (StringUtils.isNotBlank(code)) {
-            criteria.andLike("code", "%" + code + "%");
+            criteria.andLike("code", code + "%");
         }
         if (StringUtils.isNotBlank(name)) {
-            criteria.andLike("name", "%" + name + "%");
+            criteria.andLike("name", name + "%");
         }
         return example;
     }

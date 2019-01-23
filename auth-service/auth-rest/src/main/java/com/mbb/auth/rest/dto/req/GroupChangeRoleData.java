@@ -1,7 +1,7 @@
 package com.mbb.auth.rest.dto.req;
 
-import java.util.List;
 import lombok.Data;
+import java.util.List;
 
 @Data
 public class GroupChangeRoleData {

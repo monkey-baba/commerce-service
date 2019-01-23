@@ -5,9 +5,7 @@ import com.github.pagehelper.PageInfo;
 import com.lxm.idgenerator.service.intf.IdService;
 import com.mbb.stock.biz.model.WarehouseModel;
 import com.mbb.stock.biz.service.WarehouseService;
-import com.mbb.stock.rest.dto.WarehouseCreateData;
-import com.mbb.stock.rest.dto.WarehouseInfoResp;
-import com.mbb.stock.rest.dto.WarehouseListQuery;
+import com.mbb.stock.rest.dto.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -22,7 +20,7 @@ import java.util.stream.Collectors;
  * @create 2019-01-10 17:41
  */
 @RestController
-@RequestMapping("api/v1/warehouse")
+@RequestMapping("/api/v1/warehouse")
 public class WarehouseController {
 
     @Autowired
@@ -44,7 +42,11 @@ public class WarehouseController {
         //获取页码等信息
         PageInfo<WarehouseModel> origin = PageInfo.of(warehouses);
         //从model转data
-        List<WarehouseInfoResp> stockInfoRespList = dealResult(origin);
+        List<WarehouseInfoResp> stockInfoRespList = origin.getList().stream().map(warehouse -> {
+            WarehouseInfoResp warehouseInfoResp = new WarehouseInfoResp();
+            convert(warehouse, warehouseInfoResp);
+            return warehouseInfoResp;
+        }).collect(Collectors.toList());
         //用data生成新的分页数据
         PageInfo<WarehouseInfoResp> result = PageInfo.of(stockInfoRespList);
         result.setTotal(origin.getTotal());
@@ -58,51 +60,55 @@ public class WarehouseController {
         warehouseModel.setCode(warehouseCreateData.getCode());
         warehouseModel.setName(warehouseCreateData.getName());
         //是否启用
-        String active = warehouseCreateData.getActive();
-        if ("1".equals(active)) {
-            warehouseModel.setActive(Boolean.TRUE);
-        } else if ("0".equals(active)) {
-            warehouseModel.setActive(Boolean.FALSE);
-        }
+        warehouseModel.setActive(warehouseCreateData.getEnabled());
         //所属供货点
         warehouseModel.setPosId(warehouseCreateData.getPosId());
         warehouseModel.setVersion(0);
         warehouseService.createWarehouse(warehouseModel);
         WarehouseInfoResp warehouseInfoResp = new WarehouseInfoResp();
-        warehouseInfoResp.setId(warehouseModel.getId());
-        warehouseInfoResp.setCode(warehouseModel.getCode());
-        warehouseInfoResp.setName(warehouseModel.getName());
-        Boolean activeBoolean = warehouseModel.getActive();
-        warehouseInfoResp.setActive(activeBoolean != null && activeBoolean ? "1" : "0");
-        warehouseInfoResp.setPosId(warehouseModel.getPosId());
+        convert(warehouseModel, warehouseInfoResp);
         return ResponseEntity.ok(warehouseInfoResp);
     }
 
-    @GetMapping("/delete")
-    public ResponseEntity deleteWarehouse(@RequestParam(value = "id", required = true) String id) {
-        warehouseService.deleteWarehouse(id);
-        return ResponseEntity.ok(Boolean.TRUE);
+    @PostMapping("/delete")
+    public ResponseEntity deleteWarehouse(@RequestBody List<WarehouseDeleteData> datas) {
+        for (WarehouseDeleteData data : datas) {
+            warehouseService.deleteWarehouse(data.getCode());
+        }
+        return ResponseEntity.ok("删除成功");
     }
 
-    private List<WarehouseInfoResp> dealResult(PageInfo<WarehouseModel> warehouses) {
-        List<WarehouseInfoResp> warehouseInfoRespList = warehouses.getList().stream().map(warehouseModel -> {
-            WarehouseInfoResp warehouseInfoResp = new WarehouseInfoResp();
-            //主键
-            warehouseInfoResp.setId(warehouseModel.getId());
-            //仓库编码
-            warehouseInfoResp.setCode(warehouseModel.getCode());
-            //仓库名称
-            warehouseInfoResp.setName(warehouseModel.getName());
-            //是否启用
-            Boolean active = warehouseModel.getActive();
-            warehouseInfoResp.setActive(active != null && active ? "1" : "0");
-            //所属供货点
-            warehouseInfoResp.setPosId(warehouseModel.getPosId());
-            //仓库地址
-            return warehouseInfoResp;
+    @PostMapping("/enable")
+    public ResponseEntity enableWarehouse(@RequestBody List<WarehouseEnableData> datas) {
+        for (WarehouseEnableData data : datas) {
+            warehouseService.enableWarehouse(data.getCode(), data.getEnabled());
+        }
+        return ResponseEntity.ok("更新成功");
+    }
 
-        }).collect(Collectors.toList());
-        return warehouseInfoRespList;
+    @PostMapping("/update")
+    public ResponseEntity updateWarehouse(@RequestBody WarehouseUpdateData data) {
+        WarehouseModel warehouseModel = warehouseService.findById(data.getId());
+        warehouseModel.setId(data.getId());
+        warehouseModel.setCode(data.getCode());
+        warehouseModel.setName(data.getName());
+        warehouseService.updateWarehouse(warehouseModel);
+        return ResponseEntity.ok("更新成功");
+    }
+
+    private WarehouseInfoResp convert(WarehouseModel warehouseModel, WarehouseInfoResp warehouseInfoResp) {
+        //主键
+        warehouseInfoResp.setId(warehouseModel.getId());
+        //仓库编码
+        warehouseInfoResp.setCode(warehouseModel.getCode());
+        //仓库名称
+        warehouseInfoResp.setName(warehouseModel.getName());
+        //是否启用
+        warehouseInfoResp.setEnabled(warehouseModel.getActive());
+        //所属供货点
+        warehouseInfoResp.setPosId(warehouseModel.getPosId());
+        //仓库地址
+        return warehouseInfoResp;
     }
 
 }
