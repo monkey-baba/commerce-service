@@ -8,6 +8,7 @@ import com.mbb.product.biz.data.PriceUpdateData;
 import com.mbb.product.biz.model.PriceModel;
 import com.mbb.product.biz.service.PriceService;
 import com.mbb.product.rest.data.PriceDeleteData;
+import java.util.Collections;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -33,7 +34,7 @@ public class PriceController extends BaseController {
     public ResponseEntity updateprice(@RequestBody PriceUpdateData data) throws Exception {
         PriceModel price = priceService.findPriceById(data.getId());
         price.setName(data.getName());
-        price.setChannelId(data.getChannelId());
+        price.setChannelId(Collections.singletonList(data.getChannelId()));
         price.setActive(data.getActive());
         price.setStartTime(data.getStartTime());
         price.setEndTime(data.getEndTime());
@@ -46,7 +47,7 @@ public class PriceController extends BaseController {
     public ResponseEntity create(@RequestBody PriceCreateData data) {
         PriceModel price = new PriceModel();
         price.setName(data.getName());
-        price.setChannelId(data.getChannelId());
+        price.setChannelId(Collections.singletonList(data.getChannelId()));
         price.setStartTime(data.getStartTime());
         price.setEndTime(data.getEndTime());
         price.setId(idService.genId());
@@ -55,7 +56,7 @@ public class PriceController extends BaseController {
         priceService.createPrice(price);
         PriceData resp = new PriceData();
         resp.setName(price.getName());
-        resp.setChannelId(price.getChannelId());
+        resp.setChannelId(price.getChannelId().get(0));
         resp.setStartTime(price.getStartTime());
         resp.setEndTime(price.getEndTime());
 
