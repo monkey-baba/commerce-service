@@ -3,6 +3,8 @@ package com.mbb.customer.rest.controller;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.lxm.idgenerator.service.intf.IdService;
+import com.mbb.basic.common.dto.DictValueData;
+import com.mbb.customer.adapter.CustomerServiceAdapter;
 import com.mbb.customer.biz.model.CustomerModel;
 import com.mbb.customer.biz.service.CustomerService;
 import com.mbb.customer.rest.dto.*;
@@ -20,7 +22,7 @@ import java.util.stream.Collectors;
  * @create 2019-01-08 15:33
  */
 @RestController
-@RequestMapping("api/v1/customer")
+@RequestMapping("/api/v1/customer")
 public class CustomerController extends BaseController {
 
     @Autowired
@@ -28,6 +30,9 @@ public class CustomerController extends BaseController {
 
     @Autowired
     private IdService idService;
+
+    @Autowired
+    private CustomerServiceAdapter customerServiceAdapter;
 
     @GetMapping("/info")
     public ResponseEntity getCustomers(CustomerListQuery customerListQuery) {
@@ -92,6 +97,12 @@ public class CustomerController extends BaseController {
         return ResponseEntity.ok("删除成功");
     }
 
+    @GetMapping("/status")
+    public ResponseEntity getCustomerStatus() {
+        List<DictValueData> customerStatusDataList = customerServiceAdapter.getCustomerStatus();
+        return ResponseEntity.ok(customerStatusDataList);
+    }
+
     private void convertCustomer(CustomerModel customerModel, CustomerInfoResp customerInfoResp) {
         //主键
         customerInfoResp.setId(customerModel.getId());
@@ -104,6 +115,11 @@ public class CustomerController extends BaseController {
         //邮箱
         customerInfoResp.setEmail(customerModel.getEmail());
         //状态
-        customerInfoResp.setStatusId(customerModel.getStatusId());
+        Long statusId = customerModel.getStatusId();
+        if (statusId != null) {
+            DictValueData dictValueData = customerServiceAdapter.getDictValue(statusId);
+            customerInfoResp.setStatusId(statusId);
+            customerInfoResp.setStatusName(dictValueData == null ? "" : dictValueData.getName());
+        }
     }
 }
