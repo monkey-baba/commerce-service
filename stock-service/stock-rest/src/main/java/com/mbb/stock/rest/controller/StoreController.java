@@ -1,7 +1,9 @@
 package com.mbb.stock.rest.controller;
 
+import com.alibaba.fastjson.JSON;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.mbb.basic.common.dto.AddressData;
 import com.mbb.basic.common.dto.DictValueData;
 import com.mbb.stock.biz.dto.StoreInfoDto;
 import com.mbb.stock.biz.model.StockModel;
@@ -18,6 +20,7 @@ import java.util.stream.Collectors;
 import com.mbb.stock.biz.dto.StoreListQuery;
 import com.mbb.stock.biz.model.PointOfServiceModel;
 import com.mbb.stock.adapter.PosServiceAdapter;
+import com.mbb.stock.adapter.PosAddressAdapter;
 @RestController
 @RequestMapping("/api/v1/store")
 public class StoreController extends BaseController{
@@ -26,6 +29,9 @@ public class StoreController extends BaseController{
 
     @Autowired
     private PosServiceAdapter posServiceAdapter;
+
+    @Autowired
+    private PosAddressAdapter posAddressAdapter;
 
     private static final Logger logger = LogManager.getLogger(StoreController.class);
     @GetMapping("/allList")
@@ -75,7 +81,17 @@ public class StoreController extends BaseController{
 
     @PostMapping("/add")
     public ResponseEntity addStock(@RequestBody StoreInfoDto stockInfoDtoList) {
-        logger.info("classifyid====" + stockInfoDtoList.getCode());
+
+        logger.info("Paddress().size()===="+ JSON.toJSONString(stockInfoDtoList.getPaddress()));
+        logger.info("Detailaddress()====" + stockInfoDtoList.getDetailaddress());
+        logger.info("stockInfoDtoList.getContact()====" + stockInfoDtoList.getContact());
+        AddressData addressData=new AddressData();
+        addressData.setAddress(stockInfoDtoList.getPaddress());
+        addressData.setDetail(stockInfoDtoList.getDetailaddress());
+        addressData.setPhone(stockInfoDtoList.getContact());
+        addressData.setName(stockInfoDtoList.getOwner());
+        Long address= posAddressAdapter.saveAddress(addressData);
+        stockInfoDtoList.setAddress(address);
         storeService.addStore(stockInfoDtoList);
         return ResponseEntity.ok(Boolean.TRUE);
     }

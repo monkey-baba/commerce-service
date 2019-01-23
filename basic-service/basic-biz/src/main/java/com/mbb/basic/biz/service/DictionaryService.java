@@ -13,7 +13,7 @@ import java.util.List;
 public interface DictionaryService {
 
 
-    List<DictionaryValueModel> findDictValues(String type);
+    List<DictionaryValueModel> findDictValues(String type, Boolean active);
 
     List<DictionaryModel> findDictByExample(DictionaryModel model);
 
