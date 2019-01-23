@@ -9,5 +9,5 @@ import java.util.List;
 public interface StoreService {
     List<PointOfServiceModel> getStores(PointOfServiceModel storeModel);
     List<StoreInfoDto> getAllStores();
-    void addStore(List<StoreInfoDto> stockInfoDtoList);
+    void addStore(StoreInfoDto stockInfoDtoList);
 }

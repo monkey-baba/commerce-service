@@ -199,4 +199,73 @@
     </insert>
 
   </changeSet>
+
+
+  <changeSet id="5" author="ZQian">
+    <comment>枚举值初始化</comment>
+    <sql>
+      INSERT INTO `dictionary_value` VALUES (101, 1, '1', '款式', '', 1, '', '', '', 0);
+      INSERT INTO `dictionary_value` VALUES (102, 1, '2', '风格', '', 1, '', '', '', 0);
+      INSERT INTO `dictionary_value` VALUES (103, 1, '3', '鞋面材质', '', 1, '', '', '', 0);
+      INSERT INTO `dictionary_value` VALUES (104, 1, '4', '鞋底材质', '', 1, '', '', '', 0);
+      INSERT INTO `dictionary_value` VALUES (105, 1, '5', '跟底款式', '', 1, '', '', '', 0);
+      INSERT INTO `dictionary_value` VALUES (201, 1, '1', '颜色', '', 2, '', '', '', 0);
+      INSERT INTO `dictionary_value` VALUES (202, 1, '2', '尺码', '', 2, '', '', '', 0);
+      INSERT INTO `dictionary_value` VALUES (301, 1, '1', '天猫', '', 3, '', '', '', 0);
+      INSERT INTO `dictionary_value` VALUES (302, 1, '2', '京东', '', 3, '', '', '', 0);
+      INSERT INTO `dictionary_value` VALUES (303, 1, '3', '门店', '', 3, '', '', '', 0);
+      INSERT INTO `dictionary_value` VALUES (401, 1, '1', '双', '', 4, '', '', '', 0);
+      INSERT INTO `dictionary_value` VALUES (402, 1, '2', '件', '', 4, '', '', '', 0);
+      INSERT INTO `dictionary_value` VALUES (403, 1, '3', '盒', '', 4, '', '', '', 0);
+      INSERT INTO `dictionary_value` VALUES (501, 1, '1', '零售价', '', 5, '', '', '', 0);
+      INSERT INTO `dictionary_value` VALUES (502, 1, '2', '会员价', '', 5, '', '', '', 0);
+      INSERT INTO `dictionary_value` VALUES (601, 1, '1', 'ECCO爱步官方旗舰店', '天猫', 6, '', '', '', 0);
+      INSERT INTO `dictionary_value` VALUES (602, 1, '2', 'ECCO爱步女鞋旗舰店', '京东', 6, '', '', '', 0);
+      INSERT INTO `dictionary_value` VALUES (701, 1, '1', '门店', '', 7, '', '', '', 0);
+      INSERT INTO `dictionary_value` VALUES (702, 1, '2', '库区', '', 7, '', '', '', 0);
+      INSERT INTO `dictionary_value` VALUES (801, 1, '1', '已发布', '', 8, '', '', '', 0);
+      INSERT INTO `dictionary_value` VALUES (802, 1, '2', '未发布', '', 8, '', '', '', 0);
+      INSERT INTO `dictionary_value` VALUES (901, 1, '1', '直营店', '', 9, '', '', '', 0);
+      INSERT INTO `dictionary_value` VALUES (902, 1, '2', '加盟店', '', 9, '', '', '', 0);
+      INSERT INTO `dictionary_value` VALUES (1001, 1, '1', '启用', '', 10, '', '', '', 0);
+      INSERT INTO `dictionary_value` VALUES (1002, 1, '2', '失效', '', 10, '', '', '', 0);
+      INSERT INTO `dictionary_value` VALUES (1101, 1, '1', '已保存', '', 11, '', '', '', 0);
+      INSERT INTO `dictionary_value` VALUES (1102, 1, '2', '已提交', '', 11, '', '', '', 0);
+      INSERT INTO `dictionary_value` VALUES (1103, 1, '3', '待发货', '', 11, '', '', '', 0);
+      INSERT INTO `dictionary_value` VALUES (1104, 1, '4', '部分发货', '', 11, '', '', '', 0);
+      INSERT INTO `dictionary_value` VALUES (1105, 1, '5', '已发货', '', 11, '', '', '', 0);
+      INSERT INTO `dictionary_value` VALUES (1106, 1, '6', '交易成功', '', 11, '', '', '', 0);
+      INSERT INTO `dictionary_value` VALUES (1107, 1, '7', '已取消', '', 11, '', '', '', 0);
+      INSERT INTO `dictionary_value` VALUES (1201, 1, '1', '销售订单', '', 12, '', '', '', 0);
+      INSERT INTO `dictionary_value` VALUES (1301, 1, '1', '天猫', '', 13, '', '', '', 0);
+      INSERT INTO `dictionary_value` VALUES (1302, 1, '2', '京东', '', 13, '', '', '', 0);
+      INSERT INTO `dictionary_value` VALUES (1303, 1, '3', '线下', '', 13, '', '', '', 0);
+      INSERT INTO `dictionary_value` VALUES (1401, 1, '1', '手动创建', '', 14, '', '', '', 0);
+      INSERT INTO `dictionary_value` VALUES (1402, 1, '2', '天猫API', '', 14, '', '', '', 0);
+      INSERT INTO `dictionary_value` VALUES (1403, 1, '3', '京东API', '', 14, '', '', '', 0);
+      INSERT INTO `dictionary_value` VALUES (1501, 1, '1', '快递', '', 15, '', '', '', 0);
+      INSERT INTO `dictionary_value` VALUES (1502, 1, '2', '自提', '', 15, '', '', '', 0);
+      INSERT INTO `dictionary_value` VALUES (1601, 1, '1', '顺丰速运', '', 16, '', '', '', 0);
+      INSERT INTO `dictionary_value` VALUES (1602, 1, '2', '申通快递', '', 16, '', '', '', 0);
+      INSERT INTO `dictionary_value` VALUES (1603, 1, '3', '圆通快递', '', 16, '', '', '', 0);
+      INSERT INTO `dictionary_value` VALUES (1701, 1, '1', '增值税普通发票', '', 17, '', '', '', 0);
+      INSERT INTO `dictionary_value` VALUES (1702, 1, '2', '增值税专用发票', '', 17, '', '', '', 0);
+      INSERT INTO `dictionary_value` VALUES (1801, 1, '1', '支付宝', '', 18, '', '', '', 0);
+      INSERT INTO `dictionary_value` VALUES (1802, 1, '2', '微信支付', '', 18, '', '', '', 0);
+      INSERT INTO `dictionary_value` VALUES (1803, 1, '3', '现金', '', 18, '', '', '', 0);
+      INSERT INTO `dictionary_value` VALUES (1804, 1, '4', '网上银行', '', 18, '', '', '', 0);
+      INSERT INTO `dictionary_value` VALUES (1805, 1, '5', '优先规则', '', 19, '', '', '', 0);
+      INSERT INTO `dictionary_value` VALUES (1901, 1, '1', '排序规则', '', 19, '', '', '', 0);
+      INSERT INTO `dictionary_value` VALUES (1902, 1, '2', '规律规则', '', 19, '', '', '', 0);
+      INSERT INTO `dictionary_value` VALUES (2001, 1, '1', '待分配', '', 20, '', '', '', 0);
+      INSERT INTO `dictionary_value` VALUES (2002, 1, '2', '寻源结束', '', 20, '', '', '', 0);
+      INSERT INTO `dictionary_value` VALUES (2003, 1, '3', '寻源异常', '', 20, '', '', '', 0);
+      INSERT INTO `dictionary_value` VALUES (2004, 1, '4', '已审核', '', 20, '', '', '', 0);
+      INSERT INTO `dictionary_value` VALUES (2005, 1, '5', '待发货', '', 20, '', '', '', 0);
+      INSERT INTO `dictionary_value` VALUES (2006, 1, '6', '已发货', '', 20, '', '', '', 0);
+      INSERT INTO `dictionary_value` VALUES (2007, 1, '7', '已取消', '', 20, '', '', '', 0);
+      INSERT INTO `dictionary_value` VALUES (2101, 1, '1', '生效', '', 21, '', '', '', 0);
+      INSERT INTO `dictionary_value` VALUES (2102, 1, '2', '失效', '', 21, '', '', '', 0);
+    </sql>
+  </changeSet>
 </databaseChangeLog>

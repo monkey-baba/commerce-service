@@ -2,10 +2,14 @@ package com.mbb.stock.rest.controller;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.mbb.basic.common.dto.DictValueData;
 import com.mbb.stock.biz.dto.StoreInfoDto;
 import com.mbb.stock.biz.model.StockModel;
 import com.mbb.stock.biz.service.StoreService;
+import com.mbb.stock.biz.service.impl.StockServiceImpl;
 import com.mbb.stock.rest.dto.StockInfoResp;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -13,23 +17,41 @@ import java.util.List;
 import java.util.stream.Collectors;
 import com.mbb.stock.biz.dto.StoreListQuery;
 import com.mbb.stock.biz.model.PointOfServiceModel;
+import com.mbb.stock.adapter.PosServiceAdapter;
 @RestController
 @RequestMapping("/api/v1/store")
 public class StoreController extends BaseController{
     @Autowired
     private StoreService storeService;
+
+    @Autowired
+    private PosServiceAdapter posServiceAdapter;
+
+    private static final Logger logger = LogManager.getLogger(StoreController.class);
     @GetMapping("/allList")
     public ResponseEntity storeAllList(StoreListQuery query) {
         List<StoreInfoDto> stockInfoDtoList = storeService.getAllStores();
         return ResponseEntity.ok(stockInfoDtoList);
     }
+
+    @GetMapping("/classify")
+    public ResponseEntity storeClassification() {
+       List<DictValueData> dictValueDataList = posServiceAdapter.getPosClassify();
+        return ResponseEntity.ok(dictValueDataList);
+    }
+
+    @GetMapping("/status")
+    public ResponseEntity storeStatus() {
+        List<DictValueData> dictValueDataList = posServiceAdapter.getPosStatus();
+        return ResponseEntity.ok(dictValueDataList);
+    }
+
     @PostMapping("/info")
     public ResponseEntity getStores(@RequestBody StoreListQuery storeListQuery) {
 
         PointOfServiceModel storeModel = new PointOfServiceModel();
         storeModel.setName(storeListQuery.getName());
         storeModel.setCode(storeListQuery.getCode());
-
         if(!(storeListQuery.getClassification().equals(""))){
             storeModel.setClassifyId(Long.valueOf(storeListQuery.getClassification()));
         }
@@ -52,7 +74,8 @@ public class StoreController extends BaseController{
     }
 
     @PostMapping("/add")
-    public ResponseEntity addStock(@RequestBody List<StoreInfoDto> stockInfoDtoList) {
+    public ResponseEntity addStock(@RequestBody StoreInfoDto stockInfoDtoList) {
+        logger.info("classifyid====" + stockInfoDtoList.getCode());
         storeService.addStore(stockInfoDtoList);
         return ResponseEntity.ok(Boolean.TRUE);
     }
@@ -66,11 +89,18 @@ public class StoreController extends BaseController{
             //门店名字
             storeInfoResp.setName(store.getName());
             //门店状态
-            Long status=store.getAddressId();
-            storeInfoResp.setStatus(status);
+            Long status=store.getStatusId();
+            List<DictValueData> dictValueDataList = posServiceAdapter.getPosStatus();
+
+            for(DictValueData dictValueData:dictValueDataList){
+                if(status.equals(dictValueData.getId())){
+                    storeInfoResp.setPstatus(dictValueData.getName());
+                }
+            }
+
             //门店负责人
-            String owner=store.getOwner();
-            storeInfoResp.setOwner(String.valueOf(owner == null ? "" : owner));
+
+            storeInfoResp.setOwner(String.valueOf(store.getOwner() == null ? "" : store.getOwner()));
 
             return storeInfoResp;
         }).collect(Collectors.toList());

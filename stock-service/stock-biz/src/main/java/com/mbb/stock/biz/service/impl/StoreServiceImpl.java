@@ -8,6 +8,7 @@ import com.mbb.stock.biz.dto.StoreListQuery;
 import com.mbb.stock.biz.model.PointOfServiceModel;
 import com.mbb.stock.biz.model.StockModel;
 import com.mbb.stock.biz.service.StoreService;
+import com.mbb.stock.common.enumation.PosType;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.ibatis.session.RowBounds;
@@ -51,15 +52,16 @@ public class StoreServiceImpl implements StoreService {
     }
 
     @Override
-    public void addStore(List<StoreInfoDto> storeInfoDtoList) {
-        if (!CollectionUtils.isEmpty(storeInfoDtoList)) {
-            for (StoreInfoDto storeInfoDto : storeInfoDtoList) {
+    public void addStore(StoreInfoDto storeInfoDto) {
+        if (storeInfoDto!=null) {
                 PointOfServiceModel storeModel = new PointOfServiceModel();
+                storeModel.setPos_type(PosType.STORE);
                 storeModel.setId(idService.genId());
                 storeModel.setCode(storeInfoDto.getCode());
                 String name=storeInfoDto.getName();
                 storeModel.setName(StringUtils.isBlank(name) ? null : name);
-                Long  classifyid=storeInfoDto.getClassifyid();
+                Long  classifyid=storeInfoDto.getClassification();
+                logger.info("classifyid====" + classifyid);
                 storeModel.setClassifyId(classifyid);
                 String contact=storeInfoDto.getContact();
                 storeModel.setContact(StringUtils.isBlank(contact) ? null :contact);
@@ -70,7 +72,6 @@ public class StoreServiceImpl implements StoreService {
                 String owner = storeInfoDto.getOwner();
                 storeModel.setOwner(StringUtils.isBlank(owner) ? null : owner);
                 storeMapper.insert(storeModel);
-            }
         }
     }
 
@@ -111,7 +112,7 @@ public class StoreServiceImpl implements StoreService {
         Long status = storeModel.getStatusId();
         //门店负责人
         String owner = storeModel.getOwner();
-
+        logger.info("type====" + type);
         Example example = new Example(PointOfServiceModel.class);
         Example.Criteria criteria = example.createCriteria();
         if (StringUtils.isNotBlank(code)) {
@@ -124,6 +125,13 @@ public class StoreServiceImpl implements StoreService {
         if (StringUtils.isNotBlank(owner)) {
             criteria.andLike("owner", "%" + owner + "%");
         }
+        if(null!=type){
+            criteria.andEqualTo("classifyId", type);
+        }
+        if(null!=status){
+            criteria.andEqualTo("statusId", status);
+        }
+        criteria.andEqualTo("pos_type", PosType.STORE);
         return example;
     }
     private RowBounds mapRowBounds(StoreListQuery storeListQuery) {

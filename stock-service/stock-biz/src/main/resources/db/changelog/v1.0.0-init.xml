@@ -14,7 +14,7 @@
       <column name="address_id" type="BIGINT" remarks="地址ID"/>
       <column name="owner" type="VARCHAR(32)" remarks="负责人"/>
       <column name="contact" type="VARCHAR(255)" remarks="联系方式"/>
-      <column name="posType" type="VARCHAR(32)" remarks="类型(门店或大仓)"/>
+      <column name="pos_type" type="VARCHAR(32)" remarks="类型(门店或大仓)"/>
       <column name="classify_id" type="BIGINT" remarks="门店分类"/>
       <column name="status_id" type="BIGINT" remarks="门店状态"/>
     </createTable>
