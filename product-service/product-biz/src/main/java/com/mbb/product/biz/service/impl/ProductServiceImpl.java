@@ -8,8 +8,6 @@ import com.mbb.product.biz.data.ProductQuery;
 import com.mbb.product.biz.model.ProductModel;
 import com.mbb.product.biz.service.ProductService;
 import lombok.extern.slf4j.Slf4j;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import tk.mybatis.mapper.entity.Example;
 
@@ -23,7 +21,6 @@ import org.apache.commons.lang3.StringUtils;
 @Service
 @Slf4j
 public class ProductServiceImpl implements ProductService {
-    private static final Logger LOG = LoggerFactory.getLogger(ProductServiceImpl.class);
 
     @Resource
     private ProductMapper productMapper;
@@ -53,7 +50,7 @@ public class ProductServiceImpl implements ProductService {
         //封装查询Example
         Example example = mapQueryInfo(productModel);
         List<ProductModel> productModels = productMapper.selectByExample(example);
-        LOG.info("product size====" + productModels.size());
+        log.info("product size====" + productModels.size());
         return productModels;
     }
 

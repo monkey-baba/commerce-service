@@ -10,8 +10,6 @@ import com.mbb.product.biz.service.PriceService;
 import java.util.Collections;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import tk.mybatis.mapper.entity.Example;
 
@@ -23,7 +21,6 @@ import java.util.stream.Collectors;
 @Service
 @Slf4j
 public class PriceServiceImpl implements PriceService {
-    private static final Logger LOG = LoggerFactory.getLogger(PriceServiceImpl.class);
 
     @Resource
     private PriceMapper priceMapper;
@@ -51,7 +48,7 @@ public class PriceServiceImpl implements PriceService {
         //封装查询Example
         Example example = mapQueryInfo(priceModel);
         List<PriceModel> priceModels = priceMapper.selectByExample(example);
-        LOG.info("price size====" + priceModels.size());
+        log.info("price size====" + priceModels.size());
         return priceModels;
     }
 

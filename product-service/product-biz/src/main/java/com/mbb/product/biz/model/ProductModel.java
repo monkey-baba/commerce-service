@@ -20,5 +20,4 @@ public class ProductModel extends BaseModel {
     private List<String> images;
     private Map<Long,String> attribute;
 
-
 }
