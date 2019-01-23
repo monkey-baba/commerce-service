@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.CollectionUtils;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -29,6 +30,9 @@ public class AddressController extends BaseController {
         if (CollectionUtils.isEmpty(data.getAddress()) || data.getAddress().size() != 3) {
             return ResponseEntity.badRequest().body("地址数据不完整");
         }
+        if (StringUtils.isEmpty(data.getName())) {
+            return ResponseEntity.badRequest().body("联系人为空");
+        }
         AddressModel address = new AddressModel();
         address.setId(idService.genId());
         address.setAddress(data.getDetail());
@@ -36,6 +40,7 @@ public class AddressController extends BaseController {
         address.setCity(data.getAddress().get(1));
         address.setDistrict(data.getAddress().get(2));
         address.setPhone(data.getPhone());
+        address.setName(data.getName());
         int insert = addressService.createAddress(address);
         if (insert != 1) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("保存失败");
@@ -54,6 +59,7 @@ public class AddressController extends BaseController {
                 Arrays.asList(address.getProvince(), address.getCity(), address.getDistrict()));
         data.setDetail(address.getAddress());
         data.setPhone(address.getPhone());
+        data.setName(address.getName());
         return ResponseEntity.ok(data);
     }
 
