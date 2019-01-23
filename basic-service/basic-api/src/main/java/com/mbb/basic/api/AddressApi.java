@@ -12,5 +12,5 @@ public interface AddressApi {
     Long saveAddress(AddressData data);
 
     @GetMapping("/api/v1/address/get")
-    AddressData saveAddress(Long id);
+    AddressData getAddress(Long id);
 }
