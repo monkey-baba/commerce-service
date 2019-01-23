@@ -18,4 +18,8 @@ public class AddressData {
      * 联系电话
      */
     private String phone;
+    /**
+     * 联系人
+     */
+    private String name;
 }

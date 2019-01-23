@@ -28,13 +28,13 @@ public class ProductController extends BaseController {
     }
 
     @PostMapping("/update")
-    public ResponseEntity updateproduct(@RequestBody ProductUpdateData data) throws Exception {
+    public ResponseEntity updateProduct(@RequestBody ProductUpdateData data) throws Exception {
         ProductModel product = productService.findProductById(data.getId());
         product.setCode(data.getCode());
         product.setName(data.getName());
         product.setChannelId(data.getChannelId());
         product.setApprovedId(data.getApprovedId());
-        productService.updateproduct(product);
+        productService.updateProduct(product);
         return ResponseEntity.ok("更新成功");
 }
 

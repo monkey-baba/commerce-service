@@ -68,7 +68,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public void updateproduct(ProductModel product) throws Exception {
+    public void updateProduct(ProductModel product) throws Exception {
         int result = this.productMapper.updateByPrimaryKey(product);
         if (result == 0) {
             throw new Exception("更新失败！");

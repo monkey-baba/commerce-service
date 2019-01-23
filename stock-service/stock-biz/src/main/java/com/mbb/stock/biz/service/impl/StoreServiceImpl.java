@@ -55,7 +55,7 @@ public class StoreServiceImpl implements StoreService {
     public void addStore(StoreInfoDto storeInfoDto) {
         if (storeInfoDto!=null) {
                 PointOfServiceModel storeModel = new PointOfServiceModel();
-                storeModel.setPos_type(PosType.STORE);
+                storeModel.setPosType(PosType.STORE);
                 storeModel.setId(idService.genId());
                 storeModel.setCode(storeInfoDto.getCode());
                 String name=storeInfoDto.getName();

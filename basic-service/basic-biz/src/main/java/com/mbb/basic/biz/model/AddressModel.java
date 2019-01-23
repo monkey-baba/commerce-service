@@ -10,6 +10,10 @@ import lombok.EqualsAndHashCode;
 @Table(name = "address")
 public class AddressModel extends BaseModel {
 
+    /**
+     * 联系人
+     */
+    private String name;
     private String province;
     private String city;
     private String district;

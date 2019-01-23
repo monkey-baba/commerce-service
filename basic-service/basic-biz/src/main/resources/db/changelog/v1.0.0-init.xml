@@ -39,6 +39,7 @@
     <createTable tableName="address" remarks="地址">
       <column name="id" type="BIGINT" remarks="ID"/>
       <column name="version" type="INT" remarks="乐观锁"/>
+      <column name="name" type="VARCHAR(32)" remarks="联系人"/>
       <column name="province" type="VARCHAR(32)" remarks="省编码"/>
       <column name="city" type="VARCHAR(32)" remarks="市编码"/>
       <column name="district" type="VARCHAR(32)" remarks="区编码"/>
