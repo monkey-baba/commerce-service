@@ -9,6 +9,6 @@ public interface ProductService {
     PageInfo<ProductData> getProducts(ProductQuery productQuery);
     void deleteProduct(Long id);
     ProductModel findProductById(Long id);
-    void updateproduct(ProductModel product) throws Exception;
+    void updateProduct(ProductModel product) throws Exception;
     ProductModel createProduct(ProductModel product);
 }

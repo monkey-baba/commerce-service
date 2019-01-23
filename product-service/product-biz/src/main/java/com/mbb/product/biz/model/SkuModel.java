@@ -12,6 +12,7 @@ import lombok.EqualsAndHashCode;
 public class SkuModel extends BaseModel {
 
     private String code;
+    private String name;
     private Long productId;
     private Map<Long,String> meta;
 
