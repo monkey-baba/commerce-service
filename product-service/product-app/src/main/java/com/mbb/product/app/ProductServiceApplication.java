@@ -10,7 +10,7 @@ import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 @SpringBootApplication(scanBasePackages = "com.mbb.product")
 @EnableDiscoveryClient
 @MapperScan(basePackages = "com.mbb.product.biz.dao")
-@EnableFeignClients
+@EnableFeignClients(basePackages = {"com.mbb.basic.api"})
 public class ProductServiceApplication {
 
     public static void main(String[] args) {

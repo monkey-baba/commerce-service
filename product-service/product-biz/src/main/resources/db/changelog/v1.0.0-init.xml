@@ -25,6 +25,7 @@
       <column name="id" type="BIGINT" remarks="ID"/>
       <column name="version" type="INT" remarks="乐观锁"/>
       <column name="code" type="VARCHAR(32)" remarks="编码"/>
+      <column name="name" type="VARCHAR(255)" remarks="名称"/>
       <column name="product_id" type="BIGINT" remarks="SPU"/>
       <column name="meta" type="JSON" remarks="规格信息"/>
     </createTable>
