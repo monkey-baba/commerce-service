@@ -8,6 +8,7 @@ import com.mbb.basic.biz.model.DictionaryModel;
 import com.mbb.basic.biz.model.DictionaryValueModel;
 import com.mbb.basic.biz.service.DictionaryService;
 import com.mbb.basic.biz.service.DictionaryValueService;
+import com.mbb.basic.common.dto.AddressData;
 import com.mbb.basic.common.dto.DictValueData;
 import com.mbb.basic.rest.dto.req.DictCreateData;
 import com.mbb.basic.rest.dto.req.DictListQuery;
@@ -47,9 +48,9 @@ public class DictionaryController {
      * @return 枚举值List
      */
     @GetMapping("/values")
-    public ResponseEntity values(@RequestParam String type) {
+    public ResponseEntity values(@RequestParam String type,@RequestParam(required = false) Boolean active) {
 
-        List<DictionaryValueModel> values = dictionaryService.findDictValues(type);
+        List<DictionaryValueModel> values = dictionaryService.findDictValues(type,active);
         List<DictValueData> result = values.stream().map(value -> {
             DictValueData dictValueData = new DictValueData();
             BeanCopier.create(DictionaryValueModel.class, DictValueData.class, false)

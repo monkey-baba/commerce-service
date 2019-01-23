@@ -32,15 +32,20 @@ public class DictionaryServiceImpl implements DictionaryService {
     private DictionaryValueMapper dictionaryValueMapper;
 
     @Override
-    public List<DictionaryValueModel> findDictValues(String type) {
+    public List<DictionaryValueModel> findDictValues(String type, Boolean active) {
         Builder dict = Example.builder(DictionaryModel.class);
-        dict.where(Sqls.custom().andEqualTo("code",type));
+        dict.where(Sqls.custom().andEqualTo("code", type));
+
         DictionaryModel dictModel = dictionaryMapper.selectOneByExample(dict.build());
-        if (dictModel == null){
+        if (dictModel == null) {
             return Collections.emptyList();
         }
         Builder values = Example.builder(DictionaryValueModel.class);
-        values.where(Sqls.custom().andEqualTo("typeId",dictModel.getId()));
+        Sqls custom = Sqls.custom();
+        values.where(custom.andEqualTo("typeId", dictModel.getId()));
+        if (active != null) {
+            custom.andEqualTo("active", active);
+        }
         return dictionaryValueMapper.selectByExample(values.build());
     }
 
@@ -49,7 +54,7 @@ public class DictionaryServiceImpl implements DictionaryService {
         final Example.Builder builder = Example.builder(DictionaryModel.class);
         final Sqls where = Sqls.custom();
         if (StringUtils.isNotEmpty(model.getName())) {
-            where.andLike("name",  "%" + model.getName() + "%");
+            where.andLike("name", "%" + model.getName() + "%");
         }
         if (StringUtils.isNotEmpty(model.getCode())) {
             where.andLike("code", model.getCode() + "%");

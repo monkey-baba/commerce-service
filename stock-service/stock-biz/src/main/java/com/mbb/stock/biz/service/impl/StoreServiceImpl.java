@@ -1,31 +1,25 @@
 package com.mbb.stock.biz.service.impl;
 
 import com.lxm.idgenerator.service.intf.IdService;
-import com.mbb.stock.biz.dao.StockMapper;
 import com.mbb.stock.biz.dao.StoreMapper;
 import com.mbb.stock.biz.dto.StoreInfoDto;
 import com.mbb.stock.biz.dto.StoreListQuery;
 import com.mbb.stock.biz.model.PointOfServiceModel;
-import com.mbb.stock.biz.model.StockModel;
 import com.mbb.stock.biz.service.StoreService;
 import com.mbb.stock.common.enumation.PosType;
+import java.util.ArrayList;
+import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.ibatis.session.RowBounds;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 import tk.mybatis.mapper.entity.Example;
-
-import java.util.ArrayList;
-import java.util.List;
 @Service
 @Slf4j
 public class StoreServiceImpl implements StoreService {
 
-    private static final Logger logger = LogManager.getLogger(StockServiceImpl.class);
 
     private static final Integer limit = 25;
 
@@ -39,14 +33,14 @@ public class StoreServiceImpl implements StoreService {
     public List<PointOfServiceModel> getStores(PointOfServiceModel storeModel) {
         Example example = mapQueryInfo(storeModel);
         List<PointOfServiceModel> storeModels = storeMapper.selectByExample(example);
-        logger.info("stock size====" + storeModels.size());
+        log.info("stock size====" + storeModels.size());
         return storeModels;
     }
 
     @Override
     public List<StoreInfoDto> getAllStores() {
         List<PointOfServiceModel> storeModels = storeMapper.selectAll();
-        logger.info("stock size====" + storeModels.size());
+        log.info("stock size====" + storeModels.size());
         //处理返回结果
         return dealResult(storeModels);
     }
@@ -61,7 +55,7 @@ public class StoreServiceImpl implements StoreService {
                 String name=storeInfoDto.getName();
                 storeModel.setName(StringUtils.isBlank(name) ? null : name);
                 Long  classifyid=storeInfoDto.getClassification();
-                logger.info("classifyid====" + classifyid);
+                log.info("classifyid====" + classifyid);
                 storeModel.setClassifyId(classifyid);
                 String contact=storeInfoDto.getContact();
                 storeModel.setContact(StringUtils.isBlank(contact) ? null :contact);
@@ -112,7 +106,7 @@ public class StoreServiceImpl implements StoreService {
         Long status = storeModel.getStatusId();
         //门店负责人
         String owner = storeModel.getOwner();
-        logger.info("type====" + type);
+        log.info("type====" + type);
         Example example = new Example(PointOfServiceModel.class);
         Example.Criteria criteria = example.createCriteria();
         if (StringUtils.isNotBlank(code)) {
@@ -131,7 +125,7 @@ public class StoreServiceImpl implements StoreService {
         if(null!=status){
             criteria.andEqualTo("statusId", status);
         }
-        criteria.andEqualTo("pos_type", PosType.STORE);
+        criteria.andEqualTo("posType", PosType.STORE);
         return example;
     }
     private RowBounds mapRowBounds(StoreListQuery storeListQuery) {

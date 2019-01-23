@@ -12,7 +12,9 @@ import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -26,7 +28,7 @@ public class AddressController extends BaseController {
     private IdService idService;
 
     @PostMapping("/save")
-    public ResponseEntity saveAddress(AddressData data) {
+    public ResponseEntity saveAddress(@RequestBody AddressData data) {
         if (CollectionUtils.isEmpty(data.getAddress()) || data.getAddress().size() != 3) {
             return ResponseEntity.badRequest().body("地址数据不完整");
         }
@@ -49,7 +51,7 @@ public class AddressController extends BaseController {
     }
 
     @GetMapping("/get")
-    public ResponseEntity getAddress(Long id) {
+    public ResponseEntity getAddress(@RequestParam Long id) {
         AddressModel address = addressService.findById(id);
         if (address == null) {
             return ResponseEntity.badRequest().body("未找到数据");
