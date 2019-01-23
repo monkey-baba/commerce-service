@@ -10,5 +10,5 @@ public class CustomerInfoResp {
     private String phone;
     private String email;
     private Long statusId;
-
+    private String statusName;
 }
