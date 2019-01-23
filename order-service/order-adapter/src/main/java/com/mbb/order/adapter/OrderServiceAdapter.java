@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -38,5 +39,23 @@ public class OrderServiceAdapter {
      */
     public Map<String, String> getUserInfo(Long id) {
         return Collections.singletonMap("name", "管理员");
+    }
+
+    /**
+     * 获取订单状态
+     *
+     * @return
+     */
+    public List<DictValueData> getOrderStatus() {
+        return dictValueApi.getOrderStatus();
+    }
+
+    /**
+     * 获取订单类型
+     *
+     * @return
+     */
+    public List<DictValueData> getOrderType() {
+        return dictValueApi.getOrderType();
     }
 }

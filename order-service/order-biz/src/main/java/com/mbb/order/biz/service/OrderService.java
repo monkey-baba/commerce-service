@@ -22,5 +22,4 @@ public interface OrderService {
 
     void createOrder(OrderModel orderModel);
 
-    List<DictValueData> getEnums(String type);
 }

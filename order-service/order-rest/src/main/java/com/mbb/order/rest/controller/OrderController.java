@@ -4,6 +4,7 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.lxm.idgenerator.service.intf.IdService;
 import com.mbb.basic.common.dto.DictValueData;
+import com.mbb.order.adapter.OrderServiceAdapter;
 import com.mbb.order.biz.model.OrderModel;
 import com.mbb.order.biz.service.OrderService;
 import com.mbb.order.rest.dto.OrderCreateData;
@@ -31,6 +32,9 @@ public class OrderController extends BaseController {
 
     @Autowired
     private IdService idService;
+
+    @Autowired
+    private OrderServiceAdapter orderServiceAdapter;
 
     @GetMapping("/info")
     public ResponseEntity getStocks(OrderListQuery orderListQuery) {
@@ -83,10 +87,17 @@ public class OrderController extends BaseController {
         return ResponseEntity.ok(orderInfoResp);
     }
 
-    @GetMapping("/enums")
-    public ResponseEntity getEnums(@RequestParam String type) {
-        List<DictValueData> dictValues = orderService.getEnums(type);
-        return ResponseEntity.ok(dictValues);
+    @GetMapping("/orderstatus")
+    public ResponseEntity getOrderStatus() {
+        List<DictValueData> orderStatusDataList = orderServiceAdapter.getOrderStatus();
+        return ResponseEntity.ok(orderStatusDataList);
+    }
+
+
+    @GetMapping("/ordertypes")
+    public ResponseEntity getOrderType() {
+        List<DictValueData> orderTypeDataList = orderServiceAdapter.getOrderType();
+        return ResponseEntity.ok(orderTypeDataList);
     }
 
     private void convertOrder(OrderModel orderModel, OrderInfoResp orderInfoResp) {

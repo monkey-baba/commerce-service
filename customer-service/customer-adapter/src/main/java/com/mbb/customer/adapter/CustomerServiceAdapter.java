@@ -1,4 +1,4 @@
-package com.mbb.order.adapter;
+package com.mbb.customer.adapter;
 
 import com.mbb.basic.api.DictValueApi;
 import com.mbb.basic.common.dto.DictValueData;
@@ -11,15 +11,19 @@ import java.util.List;
  * ${DESCRIPTION}
  *
  * @author lf
- * @create 2019-01-21 11:28
+ * @create 2019-01-22 16:23
  */
 @Component
-public class DictValueAdapter {
+public class CustomerServiceAdapter {
     @Autowired
     private DictValueApi dictValueApi;
 
-    public List<DictValueData> getDictValues(String type) {
+    public List<DictValueData> getCustomerStatus() {
         // 远程调⽤用
-        return dictValueApi.getDictValues(type);
+        return dictValueApi.getCustomerStatus();
+    }
+
+    public DictValueData getDictValue(Long id) {
+        return dictValueApi.getDictValue(id);
     }
 }
