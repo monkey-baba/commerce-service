@@ -18,4 +18,8 @@ public interface DictionaryService {
     List<DictionaryModel> findDictByExample(DictionaryModel model);
 
     int createDict(DictionaryModel dict);
+
+    void updateDictAndValues(DictionaryModel dict, List<DictionaryValueModel> add, List<DictionaryValueModel> update, List<DictionaryValueModel> delete);
+
+    DictionaryModel findDictById(Long id);
 }

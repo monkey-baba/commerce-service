@@ -12,7 +12,9 @@ import com.mbb.basic.common.dto.AddressData;
 import com.mbb.basic.common.dto.DictValueData;
 import com.mbb.basic.rest.dto.req.DictCreateData;
 import com.mbb.basic.rest.dto.req.DictListQuery;
+import com.mbb.basic.rest.dto.req.DictUpdateData;
 import com.mbb.basic.rest.dto.resp.DictListResp;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
@@ -123,5 +125,43 @@ public class DictionaryController {
         return ResponseEntity.ok(resp);
     }
 
+
+    @PostMapping("/edit")
+    public ResponseEntity edit(@RequestBody DictUpdateData data) {
+        DictionaryModel dict = dictionaryService.findDictById(data.getId());
+        if (dict ==null){
+            return ResponseEntity.badRequest().body("找不到对应枚举");
+        }
+        dict.setName(data.getName());
+
+        List<DictionaryValueModel> add  =data.getAdd().stream().map(v->{
+            DictionaryValueModel value=new DictionaryValueModel();
+            BeanCopier.create(DictValueData.class, DictionaryValueModel.class, false)
+                    .copy(v, value, null);
+            value.setId(idService.genId());
+            value.setVersion(1);
+            value.setTypeId(dict.getId());
+            return value;
+        }).collect(Collectors.toList());
+
+        List<DictionaryValueModel> update  =data.getUpdate().stream().map(v->{
+            DictionaryValueModel value=new DictionaryValueModel();
+            BeanCopier.create(DictValueData.class, DictionaryValueModel.class, false)
+                    .copy(v, value, null);
+            return value;
+        }).collect(Collectors.toList());
+
+        List<DictionaryValueModel> delete  =data.getDelete().stream().map(v->{
+            DictionaryValueModel value=new DictionaryValueModel();
+            BeanCopier.create(DictValueData.class, DictionaryValueModel.class, false)
+                    .copy(v, value, null);
+            return value;
+        }).collect(Collectors.toList());
+
+
+        // 为了在一个事务里面执行，所以一个方法处理所有
+        dictionaryService.updateDictAndValues(dict,add,update,delete);
+        return ResponseEntity.ok("更新成功");
+    }
 
 }
