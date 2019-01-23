@@ -77,19 +77,33 @@ public class DictionaryServiceImpl implements DictionaryService {
             List<DictionaryValueModel> update, List<DictionaryValueModel> delete) {
         dictionaryMapper.updateByPrimaryKey(dict);
         //处理新增
-        if (CollectionUtils.isNotEmpty(add)){
+        if (CollectionUtils.isNotEmpty(add)) {
             dictionaryValueMapper.insertList(add);
         }
         //处理更新
-        update.forEach(v-> dictionaryValueMapper.updateByPrimaryKeySelective(v));
+        update.forEach(v -> dictionaryValueMapper.updateByPrimaryKeySelective(v));
         //处理删除
-        delete.forEach(v-> dictionaryValueMapper.delete(v));
+        delete.forEach(v -> dictionaryValueMapper.delete(v));
 
     }
 
     @Override
     public DictionaryModel findDictById(Long id) {
         return dictionaryMapper.selectByPrimaryKey(id);
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void deleteDicts(List<Long> ids) {
+        ids.forEach(id -> {
+            //先删dict
+            dictionaryMapper.deleteByPrimaryKey(id);
+            //再删值
+            Builder builder = Example.builder(DictionaryValueModel.class);
+            builder.where(Sqls.custom().andEqualTo("typeId", id));
+            dictionaryValueMapper.deleteByExample(builder.build());
+        });
+
     }
 
 

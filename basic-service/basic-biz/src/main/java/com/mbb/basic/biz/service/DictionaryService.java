@@ -22,4 +22,6 @@ public interface DictionaryService {
     void updateDictAndValues(DictionaryModel dict, List<DictionaryValueModel> add, List<DictionaryValueModel> update, List<DictionaryValueModel> delete);
 
     DictionaryModel findDictById(Long id);
+
+    void deleteDicts(List<Long> ids);
 }

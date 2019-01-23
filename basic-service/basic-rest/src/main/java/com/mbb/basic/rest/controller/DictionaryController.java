@@ -11,6 +11,7 @@ import com.mbb.basic.biz.service.DictionaryValueService;
 import com.mbb.basic.common.dto.AddressData;
 import com.mbb.basic.common.dto.DictValueData;
 import com.mbb.basic.rest.dto.req.DictCreateData;
+import com.mbb.basic.rest.dto.req.DictDeleteData;
 import com.mbb.basic.rest.dto.req.DictListQuery;
 import com.mbb.basic.rest.dto.req.DictUpdateData;
 import com.mbb.basic.rest.dto.resp.DictListResp;
@@ -22,6 +23,7 @@ import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cglib.beans.BeanCopier;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -164,4 +166,10 @@ public class DictionaryController {
         return ResponseEntity.ok("更新成功");
     }
 
+    @DeleteMapping("/delete")
+    public ResponseEntity delete(@RequestBody List<DictDeleteData> datas) {
+        dictionaryService.deleteDicts(
+                datas.stream().map(DictDeleteData::getId).collect(Collectors.toList()));
+        return ResponseEntity.ok("删除成功");
+    }
 }
