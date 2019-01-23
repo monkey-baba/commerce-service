@@ -16,7 +16,16 @@ public class PointOfServiceModel extends BaseModel {
     private Long addressId;
     private String owner;
     private String contact;
-    private PosType posType;
+
+    public PosType getPos_type() {
+        return pos_type;
+    }
+
+    public void setPos_type(PosType pos_type) {
+        this.pos_type = pos_type;
+    }
+
+    private PosType pos_type;
     private Long statusId;
     private Long classifyId;
 

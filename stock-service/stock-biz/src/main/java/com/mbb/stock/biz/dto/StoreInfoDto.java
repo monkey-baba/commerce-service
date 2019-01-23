@@ -2,16 +2,42 @@ package com.mbb.stock.biz.dto;
 
 public class StoreInfoDto {
     private String name;
+    private Long address;
 
-    public Long getClassifyid() {
-        return Classifyid;
+    public Long getStatus() {
+        return status;
     }
 
-    public void setClassifyid(Long classifyid) {
-        Classifyid = classifyid;
+    public void setStatus(Long status) {
+        this.status = status;
     }
 
-    private Long Classifyid;
+    public String getPstatus() {
+        return pstatus;
+    }
+
+    public void setPstatus(String pstatus) {
+        this.pstatus = pstatus;
+    }
+
+    private String  pstatus;
+    private Long status;
+    private String contact;
+    private String code;
+    private String owner;
+    private Long classification;
+    public Long getClassification() {
+        return classification;
+    }
+
+    public void setClassification(Long classification) {
+        this.classification = classification;
+    }
+
+
+
+
+
     public String getName() {
         return name;
     }
@@ -28,13 +54,7 @@ public class StoreInfoDto {
         this.address = address;
     }
 
-    public Long getStatus() {
-        return status;
-    }
 
-    public void setStatus(Long status) {
-        this.status = status;
-    }
 
     public String getContact() {
         return contact;
@@ -60,9 +80,5 @@ public class StoreInfoDto {
         this.owner = owner;
     }
 
-    private Long address;
-    private Long status;
-    private String contact;
-    private String code;
-    private String owner;
+
 }
