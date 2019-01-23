@@ -7,8 +7,6 @@ import com.mbb.product.biz.model.SkuModel;
 import com.mbb.product.biz.service.SkuService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import tk.mybatis.mapper.entity.Example;
 
@@ -19,7 +17,6 @@ import java.util.List;
 @Service
 @Slf4j
 public class SkuServiceImpl implements SkuService {
-    private static final Logger LOG = LoggerFactory.getLogger(SkuServiceImpl.class);
 
     @Resource
     private SkuMapper skuMapper;
@@ -29,7 +26,7 @@ public class SkuServiceImpl implements SkuService {
         //封装查询Example
         Example example = mapQueryInfo(sku);
         List<SkuModel> skus = skuMapper.selectByExample(example);
-        LOG.info("sku size====" + skus.size());
+        log.info("sku size====" + skus.size());
         return skus;
     }
 

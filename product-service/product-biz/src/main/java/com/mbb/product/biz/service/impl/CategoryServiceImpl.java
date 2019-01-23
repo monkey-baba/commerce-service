@@ -10,8 +10,7 @@ import com.mbb.product.biz.model.CategoryModel;
 import com.mbb.product.biz.service.CategoryService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+
 import org.springframework.stereotype.Service;
 import tk.mybatis.mapper.entity.Example;
 
@@ -23,7 +22,6 @@ import java.util.stream.Collectors;
 @Service
 @Slf4j
 public class CategoryServiceImpl implements CategoryService {
-    private static final Logger LOG = LoggerFactory.getLogger(CategoryServiceImpl.class);
 
     @Resource
     private CategoryMapper categoryMapper;
@@ -51,7 +49,7 @@ public class CategoryServiceImpl implements CategoryService {
         //封装查询Example
         Example example = mapQueryInfo(categoryModel);
         List<CategoryModel> categoryModels = categoryMapper.selectByExample(example);
-        LOG.info("category size====" + categoryModels.size());
+        log.info("category size====" + categoryModels.size());
         return categoryModels;
     }
 
