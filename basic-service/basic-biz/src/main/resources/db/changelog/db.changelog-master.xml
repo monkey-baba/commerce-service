@@ -8,6 +8,7 @@
         http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
 
   <include file="db/changelog/v1.0.0-init.xml" />
+  <include file="db/changelog/v1.0.1-dict-values.xml" />
 
 
 </databaseChangeLog>

@@ -36,7 +36,7 @@ public class AddressController extends BaseController {
         address.setCity(data.getAddress().get(1));
         address.setDistrict(data.getAddress().get(2));
         address.setPhone(data.getPhone());
-        int insert = addressService.insert(address);
+        int insert = addressService.createAddress(address);
         if (insert != 1) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("保存失败");
         }

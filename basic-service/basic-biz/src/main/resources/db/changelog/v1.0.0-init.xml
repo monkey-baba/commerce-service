@@ -14,6 +14,9 @@
       <column name="editable" type="TINYINT(1)" remarks="可编辑"/>
     </createTable>
     <addPrimaryKey tableName="dictionary" columnNames="id"/>
+    <createIndex tableName="dictionary" indexName="code_idx" unique="true">
+      <column name="code" />
+    </createIndex>
   </changeSet>
 
   <changeSet id="2" author="ZQian">

@@ -8,6 +8,7 @@ import com.mbb.basic.biz.service.DictionaryService;
 import java.util.Collections;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import tk.mybatis.mapper.entity.Example;
@@ -43,7 +44,25 @@ public class DictionaryServiceImpl implements DictionaryService {
         return dictionaryValueMapper.selectByExample(values.build());
     }
 
+    @Override
+    public List<DictionaryModel> findDictByExample(DictionaryModel model) {
+        final Example.Builder builder = Example.builder(DictionaryModel.class);
+        final Sqls where = Sqls.custom();
+        if (StringUtils.isNotEmpty(model.getName())) {
+            where.andLike("name",  "%" + model.getName() + "%");
+        }
+        if (StringUtils.isNotEmpty(model.getCode())) {
+            where.andLike("code", model.getCode() + "%");
+        }
+        final Example build = builder.where(where).build();
+        return this.dictionaryMapper.selectByExample(build);
 
+    }
+
+    @Override
+    public int createDict(DictionaryModel dict) {
+        return dictionaryMapper.insert(dict);
+    }
 
 
 }

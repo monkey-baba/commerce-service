@@ -13,7 +13,7 @@ public class AddressServiceImpl implements AddressService {
     private AddressMapper addressMapper;
 
     @Override
-    public int insert(AddressModel address) {
+    public int createAddress(AddressModel address) {
         return addressMapper.insert(address);
     }
 
