@@ -45,6 +45,14 @@ public class SkuServiceImpl implements SkuService {
     }
 
     @Override
+    public SkuModel findSkuByCode(String skuId) {
+        Example example = new Example(SkuModel.class);
+        Example.Criteria criteria = example.createCriteria();
+        criteria.andEqualTo("code", skuId);
+        return skuMapper.selectOneByExample(example);
+    }
+
+    @Override
     public void updateSku(SkuModel sku) throws Exception {
         int result = this.skuMapper.updateByPrimaryKey(sku);
         if (result == 0) {
