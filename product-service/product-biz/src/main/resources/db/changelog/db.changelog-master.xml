@@ -8,7 +8,13 @@
         http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
 
   <include file="db/changelog/v1.0.0-init.xml" />
-
-
+  <changeSet id="2019011802" author="DZ" runOnChange="true" >
+    <addColumn tableName="price">
+      <column name="name" remarks="价目表名称" type="VARCHAR(255)"/>
+      <column name="priority" remarks="优先级" type="INT"/>
+    </addColumn>
+    <renameColumn tableName="price" oldColumnName="startTime" newColumnName="start_time" columnDataType="DATETIME"/>
+    <renameColumn tableName="price" oldColumnName="endTime" newColumnName="end_time" columnDataType="DATETIME"/>
+  </changeSet>
 
 </databaseChangeLog>

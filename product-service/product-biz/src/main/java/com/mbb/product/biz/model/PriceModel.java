@@ -2,7 +2,6 @@ package com.mbb.product.biz.model;
 
 import com.mbb.common.model.BaseModel;
 import java.util.Date;
-import java.util.Map;
 import javax.persistence.Table;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -11,12 +10,12 @@ import lombok.EqualsAndHashCode;
 @Data
 @Table(name = "price")
 public class PriceModel extends BaseModel {
-
-    private Long productId;
+    private String name;
     private Long channelId;
     private Boolean active;
     private Date startTime;
     private Date endTime;
+    private Integer priority;
 
 
 }
