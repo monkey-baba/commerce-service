@@ -13,7 +13,7 @@ public class StoreInfoDto {
     private String code;
     private String owner;
     private Long classification;
-    
+
 
 
 }

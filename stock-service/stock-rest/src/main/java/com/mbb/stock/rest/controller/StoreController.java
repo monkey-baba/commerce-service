@@ -89,6 +89,7 @@ public class StoreController extends BaseController{
         addressData.setAddress(stockInfoDtoList.getPaddress());
         addressData.setDetail(stockInfoDtoList.getDetailaddress());
         addressData.setPhone(stockInfoDtoList.getContact());
+        addressData.setName(stockInfoDtoList.getOwner());
         Long address= posAddressAdapter.saveAddress(addressData);
         stockInfoDtoList.setAddress(address);
         storeService.addStore(stockInfoDtoList);
