@@ -1,13 +1,10 @@
 package com.mbb.customer.biz.service.impl;
 
-import com.lxm.idgenerator.service.intf.IdService;
 import com.mbb.customer.biz.dao.CustomerMapper;
 import com.mbb.customer.biz.model.CustomerModel;
 import com.mbb.customer.biz.service.CustomerService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import tk.mybatis.mapper.entity.Example;
@@ -23,8 +20,6 @@ import java.util.List;
 @Service
 @Slf4j
 public class CustomerServiceImpl implements CustomerService {
-
-    private static final Logger logger = LogManager.getLogger(CustomerServiceImpl.class);
 
     @Autowired
     private CustomerMapper customerMapper;
@@ -48,7 +43,7 @@ public class CustomerServiceImpl implements CustomerService {
         //封装查询Example
         Example example = mapQueryInfo(customerModel);
         List<CustomerModel> customerModels = customerMapper.selectByExample(example);
-        logger.info("customer size====" + customerModels.size());
+        log.info("customer size====" + customerModels.size());
         return customerModels;
     }
 
@@ -61,7 +56,7 @@ public class CustomerServiceImpl implements CustomerService {
 
     @Override
     public void deleteCustomer(String code) {
-        logger.info("code==" + code);
+        log.info("code==" + code);
         CustomerModel customerModel = this.findByCode(code);
         customerMapper.deleteByPrimaryKey(customerModel);
     }

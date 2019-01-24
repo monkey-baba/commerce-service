@@ -3,7 +3,9 @@ package com.mbb.order.rest.controller;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.lxm.idgenerator.service.intf.IdService;
+import com.mbb.basic.common.dto.AddressData;
 import com.mbb.basic.common.dto.DictValueData;
+import com.mbb.order.adapter.AddressAdapter;
 import com.mbb.order.adapter.OrderServiceAdapter;
 import com.mbb.order.biz.model.OrderModel;
 import com.mbb.order.biz.service.OrderService;
@@ -15,7 +17,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
@@ -36,6 +40,9 @@ public class OrderController extends BaseController {
     @Autowired
     private OrderServiceAdapter orderServiceAdapter;
 
+    @Autowired
+    private AddressAdapter addressAdapter;
+
     @GetMapping("/info")
     public ResponseEntity getStocks(OrderListQuery orderListQuery) {
         OrderModel orderModel = new OrderModel();
@@ -46,13 +53,21 @@ public class OrderController extends BaseController {
         orderModel.setReceiver(orderListQuery.getReceiver());
         orderModel.setReceiverPhone(orderListQuery.getReceiverPhone());
         orderModel.setWareId(orderListQuery.getWareId());
-        orderModel.setStatusId(orderListQuery.getStatusId());
-        orderModel.setOrderTypeId(orderListQuery.getOrderTypeId());
-
+//        orderModel.setStatusId(orderListQuery.getStatusId());
+//        orderModel.setOrderTypeId(orderListQuery.getOrderTypeId());
+        Map<String, Object> queryMap = new HashMap<>();
+        queryMap.put("startDate", orderListQuery.getStartDate());
+        queryMap.put("endDate", orderListQuery.getEndDate());
+        queryMap.put("paymentStartDate", orderListQuery.getPaymentStartDate());
+        queryMap.put("paymentEndDate", orderListQuery.getPaymentEndDate());
+        queryMap.put("totalPriceMin", orderListQuery.getTotalPriceMin());
+        queryMap.put("totalPriceMax", orderListQuery.getTotalPriceMax());
+        queryMap.put("statusId", orderListQuery.getNewStatusId());
+        queryMap.put("orderTypeId", orderListQuery.getNewOrderTypeId());
         //开启分页
         PageHelper.startPage(orderListQuery.getPageNum(), orderListQuery.getPageSize());
         //查询数据
-        List<OrderModel> orders = orderService.getOrders(orderModel);
+        List<OrderModel> orders = orderService.getOrders(orderModel, queryMap);
         //获取页码等信息
         PageInfo<OrderModel> origin = PageInfo.of(orders);
         //从model转data
@@ -100,19 +115,58 @@ public class OrderController extends BaseController {
         return ResponseEntity.ok(orderTypeDataList);
     }
 
+    @GetMapping("/stores")
+    public ResponseEntity getBaseStores() {
+        List<DictValueData> baseStoreDataList = orderServiceAdapter.getBaseStores();
+        return ResponseEntity.ok(baseStoreDataList);
+    }
+
     private void convertOrder(OrderModel orderModel, OrderInfoResp orderInfoResp) {
+        //id
         orderInfoResp.setId(orderModel.getId());
+        //平台订单号
         orderInfoResp.setEcsOrderId(orderModel.getEcsOrderId());
-        orderInfoResp.setStoreId(orderModel.getStoreId());
+        //店铺
+        Long storeId = orderModel.getStoreId();
+        if (storeId != null) {
+            DictValueData baseStoreData = orderServiceAdapter.getDictValue(storeId);
+            orderInfoResp.setStoreId(storeId);
+            orderInfoResp.setStoreName(baseStoreData.getName());
+        }
+        //订单编号
         orderInfoResp.setCode(orderModel.getCode());
+        //门店
         orderInfoResp.setWareId(orderModel.getWareId());
-        orderInfoResp.setOrderTypeId(orderModel.getOrderTypeId());
-        orderInfoResp.setStatusId(orderModel.getStatusId());
+        //订单类型
+        Long orderTypeId = orderModel.getOrderTypeId();
+        if (orderTypeId != null) {
+            DictValueData orderTypeData = orderServiceAdapter.getDictValue(orderTypeId);
+            orderInfoResp.setOrderTypeId(orderTypeId);
+            orderInfoResp.setOrderTypeName(orderTypeData.getName());
+        }
+        //订单状态
+        Long statusId = orderModel.getStatusId();
+        if (statusId != null) {
+            DictValueData statusData = orderServiceAdapter.getDictValue(statusId);
+            orderInfoResp.setStatusId(statusId);
+            orderInfoResp.setStatusName(statusData.getName());
+        }
+        //订单金额
         orderInfoResp.setTotalPrice(orderModel.getTotalPrice());
+        //收件人
         orderInfoResp.setReceiver(orderModel.getReceiver());
+        //收件人手机号
         orderInfoResp.setReceiverPhone(orderModel.getReceiverPhone());
-        orderInfoResp.setAddressId(orderModel.getAddressId());
+        //收件地址
+        Long addressId = orderModel.getAddressId();
+        if (addressId != null) {
+            AddressData addressData = addressAdapter.getAddress(addressId);
+            orderInfoResp.setAddressId(addressId);
+            orderInfoResp.setAddressName(addressData.getName());
+        }
+        //下单时间
         orderInfoResp.setDate(orderModel.getDate());
+        //支付时间
         orderInfoResp.setPaymentDate(orderModel.getPaymentDate());
     }
 }

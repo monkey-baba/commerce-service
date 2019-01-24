@@ -3,6 +3,7 @@ package com.mbb.order.rest.dto;
 import lombok.Data;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  * ${DESCRIPTION}
@@ -26,8 +27,10 @@ public class OrderListQuery {
     private Date endDate;
     private Date paymentStartDate;
     private Date paymentEndDate;
-    private Long statusId;
-    private Long orderTypeId;
+    private List<Long> statusId;
+    private List<Long> newStatusId;
+    private List<Long> orderTypeId;
+    private List<Long> newOrderTypeId;
     private Integer pageNum;
     private Integer pageSize;
 }
