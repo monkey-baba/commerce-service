@@ -1,13 +1,12 @@
-package com.mbb.product.biz.data;
+package com.mbb.product.rest.data.product;
 
 import lombok.Data;
 
 @Data
-public class ProductQuery {
+public class ProductUpdateData {
     private String code;
+    private Long id;
     private String name;
     private Long channelId;
     private Long approvedId;
-    private Integer pageNum;
-    private Integer pageSize;
 }

@@ -1,10 +1,8 @@
 package com.mbb.product.biz.service.impl;
 
-import com.github.pagehelper.PageHelper;
-import com.github.pagehelper.PageInfo;
+
 import com.mbb.product.biz.dao.ProductMapper;
-import com.mbb.product.biz.data.ProductData;
-import com.mbb.product.biz.data.ProductQuery;
+
 import com.mbb.product.biz.model.ProductModel;
 import com.mbb.product.biz.service.ProductService;
 import lombok.extern.slf4j.Slf4j;
@@ -13,7 +11,6 @@ import tk.mybatis.mapper.entity.Example;
 
 import javax.annotation.Resource;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -25,27 +22,6 @@ public class ProductServiceImpl implements ProductService {
     @Resource
     private ProductMapper productMapper;
     @Override
-    public PageInfo<ProductData> getProducts(ProductQuery productQuery) {
-        ProductModel productModel = new ProductModel();
-        productModel.setCode(productQuery.getCode());
-        productModel.setName(productQuery.getName());
-        productModel.setChannelId(productQuery.getChannelId());
-        productModel.setApprovedId(productQuery.getApprovedId());
-
-        //开启分页
-        PageHelper.startPage(productQuery.getPageNum(), productQuery.getPageSize());
-        //查询数据
-        List<ProductModel> products = getProducts(productModel);
-        //获取页码等信息
-        PageInfo<ProductModel> origin = PageInfo.of(products);
-        //从model转data
-        List<ProductData> productDataList = dealResult(origin);
-        //用data生成新的分页数据
-        PageInfo<ProductData> result = PageInfo.of(productDataList);
-        result.setTotal(origin.getTotal());
-        return result;
-    }
-
     public List<ProductModel> getProducts(ProductModel productModel) {
         //封装查询Example
         Example example = mapQueryInfo(productModel);
@@ -99,21 +75,4 @@ public class ProductServiceImpl implements ProductService {
     }
 
 
-    private List<ProductData> dealResult(PageInfo<ProductModel> products) {
-        List<ProductData> productDataList = products.getList().stream().map(productModel -> {
-            ProductData productData = new ProductData();
-            //客户编号
-            productData.setCode(productModel.getCode());
-            //客户名称
-            productData.setName(productModel.getName());
-            //手机号
-            productData.setChannelId(productModel.getChannelId());
-            //id
-            productData.setId(productModel.getId());
-            //
-            productData.setApprovedId(productModel.getApprovedId());
-            return productData;
-        }).collect(Collectors.toList());
-        return productDataList;
-    }
 }

@@ -12,10 +12,10 @@ import lombok.EqualsAndHashCode;
 public class PriceRowModel extends BaseModel {
 
     private Long skuId;
+    private Long priceId;
     private Long priceTypeId;
     private Double price;
     private Date startTime;
     private Date endTime;
-
 
 }

@@ -1,7 +1,9 @@
 package com.mbb.product.rest.controller;
 
 import com.lxm.idgenerator.service.intf.IdService;
-import com.mbb.product.biz.data.ProductData;
+import com.mbb.basic.common.dto.DictValueData;
+import com.mbb.product.adapter.ProductServiceAdapter;
+import com.mbb.product.rest.data.product.ProductData;
 
 import com.mbb.product.biz.model.SkuModel;
 import com.mbb.product.biz.service.SkuService;
@@ -25,6 +27,8 @@ public class SkuController extends BaseController {
     private SkuService skuService;
     @Autowired
     private IdService idService;
+    @Autowired
+    private ProductServiceAdapter productServiceAdapter;
     @GetMapping("/list")
         public ResponseEntity getSkus(@RequestParam("skuId") String skuId, @RequestParam("skuName") String skuName) {
         SkuModel sku = new SkuModel();
@@ -50,6 +54,12 @@ public class SkuController extends BaseController {
         return ResponseEntity.ok(result);
     }
 
+    @GetMapping("/skuspeclist")
+    public ResponseEntity getSkuSpecList() {
+        List<DictValueData> skuSpecList = productServiceAdapter.getSkuSpec();
+        return ResponseEntity.ok(skuSpecList);
+    }
+
 
     @PostMapping("/update")
     public ResponseEntity updateSku(@RequestBody SkuUpdateData data) throws Exception {
@@ -67,10 +77,7 @@ public class SkuController extends BaseController {
         skuModel.setName(data.getSkuName());
         skuModel.setId(idService.genId());
         skuService.createSku(skuModel);
-        ProductData resp = new ProductData();
-        resp.setCode(skuModel.getCode());
-        resp.setName(skuModel.getName());
-        return ResponseEntity.ok(resp);
+        return ResponseEntity.ok(dealResult(skuModel));
     }
 
     private List<SkuData> dealResult(List<SkuModel> skus) {

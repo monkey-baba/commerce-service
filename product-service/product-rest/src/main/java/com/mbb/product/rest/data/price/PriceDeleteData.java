@@ -1,4 +1,4 @@
-package com.mbb.product.rest.data;
+package com.mbb.product.rest.data.price;
 
 import lombok.Data;
 

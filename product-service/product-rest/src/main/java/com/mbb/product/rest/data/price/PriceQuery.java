@@ -1,11 +1,13 @@
-package com.mbb.product.biz.data;
+package com.mbb.product.rest.data.price;
 
 import lombok.Data;
+
+import java.util.List;
 
 @Data
 public class PriceQuery {
     private String name;
-    private Long channelId;
+    private List<Long> channelId;
     private Integer pageNum;
     private Integer pageSize;
 }
