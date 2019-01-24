@@ -1,12 +1,13 @@
 package com.mbb.product.biz.service;
 
-import com.github.pagehelper.PageInfo;
-import com.mbb.product.biz.data.PriceData;
-import com.mbb.product.biz.data.PriceQuery;
+
 import com.mbb.product.biz.model.PriceModel;
 
+import java.util.List;
+
 public interface PriceService {
-    PageInfo<PriceData> getPrices(PriceQuery priceQuery);
+    List<PriceModel> getPrices(PriceModel priceModel);
+
     void deletePrice(Long id);
     PriceModel findPriceById(Long id);
     void updateprice(PriceModel price) throws Exception;
