@@ -61,6 +61,8 @@ public class ProductServiceImpl implements ProductService {
         String name = productModel.getName();
         //渠道号
         Long channelId = productModel.getChannelId();
+        Long approvedId = productModel.getApprovedId();
+
         Example example = new Example(ProductModel.class);
         Example.Criteria criteria = example.createCriteria();
         if (StringUtils.isNotBlank(code)) {
@@ -70,6 +72,10 @@ public class ProductServiceImpl implements ProductService {
             criteria.andLike("name", "%" + name + "%");
         }
         if (channelId!=null) {
+            criteria.andEqualTo("channelId",channelId);
+        }
+        if (approvedId!=null) {
+            criteria.andEqualTo("approvedId",approvedId);
         }
         return example;
     }

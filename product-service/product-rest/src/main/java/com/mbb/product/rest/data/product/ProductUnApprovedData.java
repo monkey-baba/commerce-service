@@ -3,6 +3,6 @@ package com.mbb.product.rest.data.product;
 import lombok.Data;
 
 @Data
-public class ProductApprovedData {
+public class ProductUnApprovedData {
     private Long id;
 }
