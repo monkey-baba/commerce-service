@@ -10,6 +10,8 @@ import java.nio.charset.Charset;
 import java.util.Collections;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.format.FormatterRegistry;
+import org.springframework.format.datetime.DateFormatter;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
@@ -36,5 +38,12 @@ public class WebConfiguration implements WebMvcConfigurer {
         //规则赋予转换对象
         converter.setFastJsonConfig(fastJsonConfig);
         return converter;
+    }
+
+    @Override
+    public void addFormatters(FormatterRegistry registry) {
+        DateFormatter formatter = new DateFormatter();
+        formatter.setPattern("yyyy-MM-dd HH:mm:ss");
+        registry.addFormatter(formatter);
     }
 }
