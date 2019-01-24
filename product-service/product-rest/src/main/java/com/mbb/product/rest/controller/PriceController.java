@@ -12,7 +12,6 @@ import com.mbb.product.rest.data.price.PriceUpdateData;
 import com.mbb.product.biz.model.PriceModel;
 import com.mbb.product.biz.service.PriceService;
 import com.mbb.product.rest.data.price.PriceDeleteData;
-import java.util.Collections;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;

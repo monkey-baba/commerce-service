@@ -1,18 +1,10 @@
 package com.mbb.product.rest.controller;
 
-import com.github.pagehelper.PageInfo;
 import com.lxm.idgenerator.service.intf.IdService;
 import com.mbb.basic.common.dto.DictValueData;
 import com.mbb.product.adapter.ProductServiceAdapter;
 import com.mbb.product.biz.service.PriceRowService;
-import com.mbb.product.rest.data.price.PriceCreateData;
-import com.mbb.product.rest.data.price.PriceData;
-import com.mbb.product.rest.data.price.PriceUpdateData;
-import com.mbb.product.biz.model.PriceModel;
 import com.mbb.product.biz.model.PriceRowModel;
-import com.mbb.product.biz.model.SkuModel;
-import com.mbb.product.biz.service.PriceService;
-import com.mbb.product.common.dto.SkuData;
 import com.mbb.product.rest.data.price.PriceDeleteData;
 import com.mbb.product.rest.data.pricerow.PriceRowCreateData;
 import com.mbb.product.rest.data.pricerow.PriceRowData;
@@ -22,10 +14,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import tk.mybatis.mapper.entity.Example;
 
 import javax.annotation.Resource;
-import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 

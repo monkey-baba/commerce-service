@@ -3,7 +3,6 @@ package com.mbb.product.rest.controller;
 import com.lxm.idgenerator.service.intf.IdService;
 import com.mbb.basic.common.dto.DictValueData;
 import com.mbb.product.adapter.ProductServiceAdapter;
-import com.mbb.product.rest.data.product.ProductData;
 
 import com.mbb.product.biz.model.SkuModel;
 import com.mbb.product.biz.service.SkuService;
