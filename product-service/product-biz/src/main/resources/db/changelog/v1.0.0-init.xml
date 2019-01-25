@@ -20,7 +20,7 @@
     <addPrimaryKey columnNames="id" tableName="product"/>
   </changeSet>
 
-  <changeSet id="2" author="ZQian" runOnChange="true">
+  <changeSet id="2" author="ZQian" >
     <createTable tableName="sku" remarks="SKU信息">
       <column name="id" type="BIGINT" remarks="ID"/>
       <column name="version" type="INT" remarks="乐观锁"/>
@@ -32,7 +32,7 @@
     <addPrimaryKey tableName="sku" columnNames="id" />
   </changeSet>
 
-  <changeSet id="3" author="ZQian" runOnChange="true">
+  <changeSet id="3" author="ZQian" >
     <createTable tableName="price" remarks="价目表">
       <column name="id" type="BIGINT" remarks="ID"/>
       <column name="version" type="INT" remarks="乐观锁"/>
@@ -47,7 +47,7 @@
     <addPrimaryKey tableName="price" columnNames="id" />
   </changeSet>
 
-  <changeSet id="4" author="ZQian" runOnChange="true">
+  <changeSet id="4" author="ZQian" >
     <createTable tableName="price_row" remarks="价格行">
       <column name="id" type="BIGINT" remarks="ID"/>
       <column name="version" type="INT" remarks="乐观锁"/>
@@ -61,7 +61,7 @@
     <addPrimaryKey tableName="price_row" columnNames="id" />
   </changeSet>
 
-  <changeSet id="5" author="ZQian" runOnChange="true">
+  <changeSet id="5" author="ZQian" >
     <createTable tableName="product_category" remarks="产品类别中间表">
       <column name="id" type="BIGINT" remarks="ID"/>
       <column name="version" type="INT" remarks="乐观锁"/>
@@ -71,7 +71,7 @@
     <addPrimaryKey tableName="product_category" columnNames="id" />
   </changeSet>
 
-  <changeSet id="6" author="ZQian" runOnChange="true">
+  <changeSet id="6" author="ZQian" >
     <createTable tableName="category" remarks="类别">
       <column name="id" type="BIGINT" remarks="ID"/>
       <column name="version" type="INT" remarks="乐观锁"/>
@@ -81,5 +81,16 @@
     </createTable>
     <addPrimaryKey tableName="category" columnNames="id" />
   </changeSet>
+
+  <changeSet id="7" author="ZQian">
+    <createTable tableName="sku_meta" remarks="SKU规格值">
+      <column name="id" type="BIGINT" remarks="ID"/>
+      <column name="version" type="INT" remarks="乐观锁"/>
+      <column name="spec_id" type="BIGINT" remarks="规格ID"/>
+      <column name="name" type="VARCHAR(255)" remarks="名称"/>
+    </createTable>
+    <addPrimaryKey tableName="sku_meta" columnNames="id" />
+  </changeSet>
+
 
 </databaseChangeLog>
