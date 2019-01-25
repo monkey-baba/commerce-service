@@ -139,6 +139,12 @@ public class OrderController extends BaseController {
         return ResponseEntity.ok(valueDataList);
     }
 
+    @GetMapping("/invoiceTypes")
+    public ResponseEntity getInvoiceTypes() {
+        List<DictValueData> valueDataList = orderServiceAdapter.getInvoiceTypes();
+        return ResponseEntity.ok(valueDataList);
+    }
+
     private void convertOrder(OrderModel orderModel, OrderInfoResp orderInfoResp) {
         //id
         orderInfoResp.setId(orderModel.getId());

@@ -82,4 +82,8 @@ public class OrderServiceAdapter {
     public List<DictValueData> getCarriers() {
         return dictValueApi.getCarrier();
     }
+
+    public List<DictValueData> getInvoiceTypes() {
+        return dictValueApi.getInvoiceType();
+    }
 }
