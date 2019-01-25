@@ -1,7 +1,10 @@
 package com.mbb.order.adapter;
 
+import com.github.pagehelper.PageInfo;
 import com.mbb.basic.api.DictValueApi;
 import com.mbb.basic.common.dto.DictValueData;
+import com.mbb.customer.api.CustomerApi;
+import com.mbb.customer.common.dto.CustomerData;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -20,6 +23,9 @@ public class OrderServiceAdapter {
 
     @Autowired
     private DictValueApi dictValueApi;
+
+    @Autowired
+    private CustomerApi customerApi;
 
     /**
      * 根据id获取路由规则枚举值
@@ -85,5 +91,9 @@ public class OrderServiceAdapter {
 
     public List<DictValueData> getInvoiceTypes() {
         return dictValueApi.getInvoiceType();
+    }
+
+    public PageInfo<CustomerData> getCustomers(String code, String name, Integer pageNum, Integer pageSize) {
+        return customerApi.getCustomers(code, name, pageNum, pageSize);
     }
 }

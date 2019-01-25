@@ -5,19 +5,22 @@ import com.github.pagehelper.PageInfo;
 import com.lxm.idgenerator.service.intf.IdService;
 import com.mbb.basic.common.dto.AddressData;
 import com.mbb.basic.common.dto.DictValueData;
+import com.mbb.customer.common.dto.CustomerData;
 import com.mbb.order.adapter.AddressAdapter;
 import com.mbb.order.adapter.OrderServiceAdapter;
 import com.mbb.order.biz.model.OrderModel;
 import com.mbb.order.biz.service.OrderService;
+import com.mbb.order.rest.dto.CustomerQuery;
 import com.mbb.order.rest.dto.OrderCreateData;
 import com.mbb.order.rest.dto.OrderInfoResp;
 import com.mbb.order.rest.dto.OrderListQuery;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -53,8 +56,6 @@ public class OrderController extends BaseController {
         orderModel.setReceiver(orderListQuery.getReceiver());
         orderModel.setReceiverPhone(orderListQuery.getReceiverPhone());
         orderModel.setPosId(orderListQuery.getPosId());
-//        orderModel.setStatusId(orderListQuery.getStatusId());
-//        orderModel.setOrderTypeId(orderListQuery.getOrderTypeId());
         Map<String, Object> queryMap = new HashMap<>();
         queryMap.put("startDate", orderListQuery.getStartDate());
         queryMap.put("endDate", orderListQuery.getEndDate());
@@ -62,8 +63,8 @@ public class OrderController extends BaseController {
         queryMap.put("paymentEndDate", orderListQuery.getPaymentEndDate());
         queryMap.put("totalPriceMin", orderListQuery.getTotalPriceMin());
         queryMap.put("totalPriceMax", orderListQuery.getTotalPriceMax());
-        queryMap.put("statusId", orderListQuery.getNewStatusId());
-        queryMap.put("orderTypeId", orderListQuery.getNewOrderTypeId());
+        queryMap.put("statusId", orderListQuery.getStatusId());
+//        queryMap.put("orderTypeId", orderListQuery.getNewOrderTypeId());
         //开启分页
         PageHelper.startPage(orderListQuery.getPageNum(), orderListQuery.getPageSize());
         //查询数据
@@ -119,6 +120,12 @@ public class OrderController extends BaseController {
     public ResponseEntity getBaseStores() {
         List<DictValueData> baseStoreDataList = orderServiceAdapter.getBaseStores();
         return ResponseEntity.ok(baseStoreDataList);
+    }
+
+    @GetMapping("/customer/list")
+    public ResponseEntity getCustomers(CustomerQuery customerQuery) {
+        PageInfo<CustomerData> customerList = orderServiceAdapter.getCustomers(customerQuery.getCode(), customerQuery.getName(), customerQuery.getPageNum(), customerQuery.getPageSize());
+        return ResponseEntity.ok(customerList);
     }
 
     @GetMapping("/platforms")
