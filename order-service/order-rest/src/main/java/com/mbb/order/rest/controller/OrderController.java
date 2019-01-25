@@ -21,6 +21,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -64,7 +65,7 @@ public class OrderController extends BaseController {
         queryMap.put("totalPriceMin", orderListQuery.getTotalPriceMin());
         queryMap.put("totalPriceMax", orderListQuery.getTotalPriceMax());
         queryMap.put("statusId", orderListQuery.getStatusId());
-//        queryMap.put("orderTypeId", orderListQuery.getNewOrderTypeId());
+        queryMap.put("orderTypeId", orderListQuery.getOrderTypeId());
         //开启分页
         PageHelper.startPage(orderListQuery.getPageNum(), orderListQuery.getPageSize());
         //查询数据
@@ -122,12 +123,6 @@ public class OrderController extends BaseController {
         return ResponseEntity.ok(baseStoreDataList);
     }
 
-    @GetMapping("/customer/list")
-    public ResponseEntity getCustomers(CustomerQuery customerQuery) {
-        PageInfo<CustomerData> customerList = orderServiceAdapter.getCustomers(customerQuery.getCode(), customerQuery.getName(), customerQuery.getPageNum(), customerQuery.getPageSize());
-        return ResponseEntity.ok(customerList);
-    }
-
     @GetMapping("/platforms")
     public ResponseEntity getPlatforms() {
         List<DictValueData> valueDataList = orderServiceAdapter.getPlatforms();
@@ -152,6 +147,19 @@ public class OrderController extends BaseController {
         return ResponseEntity.ok(valueDataList);
     }
 
+    @GetMapping("/customer/list")
+    public ResponseEntity getCustomers(CustomerQuery customerQuery) {
+        PageInfo<CustomerData> customerList = orderServiceAdapter.getCustomers(customerQuery.getCode(), customerQuery.getName(), customerQuery.getPageNum(), customerQuery.getPageSize());
+        return ResponseEntity.ok(customerList);
+    }
+
+    @GetMapping("/pos/list")
+    public ResponseEntity getPosList(CustomerQuery customerQuery) {
+        // TODO: 2019/1/25 此处暂时调用的客户api,门店api提供出来之后修改
+        PageInfo<CustomerData> customerList = orderServiceAdapter.getCustomers(customerQuery.getCode(), customerQuery.getName(), customerQuery.getPageNum(), customerQuery.getPageSize());
+        return ResponseEntity.ok(customerList);
+    }
+
     private void convertOrder(OrderModel orderModel, OrderInfoResp orderInfoResp) {
         //id
         orderInfoResp.setId(orderModel.getId());
@@ -167,7 +175,11 @@ public class OrderController extends BaseController {
         //订单编号
         orderInfoResp.setCode(orderModel.getCode());
         //门店
-        orderInfoResp.setPosId(orderModel.getPosId());
+        // TODO: 2019/1/25
+        Long posId = orderModel.getPosId();
+        if (posId != null) {
+            orderInfoResp.setPosName(orderServiceAdapter.getPosNameById(posId));
+        }
         //订单类型
         Long orderTypeId = orderModel.getOrderTypeId();
         if (orderTypeId != null) {

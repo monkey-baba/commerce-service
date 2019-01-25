@@ -73,6 +73,7 @@ public class OrderServiceAdapter {
     public List<DictValueData> getBaseStores() {
         return dictValueApi.getBaseStore();
     }
+
     public List<DictValueData> getPlatforms() {
         return dictValueApi.getPlatform();
     }
@@ -95,5 +96,10 @@ public class OrderServiceAdapter {
 
     public PageInfo<CustomerData> getCustomers(String code, String name, Integer pageNum, Integer pageSize) {
         return customerApi.getCustomers(code, name, pageNum, pageSize);
+    }
+
+    public String getPosNameById(Long id) {
+        // TODO: 2019/1/25 门店api提供出来替换 
+        return "大华仓";
     }
 }
