@@ -4,6 +4,7 @@ package com.mbb.auth.rest.controller;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.lxm.idgenerator.service.intf.IdService;
+import com.mbb.auth.common.dto.UserInfo;
 import com.mbb.auth.rest.dto.req.UserChangePwdData;
 import com.mbb.auth.rest.dto.req.UserCreateData;
 import com.mbb.auth.rest.dto.req.UserEnableData;
@@ -25,6 +26,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import xin.yuki.auth.core.entity.GroupModel;
 import xin.yuki.auth.core.entity.RoleModel;
@@ -65,6 +67,18 @@ public class UserController extends BaseController {
         info.setAuthorities(
                 user.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(
                         Collectors.toList()));
+        return ResponseEntity.ok(info);
+    }
+
+    @GetMapping("/get")
+    public ResponseEntity info(@RequestParam Long id) {
+        UserModel user = userService.findById(id);
+        UserInfo info = new UserInfo();
+        info.setName(user.getName());
+        info.setUsername(user.getUsername());
+        info.setId(user.getId());
+        info.setEmail(user.getEmail());
+        info.setMobileNumber(user.getMobileNumber());
         return ResponseEntity.ok(info);
     }
 
