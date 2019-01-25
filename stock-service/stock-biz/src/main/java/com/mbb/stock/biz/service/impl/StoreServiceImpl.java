@@ -69,6 +69,11 @@ public class StoreServiceImpl implements StoreService {
         }
     }
 
+    @Override
+    public PointOfServiceModel findPosById(Long id) {
+        return storeMapper.selectByPrimaryKey(id);
+    }
+
     private List<StoreInfoDto> dealResult(List<PointOfServiceModel> storeModels) {
         List<StoreInfoDto> storeInfoDtoList = new ArrayList<>();
         if (!CollectionUtils.isEmpty(storeModels)) {

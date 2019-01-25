@@ -5,10 +5,8 @@ import com.github.pagehelper.PageInfo;
 import com.lxm.idgenerator.service.intf.IdService;
 import com.mbb.basic.common.dto.DictValueData;
 import com.mbb.product.adapter.ProductServiceAdapter;
-import com.mbb.product.rest.data.product.ProductCreateData;
-import com.mbb.product.rest.data.product.ProductData;
-import com.mbb.product.rest.data.product.ProductQuery;
-import com.mbb.product.rest.data.product.ProductUpdateData;
+import com.mbb.product.rest.data.price.PriceDeleteData;
+import com.mbb.product.rest.data.product.*;
 import com.mbb.product.biz.model.ProductModel;
 import com.mbb.product.biz.service.ProductService;
 import lombok.extern.slf4j.Slf4j;
@@ -63,7 +61,7 @@ public class ProductController extends BaseController {
         productModel.setCode(data.getCode());
         productModel.setName(data.getName());
         productModel.setChannelId(data.getChannelId());
-        productModel.setApprovedId(data.getApprovedId());
+        productModel.setApprovedId(802L);
         productModel.setId(idService.genId());
         productService.createProduct(productModel);
         return ResponseEntity.ok(dealResult(productModel));
@@ -91,6 +89,34 @@ public class ProductController extends BaseController {
     public ResponseEntity getUnitList() {
         List<DictValueData> unitList = productServiceAdapter.getUnit();
         return ResponseEntity.ok(unitList);
+    }
+
+    @PostMapping("/delete")
+    public ResponseEntity deleteProduct(@RequestBody List<ProductDeleteData> datas) {
+        for (ProductDeleteData data : datas) {
+            productService.deleteProduct(data.getId());
+        }
+        return ResponseEntity.ok("删除成功");
+    }
+
+    @PostMapping("/approved")
+    public ResponseEntity approvedProduct(@RequestBody List<ProductApprovedData> datas) throws Exception {
+        for (ProductApprovedData data : datas) {
+            ProductModel productModel = productService.findProductById(data.getId());
+            productModel.setApprovedId(801L);
+            productService.updateProduct(productModel);
+        }
+        return ResponseEntity.ok("上架成功");
+    }
+
+    @PostMapping("/unapproved")
+    public ResponseEntity unApprovedProduct(@RequestBody List<ProductUnApprovedData> datas) throws Exception {
+        for (ProductUnApprovedData data : datas) {
+            ProductModel productModel = productService.findProductById(data.getId());
+            productModel.setApprovedId(802L);
+            productService.updateProduct(productModel);
+        }
+        return ResponseEntity.ok("下架成功");
     }
 
     private List<ProductData> dealResult(List<ProductModel> products) {

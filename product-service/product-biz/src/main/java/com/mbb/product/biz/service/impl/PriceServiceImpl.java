@@ -65,7 +65,7 @@ public class PriceServiceImpl implements PriceService {
             criteria.andLike("name", "%" + name + "%");
         }
         if (!channelId.isEmpty()) {
-            criteria.andIn("channelId", channelId);
+            criteria.andLike("channelId","%" + channelId + "%");
         }
         return example;
     }

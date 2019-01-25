@@ -58,4 +58,17 @@ public class OrderServiceAdapter {
     public List<DictValueData> getOrderType() {
         return dictValueApi.getOrderType();
     }
+
+    /**
+     * 获取网店
+     *
+     * @return
+     */
+    public List<DictValueData> getBaseStores() {
+        return dictValueApi.getBaseStore();
+    }
+
+    public DictValueData getDictValue(Long id) {
+        return dictValueApi.getDictValue(id);
+    }
 }

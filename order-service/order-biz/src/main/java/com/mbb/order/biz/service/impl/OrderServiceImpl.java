@@ -1,7 +1,5 @@
 package com.mbb.order.biz.service.impl;
 
-import com.mbb.basic.common.dto.DictValueData;
-import com.mbb.order.adapter.OrderServiceAdapter;
 import com.mbb.order.biz.dao.OrderMapper;
 import com.mbb.order.biz.model.OrderModel;
 import com.mbb.order.biz.service.OrderService;
@@ -9,9 +7,12 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 import tk.mybatis.mapper.entity.Example;
 
+import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 /**
  * ${DESCRIPTION}
@@ -27,8 +28,8 @@ public class OrderServiceImpl implements OrderService {
     private OrderMapper orderMapper;
 
     @Override
-    public List<OrderModel> getOrders(OrderModel orderModel) {
-        Example example = mapQueryInfo(orderModel);
+    public List<OrderModel> getOrders(OrderModel orderModel, Map<String, Object> queryMap) {
+        Example example = mapQueryInfo(orderModel, queryMap);
         List<OrderModel> orderModels = orderMapper.selectByExample(example);
         log.info("order size====" + orderModels.size());
         return orderModels;
@@ -41,33 +42,31 @@ public class OrderServiceImpl implements OrderService {
         }
     }
 
-    private Example mapQueryInfo(OrderModel orderModel) {
-        //商品编码
+    private Example mapQueryInfo(OrderModel orderModel, Map<String, Object> queryMap) {
+        //平台订单号
         String ecsOrderId = orderModel.getEcsOrderId();
-        //商品编码
+        //订单编号
         String code = orderModel.getCode();
-        //商品编码
+        //配货单号
+        // TODO: 2019/1/23
+        //网店
         Long storeId = orderModel.getStoreId();
-        //商品编码
+        //客户编号
         Long customerId = orderModel.getCustomerId();
-        //商品编码
+        //收货人
         String receiver = orderModel.getReceiver();
-        //商品编码
+        //收货人手机号
         String receiverPhone = orderModel.getReceiverPhone();
-        //商品编码
+        //门店
         Long wareId = orderModel.getWareId();
-        //商品编码
-        Long statusId = orderModel.getStatusId();
-        //商品编码
-        Long orderTypeId = orderModel.getOrderTypeId();
-        //仓库名称
+
         Example example = new Example(OrderModel.class);
         Example.Criteria criteria = example.createCriteria();
         if (StringUtils.isNotBlank(ecsOrderId)) {
-            criteria.andEqualTo("ecsOrderId", ecsOrderId);
+            criteria.andLike("ecsOrderId", ecsOrderId + "%");
         }
         if (StringUtils.isNotBlank(code)) {
-            criteria.andEqualTo("code", code);
+            criteria.andLike("code", code + "%");
         }
         if (storeId != null) {
             criteria.andEqualTo("storeId", storeId);
@@ -76,19 +75,56 @@ public class OrderServiceImpl implements OrderService {
             criteria.andEqualTo("customerId", customerId);
         }
         if (StringUtils.isNotBlank(receiver)) {
-            criteria.andEqualTo("receiver", receiver);
+            criteria.andLike("receiver", receiver + "%");
         }
         if (StringUtils.isNotBlank(receiverPhone)) {
-            criteria.andEqualTo("receiverPhone", receiverPhone);
+            criteria.andLike("receiverPhone", receiverPhone + "%");
         }
         if (wareId != null) {
             criteria.andEqualTo("wareId", wareId);
         }
-        if (statusId != null) {
-            criteria.andEqualTo("statusId", statusId);
+        //订单状态
+        List<Long> statusId = (List<Long>) queryMap.get("statusId");
+        if (!CollectionUtils.isEmpty(statusId)) {
+            criteria.andIn("statusId", statusId);
         }
-        if (orderTypeId != null) {
-            criteria.andEqualTo("orderTypeId", orderTypeId);
+        //订单类型
+        List<Long> orderTypeId = (List<Long>) queryMap.get("orderTypeId");
+        if (!CollectionUtils.isEmpty(orderTypeId)) {
+            criteria.andIn("orderTypeId", orderTypeId);
+        }
+        //下单日期
+        Object startDateObj = queryMap.get("startDate");
+        if (startDateObj != null) {
+            Date startDate = (Date) startDateObj;
+            criteria.andGreaterThanOrEqualTo("date", startDate);
+        }
+        Object endDateObj = queryMap.get("endDate");
+        if (endDateObj != null) {
+            Date endDate = (Date) endDateObj;
+            criteria.andLessThanOrEqualTo("date", endDate);
+        }
+        //支付日期
+        Object paymentStartDateObj = queryMap.get("paymentStartDate");
+        if (paymentStartDateObj != null) {
+            Date paymentStartDate = (Date) paymentStartDateObj;
+            criteria.andGreaterThanOrEqualTo("paymentDate", paymentStartDate);
+        }
+        Object paymentEndDateObj = queryMap.get("paymentEndDate");
+        if (paymentEndDateObj != null) {
+            Date paymentEndDate = (Date) paymentEndDateObj;
+            criteria.andLessThanOrEqualTo("paymentDate", paymentEndDate);
+        }
+        //订单金额
+        Object totalPriceMinObj = queryMap.get("totalPriceMin");
+        Object totalPriceMaxObj = queryMap.get("totalPriceMax");
+        if (totalPriceMinObj != null) {
+            Double totalPriceMin = (Double) totalPriceMinObj;
+            criteria.andGreaterThanOrEqualTo("totalPrice", totalPriceMin);
+        }
+        if (totalPriceMaxObj != null) {
+            Double totalPriceMax = (Double) totalPriceMaxObj;
+            criteria.andLessThanOrEqualTo("totalPrice", totalPriceMax);
         }
         return example;
     }

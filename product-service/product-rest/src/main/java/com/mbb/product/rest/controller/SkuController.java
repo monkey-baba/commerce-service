@@ -53,7 +53,7 @@ public class SkuController extends BaseController {
         return ResponseEntity.ok(result);
     }
 
-    @GetMapping("/skuspeclist")
+    @GetMapping("/speclist")
     public ResponseEntity getSkuSpecList() {
         List<DictValueData> skuSpecList = productServiceAdapter.getSkuSpec();
         return ResponseEntity.ok(skuSpecList);

@@ -3,7 +3,11 @@ package com.mbb.stock.rest.controller;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.lxm.idgenerator.service.intf.IdService;
+import com.mbb.basic.common.dto.AddressData;
+import com.mbb.stock.adapter.PosAddressAdapter;
+import com.mbb.stock.biz.model.PointOfServiceModel;
 import com.mbb.stock.biz.model.WarehouseModel;
+import com.mbb.stock.biz.service.StoreService;
 import com.mbb.stock.biz.service.WarehouseService;
 import com.mbb.stock.rest.dto.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +32,12 @@ public class WarehouseController {
 
     @Autowired
     private IdService idService;
+
+    @Autowired
+    private StoreService storeService;
+
+    @Autowired
+    private PosAddressAdapter posAddressAdapter;
 
     @GetMapping("/info")
     public ResponseEntity getWarehouses(WarehouseListQuery warehouseListQuery) {
@@ -106,7 +116,17 @@ public class WarehouseController {
         //是否启用
         warehouseInfoResp.setEnabled(warehouseModel.getActive());
         //所属供货点
-        warehouseInfoResp.setPosId(warehouseModel.getPosId());
+        Long posId = warehouseModel.getPosId();
+        if (posId != null) {
+            PointOfServiceModel pointOfServiceModel = storeService.findPosById(posId);
+            warehouseInfoResp.setPosId(posId);
+            warehouseInfoResp.setPosName(pointOfServiceModel.getName());
+            Long addressId = pointOfServiceModel.getAddressId();
+            if (addressId != null) {
+                AddressData address = posAddressAdapter.getAddress(addressId);
+                warehouseInfoResp.setPosAddress(address.getDetail());
+            }
+        }
         //仓库地址
         return warehouseInfoResp;
     }

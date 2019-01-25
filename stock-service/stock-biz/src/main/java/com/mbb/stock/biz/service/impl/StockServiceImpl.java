@@ -6,8 +6,6 @@ import com.mbb.stock.biz.dao.StockMapper;
 import com.mbb.stock.biz.model.StockModel;
 import com.mbb.stock.biz.service.StockService;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import tk.mybatis.mapper.entity.Example;
@@ -24,8 +22,6 @@ import java.util.List;
 @Slf4j
 public class StockServiceImpl implements StockService {
 
-    private static final Logger logger = LogManager.getLogger(StockServiceImpl.class);
-
     private static final Integer limit = 1;
 
     private static final Integer page = 1;
@@ -40,7 +36,7 @@ public class StockServiceImpl implements StockService {
     public List<StockModel> getStocks(StockModel stockModel) {
         Example example = mapQueryInfo(stockModel);
         List<StockModel> stockModels = stockMapper.selectByExample(example);
-        logger.info("stock size====" + stockModels.size());
+        log.info("stock size====" + stockModels.size());
         return stockModels;
     }
 

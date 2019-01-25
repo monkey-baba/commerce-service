@@ -1,9 +1,9 @@
 package com.mbb.order.biz.service;
 
-import com.mbb.basic.common.dto.DictValueData;
 import com.mbb.order.biz.model.OrderModel;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * ${DESCRIPTION}
@@ -18,7 +18,7 @@ public interface OrderService {
      * @param orderModel
      * @return
      */
-    List<OrderModel> getOrders(OrderModel orderModel);
+    List<OrderModel> getOrders(OrderModel orderModel, Map<String, Object> queryMap);
 
     void createOrder(OrderModel orderModel);
 
