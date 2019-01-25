@@ -67,8 +67,19 @@ public class OrderServiceAdapter {
     public List<DictValueData> getBaseStores() {
         return dictValueApi.getBaseStore();
     }
+    public List<DictValueData> getPlatforms() {
+        return dictValueApi.getPlatform();
+    }
 
     public DictValueData getDictValue(Long id) {
         return dictValueApi.getDictValue(id);
+    }
+
+    public List<DictValueData> getDeliveryTypes() {
+        return dictValueApi.getDeliveryType();
+    }
+
+    public List<DictValueData> getCarriers() {
+        return dictValueApi.getCarrier();
     }
 }

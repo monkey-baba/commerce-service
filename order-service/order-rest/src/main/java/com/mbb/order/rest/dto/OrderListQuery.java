@@ -20,7 +20,7 @@ public class OrderListQuery {
     private Long customerId;
     private String receiver;
     private String receiverPhone;
-    private Long wareId;
+    private Long posId;
     private Double totalPriceMin;
     private Double totalPriceMax;
     private Date startDate;

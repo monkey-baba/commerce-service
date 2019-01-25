@@ -17,7 +17,7 @@ public class OrderInfoResp {
     private Long storeId;
     private String storeName;
     private String code;
-    private Long wareId;
+    private Long posId;
     private Long orderTypeId;
     private String orderTypeName;
     private Long statusId;

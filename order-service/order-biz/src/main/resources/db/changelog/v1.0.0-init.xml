@@ -15,7 +15,7 @@
       <column name="customer_id" type="BIGINT" remarks="客户"/>
       <column name="receiver" type="VARCHAR(32)" remarks="收货人"/>
       <column name="receiver_phone" type="VARCHAR(32)" remarks="收货手机"/>
-      <column name="ware_id" type="BIGINT" remarks="下单门店"/>
+      <column name="pos_id" type="BIGINT" remarks="下单门店"/>
       <column name="total_price" type="DECIMAL(32,8)" remarks="订单金额"/>
       <column name="sub_total" type="DECIMAL(32,8)" remarks="订单总额"/>
       <column name="discount" type="DECIMAL(32,8)" remarks="订单折扣"/>

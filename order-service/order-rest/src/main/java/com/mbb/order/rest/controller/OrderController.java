@@ -12,15 +12,17 @@ import com.mbb.order.biz.service.OrderService;
 import com.mbb.order.rest.dto.OrderCreateData;
 import com.mbb.order.rest.dto.OrderInfoResp;
 import com.mbb.order.rest.dto.OrderListQuery;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 /**
  * ${DESCRIPTION}
@@ -31,17 +33,15 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping("/api/v1/order")
 public class OrderController extends BaseController {
-    @Autowired
-    private OrderService orderService;
-
-    @Autowired
-    private IdService idService;
-
-    @Autowired
-    private OrderServiceAdapter orderServiceAdapter;
 
     @Autowired
     private AddressAdapter addressAdapter;
+    @Autowired
+    private IdService idService;
+    @Autowired
+    private OrderService orderService;
+    @Autowired
+    private OrderServiceAdapter orderServiceAdapter;
 
     @GetMapping("/info")
     public ResponseEntity getStocks(OrderListQuery orderListQuery) {
@@ -52,7 +52,7 @@ public class OrderController extends BaseController {
         orderModel.setCustomerId(orderListQuery.getCustomerId());
         orderModel.setReceiver(orderListQuery.getReceiver());
         orderModel.setReceiverPhone(orderListQuery.getReceiverPhone());
-        orderModel.setWareId(orderListQuery.getWareId());
+        orderModel.setPosId(orderListQuery.getPosId());
 //        orderModel.setStatusId(orderListQuery.getStatusId());
 //        orderModel.setOrderTypeId(orderListQuery.getOrderTypeId());
         Map<String, Object> queryMap = new HashMap<>();
@@ -92,7 +92,7 @@ public class OrderController extends BaseController {
         orderModel.setCustomerId(orderCreateData.getCustomerId());
         orderModel.setReceiver(orderCreateData.getReceiver());
         orderModel.setReceiverPhone(orderCreateData.getReceiverPhone());
-        orderModel.setWareId(orderCreateData.getWareId());
+        orderModel.setPosId(orderCreateData.getWareId());
         orderModel.setTotalPrice(orderCreateData.getTotalPrice());
         orderModel.setStatusId(orderCreateData.getStatusId());
         orderModel.setOrderTypeId(orderCreateData.getOrderTypeId());
@@ -121,6 +121,24 @@ public class OrderController extends BaseController {
         return ResponseEntity.ok(baseStoreDataList);
     }
 
+    @GetMapping("/platforms")
+    public ResponseEntity getPlatforms() {
+        List<DictValueData> valueDataList = orderServiceAdapter.getPlatforms();
+        return ResponseEntity.ok(valueDataList);
+    }
+
+    @GetMapping("/deliveryTypes")
+    public ResponseEntity getDeliveryTypes() {
+        List<DictValueData> valueDataList = orderServiceAdapter.getDeliveryTypes();
+        return ResponseEntity.ok(valueDataList);
+    }
+
+    @GetMapping("/carriers")
+    public ResponseEntity getCarriers() {
+        List<DictValueData> valueDataList = orderServiceAdapter.getCarriers();
+        return ResponseEntity.ok(valueDataList);
+    }
+
     private void convertOrder(OrderModel orderModel, OrderInfoResp orderInfoResp) {
         //id
         orderInfoResp.setId(orderModel.getId());
@@ -136,7 +154,7 @@ public class OrderController extends BaseController {
         //订单编号
         orderInfoResp.setCode(orderModel.getCode());
         //门店
-        orderInfoResp.setWareId(orderModel.getWareId());
+        orderInfoResp.setPosId(orderModel.getPosId());
         //订单类型
         Long orderTypeId = orderModel.getOrderTypeId();
         if (orderTypeId != null) {
