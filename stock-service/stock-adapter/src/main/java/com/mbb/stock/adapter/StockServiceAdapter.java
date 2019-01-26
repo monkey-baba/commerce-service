@@ -13,7 +13,7 @@ import java.util.Map;
  * @create 2019-01-21 23:27
  */
 @Component
-public class ProductServiceAdapter {
+public class StockServiceAdapter {
 
     public String getSkuNameById(Long skuId) {
         //远程调用

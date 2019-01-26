@@ -58,7 +58,7 @@ public class OrderServiceImpl implements OrderService {
         //收货人手机号
         String receiverPhone = orderModel.getReceiverPhone();
         //门店
-        Long wareId = orderModel.getWareId();
+        Long wareId = orderModel.getPosId();
 
         Example example = new Example(OrderModel.class);
         Example.Criteria criteria = example.createCriteria();
@@ -81,7 +81,7 @@ public class OrderServiceImpl implements OrderService {
             criteria.andLike("receiverPhone", receiverPhone + "%");
         }
         if (wareId != null) {
-            criteria.andEqualTo("wareId", wareId);
+            criteria.andEqualTo("posId", wareId);
         }
         //订单状态
         List<Long> statusId = (List<Long>) queryMap.get("statusId");

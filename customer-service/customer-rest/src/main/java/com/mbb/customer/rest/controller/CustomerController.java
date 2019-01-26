@@ -7,7 +7,9 @@ import com.mbb.basic.common.dto.DictValueData;
 import com.mbb.customer.adapter.CustomerServiceAdapter;
 import com.mbb.customer.biz.model.CustomerModel;
 import com.mbb.customer.biz.service.CustomerService;
+import com.mbb.customer.common.dto.CustomerData;
 import com.mbb.customer.rest.dto.*;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -23,6 +25,7 @@ import java.util.stream.Collectors;
  */
 @RestController
 @RequestMapping("/api/v1/customer")
+@Slf4j
 public class CustomerController extends BaseController {
 
     @Autowired
@@ -101,6 +104,33 @@ public class CustomerController extends BaseController {
     public ResponseEntity getCustomerStatus() {
         List<DictValueData> customerStatusDataList = customerServiceAdapter.getCustomerStatus();
         return ResponseEntity.ok(customerStatusDataList);
+    }
+
+    @GetMapping("/list")
+    public ResponseEntity findCustomerList(@RequestParam("code") String code, @RequestParam("name") String name,
+                                           @RequestParam("pageNum") Integer pageNum, @RequestParam("pageSize") Integer pageSize) {
+        CustomerModel customerModel = new CustomerModel();
+        customerModel.setCode(code);
+        customerModel.setName(name);
+        //开启分页
+        PageHelper.startPage(pageNum, pageSize);
+
+        //查询数据
+        List<CustomerModel> customers = customerService.getCustomers(customerModel);
+        //获取页码等信息
+        PageInfo<CustomerModel> origin = PageInfo.of(customers);
+        //从model转data
+        List<CustomerData> customerDataList = origin.getList().stream().map(customer -> {
+            CustomerData customerData = new CustomerData();
+            customerData.setId(customer.getId());
+            customerData.setCode(customer.getCode());
+            customerData.setName(customer.getName());
+            return customerData;
+        }).collect(Collectors.toList());
+        //用data生成新的分页数据
+        PageInfo<CustomerData> result = PageInfo.of(customerDataList);
+        result.setTotal(origin.getTotal());
+        return ResponseEntity.ok(result);
     }
 
     private void convertCustomer(CustomerModel customerModel, CustomerInfoResp customerInfoResp) {

@@ -27,6 +27,13 @@
       <version>${project.version}</version>
     </dependency>
 
+    <dependency>
+      <groupId>com.mbb</groupId>
+      <artifactId>customer-api</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+
+
   </dependencies>
 
 </project>
