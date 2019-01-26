@@ -46,6 +46,15 @@ public class PriceController extends BaseController {
         return ResponseEntity.ok(result);
     }
 
+
+    @GetMapping("/list/{productid}")
+    public ResponseEntity getPrices(@PathVariable(name="productid") Long productid ) {
+        PriceModel priceModel = new PriceModel();
+        priceModel.setProductId(productid);
+
+        return ResponseEntity.ok(dealResult(priceService.getPrices(priceModel)));
+    }
+
     @GetMapping("/channellist")
     public ResponseEntity getChannelList() {
         List<DictValueData> channelList = productServiceAdapter.getChannel();
@@ -75,6 +84,7 @@ public class PriceController extends BaseController {
         priceModel.setId(idService.genId());
         priceModel.setActive(data.getActive());
         priceModel.setPriority(data.getPriority());
+        priceModel.setProductId(data.getProductId());
         priceService.createPrice(priceModel);
         return ResponseEntity.ok(dealResult(priceModel));
     }
