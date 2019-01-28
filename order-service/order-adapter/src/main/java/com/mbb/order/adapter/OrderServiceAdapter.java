@@ -99,7 +99,11 @@ public class OrderServiceAdapter {
     }
 
     public String getPosNameById(Long id) {
-        // TODO: 2019/1/25 门店api提供出来替换 
+        // TODO: 2019/1/25 门店api提供出来替换
         return "大华仓";
+    }
+
+    public List<DictValueData> getSkuSpecs() {
+        return dictValueApi.getSkuSpec();
     }
 }

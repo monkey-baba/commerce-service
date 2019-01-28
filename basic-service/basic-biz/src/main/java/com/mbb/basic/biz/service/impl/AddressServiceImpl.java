@@ -18,6 +18,11 @@ public class AddressServiceImpl implements AddressService {
     }
 
     @Override
+    public int updateAddress(AddressModel address) {
+        return addressMapper.updateByPrimaryKey(address);
+    }
+
+    @Override
     public AddressModel findById(Long id) {
         return addressMapper.selectByPrimaryKey(id);
     }

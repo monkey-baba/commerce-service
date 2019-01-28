@@ -40,8 +40,9 @@
       <column name="version" type="INT" remarks="乐观锁"/>
       <column name="sku_id" type="BIGINT" remarks="SKU"/>
       <column name="quantity" type="BIGINT" remarks="数量"/>
-      <column name="total_price" type="DECIMAL(32,8)" remarks="单价"/>
-      <column name="base_price" type="DECIMAL(32,8)" remarks="总价"/>
+      <column name="shipped_quantity" type="BIGINT" remarks="已发数量"/>
+      <column name="base_price" type="DECIMAL(32,8)" remarks="单价"/>
+      <column name="total_price" type="DECIMAL(32,8)" remarks="总价"/>
       <column name="discount" type="DECIMAL(32,8)" remarks="折扣"/>
       <column name="order_id" type="BIGINT" remarks="订单"/>
     </createTable>

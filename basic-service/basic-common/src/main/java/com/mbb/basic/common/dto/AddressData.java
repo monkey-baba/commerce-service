@@ -7,6 +7,11 @@ import lombok.Data;
 public class AddressData {
 
     /**
+     * 地址ID
+     */
+    private Long id;
+
+    /**
      * 前端地址code数组
      */
     private List<String> address;

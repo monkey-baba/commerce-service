@@ -1,29 +1,29 @@
 package com.mbb.stock.rest.controller;
 
-import com.alibaba.fastjson.JSON;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.mbb.basic.common.dto.AddressData;
 import com.mbb.basic.common.dto.DictValueData;
+import com.mbb.stock.adapter.PosAddressAdapter;
+import com.mbb.stock.adapter.PosServiceAdapter;
 import com.mbb.stock.biz.dto.StoreInfoDto;
-import com.mbb.stock.biz.service.StoreService;
-
+import com.mbb.stock.biz.dto.StoreListQuery;
+import com.mbb.stock.biz.model.PointOfServiceModel;
+import com.mbb.stock.biz.service.ReservoirAreaService;
 import com.mbb.stock.rest.dto.StoreDetailData;
 import com.mbb.stock.rest.dto.StoreUpdateData;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
 import java.util.List;
 import java.util.stream.Collectors;
-import com.mbb.stock.biz.dto.StoreListQuery;
-import com.mbb.stock.biz.model.PointOfServiceModel;
-import com.mbb.stock.adapter.PosServiceAdapter;
-import com.mbb.stock.adapter.PosAddressAdapter;
+
 @RestController
-@RequestMapping("/api/v1/store")
-public class StoreController extends BaseController{
+@RequestMapping("/api/v1/reservoirarea")
+public class ReservoirAreaController extends BaseController{
     @Autowired
-    private StoreService storeService;
+    private ReservoirAreaService reservoirAreaService;
 
     @Autowired
     private PosServiceAdapter posServiceAdapter;
@@ -32,15 +32,9 @@ public class StoreController extends BaseController{
     private PosAddressAdapter posAddressAdapter;
 
 
-    @GetMapping("/allList")
-    public ResponseEntity storeAllList(StoreListQuery query) {
-        List<StoreInfoDto> stockInfoDtoList = storeService.getAllStores();
-        return ResponseEntity.ok(stockInfoDtoList);
-    }
-
     @GetMapping("/classify")
     public ResponseEntity storeClassification() {
-       List<DictValueData> dictValueDataList = posServiceAdapter.getPosClassify();
+        List<DictValueData> dictValueDataList = posServiceAdapter.getPosClassify();
         return ResponseEntity.ok(dictValueDataList);
     }
 
@@ -52,20 +46,20 @@ public class StoreController extends BaseController{
 
     @PostMapping("/info")
     public ResponseEntity getStores(@RequestBody StoreListQuery storeListQuery) {
-        PointOfServiceModel storeModel = new PointOfServiceModel();
-        storeModel.setName(storeListQuery.getName());
-        storeModel.setCode(storeListQuery.getCode());
+        PointOfServiceModel reservoirAreaModel = new PointOfServiceModel();
+        reservoirAreaModel.setName(storeListQuery.getName());
+        reservoirAreaModel.setCode(storeListQuery.getCode());
         if(!(storeListQuery.getClassification().equals(""))){
-            storeModel.setClassifyId(Long.valueOf(storeListQuery.getClassification()));
+            reservoirAreaModel.setClassifyId(Long.valueOf(storeListQuery.getClassification()));
         }
         if(!(storeListQuery.getStatus().equals(""))){
-            storeModel.setStatusId(Long.valueOf(storeListQuery.getStatus()));
+            reservoirAreaModel.setStatusId(Long.valueOf(storeListQuery.getStatus()));
         }
-        storeModel.setOwner(storeListQuery.getPeople());
+        reservoirAreaModel.setOwner(storeListQuery.getPeople());
         //开启分页
         PageHelper.startPage(storeListQuery.getPageNum(), storeListQuery.getPageSize());
         //查询数据
-        List<PointOfServiceModel> stocks = storeService.getStores(storeModel);
+        List<PointOfServiceModel> stocks = reservoirAreaService.getReservoirAreas(reservoirAreaModel);
         //获取页码等信息
         PageInfo<PointOfServiceModel> origin = PageInfo.of(stocks);
         //从model转data
@@ -85,26 +79,26 @@ public class StoreController extends BaseController{
         addressData.setName(stockInfoDtoList.getOwner());
         Long address= posAddressAdapter.saveAddress(addressData);
         stockInfoDtoList.setAddress(address);
-        storeService.addStore(stockInfoDtoList);
+        reservoirAreaService.addReservoirArea(stockInfoDtoList);
         return ResponseEntity.ok(Boolean.TRUE);
     }
 
     private List<StoreInfoDto> dealResult(PageInfo<PointOfServiceModel> stores) {
         List<StoreInfoDto> storeInfoRespList = stores.getList().stream().map(store -> {
             StoreInfoDto storeInfoResp = new StoreInfoDto();
-            //门店地址
+            //大仓地址
             Long address=store.getAddressId();
             AddressData addressData  =  posAddressAdapter.getAddress(address);
             storeInfoResp.setPaddress(addressData.getAddress());
             storeInfoResp.setDetailaddress(addressData.getDetail());
             storeInfoResp.setAddress(address);
-            //门店名字
+            //大仓名字
             storeInfoResp.setName(store.getName());
-            //门店状态
+            //大仓状态
             Long status=store.getStatusId();
-            //门店id
+            //大仓id
             storeInfoResp.setId(store.getId());
-            //门店联系方式
+            //大仓联系方式
             storeInfoResp.setContact(store.getContact());
             storeInfoResp.setStatus(status);
             List<DictValueData> dictValueDataList = posServiceAdapter.getPosStatus();
@@ -113,7 +107,7 @@ public class StoreController extends BaseController{
                     storeInfoResp.setPstatus(dictValueData.getName());
                 }
             }
-            //门店负责人
+            //大仓负责人
             storeInfoResp.setOwner(String.valueOf(store.getOwner() == null ? "" : store.getOwner()));
             return storeInfoResp;
         }).collect(Collectors.toList());
@@ -127,24 +121,23 @@ public class StoreController extends BaseController{
         addressData.setDetail(data.getDetailaddress());
         addressData.setPhone(data.getContact());
         addressData.setName(data.getOwner());
-        PointOfServiceModel store=  storeService.findById(data.getId());
-        addressData.setId(store.getAddressId());
+        PointOfServiceModel reservoirArea=  reservoirAreaService.findById(data.getId());
         Long address= posAddressAdapter.saveAddress(addressData);
-        store.setAddressId(address);
-        store.setName(data.getName());
-        store.setOwner(data.getOwner());
-        store.setStatusId(data.getStatus());
-        storeService.updateStore(store);
+        reservoirArea.setAddressId(address);
+        reservoirArea.setName(data.getName());
+        reservoirArea.setOwner(data.getOwner());
+        reservoirArea.setStatusId(data.getStatus());
+        reservoirAreaService.updateReservoirArea(reservoirArea);
         return ResponseEntity.ok("更新成功");
     }
 
     @GetMapping("/detail")
     public ResponseEntity childRole(@RequestParam Long id) {
-        PointOfServiceModel store=  storeService.findById(id);
+        PointOfServiceModel store=  reservoirAreaService.findById(id);
         StoreDetailData storeDetailData=new StoreDetailData();
         storeDetailData.setCode(store.getCode());
         storeDetailData.setName(store.getName());
-        //门店状态
+        //库区状态
         Long status=store.getStatusId();
         List<DictValueData> dictValueDataList = posServiceAdapter.getPosStatus();
         for(DictValueData dictValueData:dictValueDataList){
@@ -152,7 +145,7 @@ public class StoreController extends BaseController{
                 storeDetailData.setPstatus(dictValueData.getName());
             }
         }
-        //门店分类
+        //大仓分类
         Long classifyId=store.getClassifyId();
         List<DictValueData> posClassifyDataList = posServiceAdapter.getPosClassify();
         for(DictValueData dictValueData:posClassifyDataList){
@@ -163,7 +156,7 @@ public class StoreController extends BaseController{
         storeDetailData.setOwner(store.getOwner());
         storeDetailData.setContact(store.getContact());
 
-        //门店地址
+        //大仓地址
         Long address=store.getAddressId();
         AddressData addressData  =  posAddressAdapter.getAddress(address);
         storeDetailData.setPaddress(addressData.getAddress());
