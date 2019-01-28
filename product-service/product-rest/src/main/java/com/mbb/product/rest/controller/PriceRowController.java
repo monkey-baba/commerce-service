@@ -30,20 +30,8 @@ public class PriceRowController extends BaseController {
     @Autowired
     private ProductServiceAdapter productServiceAdapter;
 
-    @GetMapping("/list")
-    public ResponseEntity getPrices(PriceRowQuery priceRowQuery) {
-       PriceRowModel priceRowModel = new PriceRowModel();
-        priceRowModel.setPriceId(priceRowQuery.getPriceId());
-        //查询数据
-        List<PriceRowModel> priceRowModels = priceRowService.getPriceRows(priceRowModel);
-        //从model转data
-        List<PriceRowData> result = dealResult(priceRowModels);
-
-        return ResponseEntity.ok(result);
-    }
-
-    @GetMapping("/list/priceid")
-    public ResponseEntity getPrices(@PathVariable(name="priceid") Long priceid) {
+    @GetMapping("/list/{priceid}")
+    public ResponseEntity getPriceRows(@PathVariable(name="priceid") Long priceid) {
         PriceRowModel priceRowModel = new PriceRowModel();
         priceRowModel.setPriceId(priceid);
         //查询数据

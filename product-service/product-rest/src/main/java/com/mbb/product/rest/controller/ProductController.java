@@ -5,7 +5,6 @@ import com.github.pagehelper.PageInfo;
 import com.lxm.idgenerator.service.intf.IdService;
 import com.mbb.basic.common.dto.DictValueData;
 import com.mbb.product.adapter.ProductServiceAdapter;
-import com.mbb.product.rest.data.price.PriceDeleteData;
 import com.mbb.product.rest.data.product.*;
 import com.mbb.product.biz.model.ProductModel;
 import com.mbb.product.biz.service.ProductService;
