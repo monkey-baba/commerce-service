@@ -36,7 +36,7 @@ public class AddressController extends BaseController {
             return ResponseEntity.badRequest().body("联系人为空");
         }
         AddressModel address;
-        int count=0;
+        int count;
         if (data.getId()!=null){
             address = addressService.findById(data.getId());
             if (address == null){
