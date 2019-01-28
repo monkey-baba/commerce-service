@@ -25,4 +25,5 @@ public class PosServiceAdapter {
         //远程调用
         return dictValueApi.getPosStatus();
     }
+
 }

@@ -10,4 +10,6 @@ public interface StoreService {
     List<PointOfServiceModel> getStores(PointOfServiceModel storeModel);
     List<StoreInfoDto> getAllStores();
     void addStore(StoreInfoDto stockInfoDtoList);
+    void updateStore(PointOfServiceModel var1);
+    PointOfServiceModel findById(Long var1);
 }
