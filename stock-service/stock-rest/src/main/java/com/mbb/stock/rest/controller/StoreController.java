@@ -5,9 +5,9 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.mbb.basic.common.dto.AddressData;
 import com.mbb.basic.common.dto.DictValueData;
-import com.mbb.stock.biz.dto.StoreInfoDto;
 import com.mbb.stock.biz.service.StoreService;
 
+import com.mbb.stock.common.dto.StoreInfoDto;
 import com.mbb.stock.rest.dto.StoreDetailData;
 import com.mbb.stock.rest.dto.StoreUpdateData;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,8 +50,8 @@ public class StoreController extends BaseController{
         return ResponseEntity.ok(dictValueDataList);
     }
 
-    @PostMapping("/info")
-    public ResponseEntity getStores(@RequestBody StoreListQuery storeListQuery) {
+    @GetMapping("/info")
+    public ResponseEntity getStores(StoreListQuery storeListQuery) {
         PointOfServiceModel storeModel = new PointOfServiceModel();
         storeModel.setName(storeListQuery.getName());
         storeModel.setCode(storeListQuery.getCode());
