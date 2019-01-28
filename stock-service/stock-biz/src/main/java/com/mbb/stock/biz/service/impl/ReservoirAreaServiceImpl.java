@@ -2,10 +2,10 @@ package com.mbb.stock.biz.service.impl;
 
 import com.lxm.idgenerator.service.intf.IdService;
 import com.mbb.stock.biz.dao.StoreMapper;
-import com.mbb.stock.biz.dto.StoreInfoDto;
 import com.mbb.stock.biz.dto.StoreListQuery;
 import com.mbb.stock.biz.model.PointOfServiceModel;
 import com.mbb.stock.biz.service.ReservoirAreaService;
+import com.mbb.stock.common.dto.StoreInfoDto;
 import com.mbb.stock.common.enumation.PosType;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -128,10 +128,5 @@ public class ReservoirAreaServiceImpl implements ReservoirAreaService {
         criteria.andEqualTo("posType", PosType.WAREHOUSE);
         return example;
     }
-    private RowBounds mapRowBounds(StoreListQuery storeListQuery) {
-        String queryOffset = storeListQuery.getOffset();
-        Integer offset = StringUtils.isBlank(queryOffset) ? 0 : Integer.valueOf(queryOffset);
-        RowBounds rowBounds = new RowBounds(offset, limit);
-        return rowBounds;
-    }
+
 }

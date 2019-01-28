@@ -138,10 +138,4 @@ public class StoreServiceImpl implements StoreService {
         criteria.andEqualTo("posType", PosType.STORE);
         return example;
     }
-    private RowBounds mapRowBounds(StoreListQuery storeListQuery) {
-        String queryOffset = storeListQuery.getOffset();
-        Integer offset = StringUtils.isBlank(queryOffset) ? 0 : Integer.valueOf(queryOffset);
-        RowBounds rowBounds = new RowBounds(offset, limit);
-        return rowBounds;
-    }
 }
