@@ -55,12 +55,32 @@ public class ProductController extends BaseController {
         return ResponseEntity.ok("更新成功");
 }
 
+    @GetMapping("/basic/{id}")
+    public ResponseEntity getBasicData(@PathVariable(name="id") Long id) {
+        ProductModel productModel = productService.findProductById(id);
+        return ResponseEntity.ok(dealResult(productModel));
+    }
+
+
+    @PostMapping("/updatebasic")
+    public ResponseEntity updateProduct(@RequestBody ProductBasicData data) throws Exception {
+        ProductModel productModel = productService.findProductById(data.getId());
+        productModel.setCode(data.getCode());
+        productModel.setName(data.getName());
+        productModel.setChannelId(data.getChannelId());
+        productModel.setApprovedId(data.getApprovedId());
+        productModel.setUnitId(data.getUnitId());
+        productService.updateProduct(productModel);
+        return ResponseEntity.ok("更新成功");
+    }
+
     @PostMapping("/create")
     public ResponseEntity create(@RequestBody ProductCreateData data) {
         ProductModel productModel = new ProductModel();
         productModel.setCode(data.getCode());
         productModel.setName(data.getName());
         productModel.setChannelId(data.getChannelId());
+        productModel.setUnitId(data.getUnitId());
         productModel.setApprovedId(802L);
         productModel.setId(idService.genId());
         productService.createProduct(productModel);
@@ -134,6 +154,8 @@ public class ProductController extends BaseController {
         productData.setName(productModel.getName());
         //销售渠道
         productData.setChannelId(productModel.getChannelId());
+        //销售渠道
+        productData.setUnitId(productModel.getUnitId());
         //id
         productData.setId(productModel.getId());
         //

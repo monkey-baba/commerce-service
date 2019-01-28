@@ -81,7 +81,7 @@ public class OrderServiceImpl implements OrderService {
             criteria.andLike("receiverPhone", receiverPhone + "%");
         }
         if (wareId != null) {
-            criteria.andEqualTo("wareId", wareId);
+            criteria.andEqualTo("posId", wareId);
         }
         //订单状态
         List<Long> statusId = (List<Long>) queryMap.get("statusId");

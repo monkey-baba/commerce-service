@@ -28,9 +28,7 @@ public class OrderListQuery {
     private Date paymentStartDate;
     private Date paymentEndDate;
     private List<Long> statusId;
-    private List<Long> newStatusId;
     private List<Long> orderTypeId;
-    private List<Long> newOrderTypeId;
     private Integer pageNum;
     private Integer pageSize;
 }

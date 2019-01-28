@@ -17,4 +17,5 @@ public class PriceCreateData {
     private Date startTime;
     private Date endTime;
     private Integer priority;
+    private Long productId;
 }
