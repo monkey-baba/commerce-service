@@ -16,6 +16,7 @@ import com.mbb.order.rest.dto.CustomerQuery;
 import com.mbb.order.rest.dto.OrderCreateData;
 import com.mbb.order.rest.dto.OrderInfoResp;
 import com.mbb.order.rest.dto.OrderListQuery;
+import com.mbb.order.rest.dto.StoreQuery;
 import com.mbb.stock.common.dto.StoreInfoDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -118,8 +119,7 @@ public class OrderController extends BaseController {
     }
 
     @GetMapping("/pos/list")
-    public ResponseEntity getPosList(CustomerQuery customerQuery) {
-        // TODO: 2019/1/25 此处暂时调用的客户api,门店api提供出来之后修改
+    public ResponseEntity getPosList(StoreQuery customerQuery) {
         PageInfo<StoreInfoDto> customerList = storeAdapter
                 .getCustomers(customerQuery.getCode(), customerQuery.getName(), customerQuery.getPageNum(), customerQuery.getPageSize());
         return ResponseEntity.ok(customerList);

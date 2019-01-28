@@ -10,6 +10,7 @@ import com.mbb.stock.biz.service.StoreService;
 import com.mbb.stock.common.dto.StoreInfoDto;
 import com.mbb.stock.rest.dto.StoreDetailData;
 import com.mbb.stock.rest.dto.StoreUpdateData;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -55,10 +56,10 @@ public class StoreController extends BaseController{
         PointOfServiceModel storeModel = new PointOfServiceModel();
         storeModel.setName(storeListQuery.getName());
         storeModel.setCode(storeListQuery.getCode());
-        if(!(storeListQuery.getClassification().equals(""))){
+        if(StringUtils.isNotEmpty(storeListQuery.getClassification())){
             storeModel.setClassifyId(Long.valueOf(storeListQuery.getClassification()));
         }
-        if(!(storeListQuery.getStatus().equals(""))){
+        if(StringUtils.isNotEmpty(storeListQuery.getStatus())){
             storeModel.setStatusId(Long.valueOf(storeListQuery.getStatus()));
         }
         storeModel.setOwner(storeListQuery.getPeople());
@@ -104,6 +105,7 @@ public class StoreController extends BaseController{
             Long status=store.getStatusId();
             //门店id
             storeInfoResp.setId(store.getId());
+            storeInfoResp.setCode(store.getCode());
             //门店联系方式
             storeInfoResp.setContact(store.getContact());
             storeInfoResp.setStatus(status);

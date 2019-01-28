@@ -98,6 +98,7 @@ public class ReservoirAreaController extends BaseController{
             Long status=store.getStatusId();
             //大仓id
             storeInfoResp.setId(store.getId());
+            storeInfoResp.setCode(store.getCode());
             //大仓联系方式
             storeInfoResp.setContact(store.getContact());
             storeInfoResp.setStatus(status);
