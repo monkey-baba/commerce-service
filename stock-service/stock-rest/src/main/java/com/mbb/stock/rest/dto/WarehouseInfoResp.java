@@ -9,6 +9,7 @@ public class WarehouseInfoResp {
     private String name;
     private Boolean enabled;
     private Long posId;
+    private String posName;
     private String posAddress;
 
 }

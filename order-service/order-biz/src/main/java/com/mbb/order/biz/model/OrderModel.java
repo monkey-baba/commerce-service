@@ -17,7 +17,7 @@ public class OrderModel extends BaseModel {
     private Long customerId;
     private String receiver;
     private String receiverPhone;
-    private Long wareId;
+    private Long posId;
     private Double totalPrice;
     private Double subTotal;
     private Double discount;

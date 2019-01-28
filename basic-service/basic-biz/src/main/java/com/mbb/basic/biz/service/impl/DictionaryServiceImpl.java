@@ -8,9 +8,11 @@ import com.mbb.basic.biz.service.DictionaryService;
 import java.util.Collections;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import tk.mybatis.mapper.entity.Example;
 import tk.mybatis.mapper.entity.Example.Builder;
 import tk.mybatis.mapper.util.Sqls;
@@ -67,6 +69,41 @@ public class DictionaryServiceImpl implements DictionaryService {
     @Override
     public int createDict(DictionaryModel dict) {
         return dictionaryMapper.insert(dict);
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void updateDictAndValues(DictionaryModel dict, List<DictionaryValueModel> add,
+            List<DictionaryValueModel> update, List<DictionaryValueModel> delete) {
+        dictionaryMapper.updateByPrimaryKey(dict);
+        //处理新增
+        if (CollectionUtils.isNotEmpty(add)) {
+            dictionaryValueMapper.insertList(add);
+        }
+        //处理更新
+        update.forEach(v -> dictionaryValueMapper.updateByPrimaryKeySelective(v));
+        //处理删除
+        delete.forEach(v -> dictionaryValueMapper.delete(v));
+
+    }
+
+    @Override
+    public DictionaryModel findDictById(Long id) {
+        return dictionaryMapper.selectByPrimaryKey(id);
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void deleteDicts(List<Long> ids) {
+        ids.forEach(id -> {
+            //先删dict
+            dictionaryMapper.deleteByPrimaryKey(id);
+            //再删值
+            Builder builder = Example.builder(DictionaryValueModel.class);
+            builder.where(Sqls.custom().andEqualTo("typeId", id));
+            dictionaryValueMapper.deleteByExample(builder.build());
+        });
+
     }
 
 

@@ -1,18 +1,19 @@
-package com.mbb.product.biz.data;
+package com.mbb.product.rest.data.product;
 
 import lombok.Data;
 
 import java.util.List;
 import java.util.Map;
+
 @Data
-public class ProductData {
+public class ProductBasicData {
     private String code;
+    private Long id;
     private String name;
     private Long channelId;
-    private Long id;
-    private Long unitId;
+    private Long categoryId;
     private Long approvedId;
+    private Long unitId;
     private List<String> images;
     private Map<Long,String> attribute;
-
 }

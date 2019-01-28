@@ -15,7 +15,7 @@
       <column name="customer_id" type="BIGINT" remarks="客户"/>
       <column name="receiver" type="VARCHAR(32)" remarks="收货人"/>
       <column name="receiver_phone" type="VARCHAR(32)" remarks="收货手机"/>
-      <column name="ware_id" type="BIGINT" remarks="下单门店"/>
+      <column name="pos_id" type="BIGINT" remarks="下单门店"/>
       <column name="total_price" type="DECIMAL(32,8)" remarks="订单金额"/>
       <column name="sub_total" type="DECIMAL(32,8)" remarks="订单总额"/>
       <column name="discount" type="DECIMAL(32,8)" remarks="订单折扣"/>
@@ -40,8 +40,9 @@
       <column name="version" type="INT" remarks="乐观锁"/>
       <column name="sku_id" type="BIGINT" remarks="SKU"/>
       <column name="quantity" type="BIGINT" remarks="数量"/>
-      <column name="total_price" type="DECIMAL(32,8)" remarks="单价"/>
-      <column name="base_price" type="DECIMAL(32,8)" remarks="总价"/>
+      <column name="shipped_quantity" type="BIGINT" remarks="已发数量"/>
+      <column name="base_price" type="DECIMAL(32,8)" remarks="单价"/>
+      <column name="total_price" type="DECIMAL(32,8)" remarks="总价"/>
       <column name="discount" type="DECIMAL(32,8)" remarks="折扣"/>
       <column name="order_id" type="BIGINT" remarks="订单"/>
     </createTable>

@@ -74,7 +74,10 @@ public class StoreServiceImpl implements StoreService {
 
     @Override
     public PointOfServiceModel findById(Long id) {
-        return (PointOfServiceModel)this.storeMapper.selectByPrimaryKey(id);
+        return (PointOfServiceModel) this.storeMapper.selectByPrimaryKey(id);
+    }
+    public PointOfServiceModel findPosById(Long id) {
+        return storeMapper.selectByPrimaryKey(id);
     }
 
     private List<StoreInfoDto> dealResult(List<PointOfServiceModel> storeModels) {

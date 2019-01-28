@@ -1,13 +1,10 @@
 package com.mbb.stock.biz.service.impl;
 
-import com.lxm.idgenerator.service.intf.IdService;
 import com.mbb.stock.biz.dao.WarehouseMapper;
 import com.mbb.stock.biz.model.WarehouseModel;
 import com.mbb.stock.biz.service.WarehouseService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import tk.mybatis.mapper.entity.Example;

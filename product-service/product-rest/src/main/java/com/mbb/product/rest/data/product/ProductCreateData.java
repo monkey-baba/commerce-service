@@ -1,4 +1,4 @@
-package com.mbb.product.biz.data;
+package com.mbb.product.rest.data.product;
 
 import lombok.Data;
 
@@ -7,5 +7,5 @@ public class ProductCreateData {
     private String code;
     private String name;
     private Long channelId;
-    private Long approvedId;
+    private Long unitId;
 }

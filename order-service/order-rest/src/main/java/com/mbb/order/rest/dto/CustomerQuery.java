@@ -1,13 +1,17 @@
-package com.mbb.product.biz.data;
+package com.mbb.order.rest.dto;
 
 import lombok.Data;
 
+/**
+ * ${DESCRIPTION}
+ *
+ * @author lf
+ * @create 2019-01-25 13:34
+ */
 @Data
-public class ProductQuery {
+public class CustomerQuery {
     private String code;
     private String name;
-    private Long channelId;
-    private Long approvedId;
     private Integer pageNum;
     private Integer pageSize;
 }

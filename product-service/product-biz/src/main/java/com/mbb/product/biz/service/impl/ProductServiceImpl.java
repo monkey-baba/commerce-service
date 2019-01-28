@@ -1,21 +1,16 @@
 package com.mbb.product.biz.service.impl;
 
-import com.github.pagehelper.PageHelper;
-import com.github.pagehelper.PageInfo;
+
 import com.mbb.product.biz.dao.ProductMapper;
-import com.mbb.product.biz.data.ProductData;
-import com.mbb.product.biz.data.ProductQuery;
+
 import com.mbb.product.biz.model.ProductModel;
 import com.mbb.product.biz.service.ProductService;
 import lombok.extern.slf4j.Slf4j;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import tk.mybatis.mapper.entity.Example;
 
 import javax.annotation.Resource;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -23,37 +18,15 @@ import org.apache.commons.lang3.StringUtils;
 @Service
 @Slf4j
 public class ProductServiceImpl implements ProductService {
-    private static final Logger LOG = LoggerFactory.getLogger(ProductServiceImpl.class);
 
     @Resource
     private ProductMapper productMapper;
     @Override
-    public PageInfo<ProductData> getProducts(ProductQuery productQuery) {
-        ProductModel productModel = new ProductModel();
-        productModel.setCode(productQuery.getCode());
-        productModel.setName(productQuery.getName());
-        productModel.setChannelId(productQuery.getChannelId());
-        productModel.setApprovedId(productQuery.getApprovedId());
-
-        //开启分页
-        PageHelper.startPage(productQuery.getPageNum(), productQuery.getPageSize());
-        //查询数据
-        List<ProductModel> products = getProducts(productModel);
-        //获取页码等信息
-        PageInfo<ProductModel> origin = PageInfo.of(products);
-        //从model转data
-        List<ProductData> productDataList = dealResult(origin);
-        //用data生成新的分页数据
-        PageInfo<ProductData> result = PageInfo.of(productDataList);
-        result.setTotal(origin.getTotal());
-        return result;
-    }
-
     public List<ProductModel> getProducts(ProductModel productModel) {
         //封装查询Example
         Example example = mapQueryInfo(productModel);
         List<ProductModel> productModels = productMapper.selectByExample(example);
-        LOG.info("product size====" + productModels.size());
+        log.info("product size====" + productModels.size());
         return productModels;
     }
 
@@ -88,6 +61,8 @@ public class ProductServiceImpl implements ProductService {
         String name = productModel.getName();
         //渠道号
         Long channelId = productModel.getChannelId();
+        Long approvedId = productModel.getApprovedId();
+
         Example example = new Example(ProductModel.class);
         Example.Criteria criteria = example.createCriteria();
         if (StringUtils.isNotBlank(code)) {
@@ -97,26 +72,13 @@ public class ProductServiceImpl implements ProductService {
             criteria.andLike("name", "%" + name + "%");
         }
         if (channelId!=null) {
+            criteria.andEqualTo("channelId",channelId);
+        }
+        if (approvedId!=null) {
+            criteria.andEqualTo("approvedId",approvedId);
         }
         return example;
     }
 
 
-    private List<ProductData> dealResult(PageInfo<ProductModel> products) {
-        List<ProductData> productDataList = products.getList().stream().map(productModel -> {
-            ProductData productData = new ProductData();
-            //客户编号
-            productData.setCode(productModel.getCode());
-            //客户名称
-            productData.setName(productModel.getName());
-            //手机号
-            productData.setChannelId(productModel.getChannelId());
-            //id
-            productData.setId(productModel.getId());
-            //
-            productData.setApprovedId(productModel.getApprovedId());
-            return productData;
-        }).collect(Collectors.toList());
-        return productDataList;
-    }
 }

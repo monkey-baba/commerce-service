@@ -3,7 +3,7 @@ package com.mbb.stock.rest.controller;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.lxm.idgenerator.service.intf.IdService;
-import com.mbb.stock.adapter.ProductServiceAdapter;
+import com.mbb.stock.adapter.StockServiceAdapter;
 import com.mbb.stock.biz.model.StockModel;
 import com.mbb.stock.biz.model.WarehouseModel;
 import com.mbb.stock.biz.service.StockService;
@@ -17,8 +17,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 /**
  * ${DESCRIPTION}
@@ -37,7 +35,7 @@ public class StockController extends BaseController {
     private IdService idService;
 
     @Autowired
-    private ProductServiceAdapter productServiceAdapter;
+    private StockServiceAdapter stockServiceAdapter;
 
     @Autowired
     private WarehouseService warehouseService;
@@ -95,7 +93,7 @@ public class StockController extends BaseController {
         //商品编码
         stockInfoResp.setSkuId(stockModel.getSkuId());
         //商品名称
-        String skuName = productServiceAdapter.getSkuNameById(stockModel.getSkuId());
+        String skuName = stockServiceAdapter.getSkuNameById(stockModel.getSkuId());
         stockInfoResp.setSkuName(skuName);
         //仓库编码
         WarehouseModel warehouseModel = warehouseService.findById(stockModel.getWarehouseId());
