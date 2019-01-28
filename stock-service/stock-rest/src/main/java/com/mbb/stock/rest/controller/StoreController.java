@@ -128,6 +128,7 @@ public class StoreController extends BaseController{
         addressData.setPhone(data.getContact());
         addressData.setName(data.getOwner());
         PointOfServiceModel store=  storeService.findById(data.getId());
+        addressData.setId(store.getAddressId());
         Long address= posAddressAdapter.saveAddress(addressData);
         store.setAddressId(address);
         store.setName(data.getName());
