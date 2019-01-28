@@ -145,6 +145,13 @@ public class OrderController extends BaseController {
         return ResponseEntity.ok(valueDataList);
     }
 
+
+    @GetMapping("/skuSpecs")
+    public ResponseEntity getSkuSpecs() {
+        List<DictValueData> valueDataList = orderServiceAdapter.getSkuSpecs();
+        return ResponseEntity.ok(valueDataList);
+    }
+
     private void convertOrder(OrderModel orderModel, OrderInfoResp orderInfoResp) {
         //id
         orderInfoResp.setId(orderModel.getId());

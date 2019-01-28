@@ -12,6 +12,7 @@ public class OrderEntryModel extends BaseModel {
 
     private Long skuId;
     private Long quantity;
+    private Long shippedQuantity;
     private Double totalPrice;
     private Double basePrice;
     private Double discount;

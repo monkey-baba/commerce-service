@@ -86,4 +86,8 @@ public class OrderServiceAdapter {
     public List<DictValueData> getInvoiceTypes() {
         return dictValueApi.getInvoiceType();
     }
+
+    public List<DictValueData> getSkuSpecs() {
+        return dictValueApi.getSkuSpec();
+    }
 }
