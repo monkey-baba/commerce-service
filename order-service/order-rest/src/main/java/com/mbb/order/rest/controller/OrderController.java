@@ -9,6 +9,7 @@ import com.mbb.customer.common.dto.CustomerData;
 import com.mbb.order.adapter.AddressAdapter;
 import com.mbb.order.adapter.CustomerAdapter;
 import com.mbb.order.adapter.DictAdapter;
+import com.mbb.order.adapter.ProductAdapter;
 import com.mbb.order.adapter.StoreAdapter;
 import com.mbb.order.biz.model.OrderModel;
 import com.mbb.order.biz.service.OrderService;
@@ -16,16 +17,21 @@ import com.mbb.order.rest.dto.CustomerQuery;
 import com.mbb.order.rest.dto.OrderCreateData;
 import com.mbb.order.rest.dto.OrderInfoResp;
 import com.mbb.order.rest.dto.OrderListQuery;
+import com.mbb.order.rest.dto.SkuQuery;
 import com.mbb.order.rest.dto.StoreQuery;
+import com.mbb.product.common.dto.SkuData;
 import com.mbb.stock.common.dto.StoreInfoDto;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 /**
  * ${DESCRIPTION}
@@ -40,6 +46,10 @@ public class OrderController extends BaseController {
     @Autowired
     private AddressAdapter addressAdapter;
     @Autowired
+    private CustomerAdapter customerAdapter;
+    @Autowired
+    private DictAdapter dictAdapter;
+    @Autowired
     private IdService idService;
     @Autowired
     private OrderService orderService;
@@ -47,10 +57,7 @@ public class OrderController extends BaseController {
     private StoreAdapter storeAdapter;
 
     @Autowired
-    private CustomerAdapter customerAdapter;
-
-    @Autowired
-    private DictAdapter dictAdapter;
+    private ProductAdapter productAdapter;
 
     @GetMapping("/info")
     public ResponseEntity getOrders(OrderListQuery orderListQuery) {
@@ -110,18 +117,27 @@ public class OrderController extends BaseController {
     }
 
 
-
     @GetMapping("/customer/list")
     public ResponseEntity getCustomers(CustomerQuery customerQuery) {
         PageInfo<CustomerData> customerList = customerAdapter
-                .getCustomers(customerQuery.getCode(), customerQuery.getName(), customerQuery.getPageNum(), customerQuery.getPageSize());
+                .getCustomers(customerQuery.getCode(), customerQuery.getName(),
+                        customerQuery.getPageNum(), customerQuery.getPageSize());
         return ResponseEntity.ok(customerList);
     }
 
     @GetMapping("/pos/list")
-    public ResponseEntity getPosList(StoreQuery customerQuery) {
+    public ResponseEntity getPosList(StoreQuery storeQuery) {
         PageInfo<StoreInfoDto> customerList = storeAdapter
-                .getCustomers(customerQuery.getCode(), customerQuery.getName(), customerQuery.getPageNum(), customerQuery.getPageSize());
+                .getCustomers(storeQuery.getCode(), storeQuery.getName(), storeQuery.getPageNum(),
+                        storeQuery.getPageSize());
+        return ResponseEntity.ok(customerList);
+    }
+
+    @GetMapping("/sku/list")
+    public ResponseEntity getPosList(SkuQuery skuQuery) {
+        PageInfo<SkuData> customerList = productAdapter
+                .getSkus(skuQuery.getCode(), skuQuery.getName(),
+                        skuQuery.getPageNum(), skuQuery.getPageSize());
         return ResponseEntity.ok(customerList);
     }
 
