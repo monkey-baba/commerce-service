@@ -59,14 +59,20 @@ public class PriceServiceImpl implements PriceService {
         String name = priceModel.getName();
         //渠道号
         List<Long> channelId = priceModel.getChannelId();
+        //产品id
+        Long productId = priceModel.getProductId();
         Example example = new Example(PriceModel.class);
         Example.Criteria criteria = example.createCriteria();
         if (StringUtils.isNotBlank(name)) {
             criteria.andLike("name", "%" + name + "%");
         }
-        if (!channelId.isEmpty()) {
+        if (channelId!=null&&!channelId.isEmpty()) {
             criteria.andLike("channelId","%" + channelId + "%");
         }
+        if (productId!=null) {
+            criteria.andEqualTo("productId",productId);
+        }
+
         return example;
     }
 
