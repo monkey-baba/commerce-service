@@ -80,7 +80,7 @@ public class OrderController extends BaseController {
     }
 
     @PostMapping("/create")
-    public ResponseEntity createStock(@RequestBody OrderCreateData orderCreateData) {
+    public ResponseEntity createOrder(@RequestBody OrderCreateData orderCreateData) {
         OrderModel orderModel = new OrderModel();
         orderModel.setId(idService.genId());
         orderModel.setEcsOrderId(orderCreateData.getEcsOrderId());
