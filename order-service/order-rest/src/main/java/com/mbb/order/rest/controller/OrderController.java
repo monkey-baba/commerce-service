@@ -16,17 +16,12 @@ import com.mbb.order.rest.dto.OrderInfoResp;
 import com.mbb.order.rest.dto.OrderListQuery;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
-
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
 
 /**
  * ${DESCRIPTION}
@@ -48,7 +43,7 @@ public class OrderController extends BaseController {
     private OrderServiceAdapter orderServiceAdapter;
 
     @GetMapping("/info")
-    public ResponseEntity getStocks(OrderListQuery orderListQuery) {
+    public ResponseEntity getOrders(OrderListQuery orderListQuery) {
         OrderModel orderModel = new OrderModel();
         orderModel.setEcsOrderId(orderListQuery.getEcsOrderId());
         orderModel.setCode(orderListQuery.getCode());
