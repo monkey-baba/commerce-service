@@ -4,7 +4,7 @@ import lombok.Data;
 
 @Data
 public class SkuMetaData {
-    private Long specId;
-    private Long metaId;
+    private String specId;
+    private String metaId;
     private String meta;
 }

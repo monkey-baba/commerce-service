@@ -12,6 +12,7 @@ import com.mbb.product.common.dto.SkuData;
 import com.mbb.product.common.dto.SkuMetaData;
 import com.mbb.product.rest.data.SkuCreateData;
 import com.mbb.product.rest.data.SkuUpdateData;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -130,18 +131,23 @@ public class SkuController extends BaseController {
         skuData.setName(skuModel.getName());
         //id
         skuData.setId(skuModel.getId());
+        ArrayList<SkuMetaData> metas = new ArrayList<>();
+        skuData.setMeta(metas);
         //Meta
-        Map<Long, Long> meta = skuModel.getMeta();
+        Map<String, String> meta = skuModel.getMeta();
         //转化成long string 用来展示
-        meta.forEach((specId, metaId) -> {
-            SkuMetaData metaData = new SkuMetaData();
-            metaData.setSpecId(specId);
-            metaData.setMetaId(metaId);
-            SkuMetaModel model = skuService.getSkuMetaById(metaId);
-            if (model!=null){
-                metaData.setMeta(model.getName());
-            }
-        });
+        if (meta != null && !meta.isEmpty()){
+            meta.forEach((specId, metaId) -> {
+                SkuMetaData metaData = new SkuMetaData();
+                metaData.setSpecId(specId);
+                metaData.setMetaId(metaId);
+                SkuMetaModel model = skuService.getSkuMetaById(Long.valueOf(metaId));
+                if (model!=null){
+                    metaData.setMeta(model.getName());
+                }
+                metas.add(metaData);
+            });
+        }
 
         return skuData;
 
