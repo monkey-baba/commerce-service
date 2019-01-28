@@ -6,5 +6,7 @@ public interface AddressService {
 
     int createAddress(AddressModel address);
 
+    int updateAddress(AddressModel address);
+
     AddressModel findById(Long id);
 }

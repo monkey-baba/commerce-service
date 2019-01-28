@@ -35,19 +35,38 @@ public class AddressController extends BaseController {
         if (StringUtils.isEmpty(data.getName())) {
             return ResponseEntity.badRequest().body("联系人为空");
         }
-        AddressModel address = new AddressModel();
-        address.setId(idService.genId());
+        AddressModel address;
+        int count=0;
+        if (data.getId()!=null){
+            address = addressService.findById(data.getId());
+            if (address == null){
+                return ResponseEntity.badRequest().body("更新失败");
+            }
+            convertToModel(data, address);
+            count = addressService.updateAddress(address);
+        }else {
+            address = new AddressModel();
+            address.setId(idService.genId());
+            address.setVersion(1);
+            convertToModel(data, address);
+            count = addressService.createAddress(address);
+        }
+
+        if (count != 1) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("保存失败");
+        }
+        return ResponseEntity.ok(address.getId());
+    }
+
+    private void convertToModel(
+            @RequestBody AddressData data,
+            AddressModel address) {
         address.setAddress(data.getDetail());
         address.setProvince(data.getAddress().get(0));
         address.setCity(data.getAddress().get(1));
         address.setDistrict(data.getAddress().get(2));
         address.setPhone(data.getPhone());
         address.setName(data.getName());
-        int insert = addressService.createAddress(address);
-        if (insert != 1) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("保存失败");
-        }
-        return ResponseEntity.ok(address.getId());
     }
 
     @GetMapping("/get")
