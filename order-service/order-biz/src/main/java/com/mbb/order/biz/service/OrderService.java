@@ -32,5 +32,5 @@ public interface OrderService {
 
     OrderModel getOrderById(Long id);
 
-    OrderModel findOrderDetailById(Long id);
+    OrderModel getOrderDetailById(Long id);
 }

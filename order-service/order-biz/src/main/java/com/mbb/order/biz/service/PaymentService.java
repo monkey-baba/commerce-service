@@ -6,4 +6,6 @@ import java.util.List;
 public interface PaymentService {
 
     void insertPayments(List<PaymentModel> payments);
+
+    List<PaymentModel> getPaymentsByOrderId(Long id);
 }

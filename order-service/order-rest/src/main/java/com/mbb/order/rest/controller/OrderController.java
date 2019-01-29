@@ -19,6 +19,7 @@ import com.mbb.order.biz.model.SellerRemarkModel;
 import com.mbb.order.biz.service.OrderService;
 import com.mbb.order.rest.dto.CustomerQuery;
 import com.mbb.order.rest.dto.OrderCreateData;
+import com.mbb.order.rest.dto.OrderDetailData;
 import com.mbb.order.rest.dto.OrderInfoResp;
 import com.mbb.order.rest.dto.OrderListQuery;
 import com.mbb.order.rest.dto.SkuQuery;
@@ -34,6 +35,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cglib.beans.BeanCopier;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -289,8 +291,12 @@ public class OrderController extends BaseController {
 
     @GetMapping("/detail")
     public ResponseEntity detail(@RequestParam Long id){
-        OrderModel order = orderService.findOrderDetailById(id);
-        return ResponseEntity.ok(order);
+        OrderModel order = orderService.getOrderDetailById(id);
+        OrderDetailData data = new OrderDetailData();
+        BeanCopier.create(OrderModel.class, OrderDetailData.class, false)
+                .copy(order, data, null);
+
+        return ResponseEntity.ok(data);
     }
 
 

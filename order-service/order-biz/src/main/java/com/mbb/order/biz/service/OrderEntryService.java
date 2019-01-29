@@ -6,4 +6,6 @@ import java.util.List;
 public interface OrderEntryService {
 
     void insertEntries(List<OrderEntryModel> entries);
+
+    List<OrderEntryModel> getEntriesByOrderId(Long id);
 }

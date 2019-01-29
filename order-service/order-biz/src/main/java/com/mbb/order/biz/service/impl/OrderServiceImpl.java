@@ -1,11 +1,13 @@
 package com.mbb.order.biz.service.impl;
 
 import com.mbb.order.biz.dao.OrderMapper;
+import com.mbb.order.biz.model.ConsignmentModel;
 import com.mbb.order.biz.model.InvoiceModel;
 import com.mbb.order.biz.model.OrderEntryModel;
 import com.mbb.order.biz.model.OrderModel;
 import com.mbb.order.biz.model.PaymentModel;
 import com.mbb.order.biz.model.SellerRemarkModel;
+import com.mbb.order.biz.service.ConsignmentService;
 import com.mbb.order.biz.service.InvoiceService;
 import com.mbb.order.biz.service.OrderEntryService;
 import com.mbb.order.biz.service.OrderService;
@@ -43,6 +45,9 @@ public class OrderServiceImpl implements OrderService {
     @Autowired
     private RemarkService remarkService;
 
+    @Autowired
+    private ConsignmentService consignmentService;
+
     @Override
     public List<OrderModel> getOrders(OrderModel orderModel, Map<String, Object> queryMap) {
         Example example = mapQueryInfo(orderModel, queryMap);
@@ -75,8 +80,24 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public OrderModel findOrderDetailById(Long id) {
-        return null;
+    public OrderModel getOrderDetailById(Long id) {
+        OrderModel order = this.getOrderById(id);
+
+        List<OrderEntryModel> entries = orderEntryService.getEntriesByOrderId(order.getId());
+        order.setEntries(entries);
+
+        List<ConsignmentModel> consignments = consignmentService.getConsignmentsByOrderId(order.getId());
+        order.setConsignments(consignments);
+
+        List<SellerRemarkModel> sellerRemarks = remarkService.getRemarksByOrderId(order.getId());
+        order.setSellerRemarks(sellerRemarks);
+
+        List<PaymentModel> payments = paymentService.getPaymentsByOrderId(order.getId());
+        order.setPayments(payments);
+
+        InvoiceModel invoice = invoiceService.getInvoiceByOrderId(order.getId());
+        order.setInvoice(invoice);
+        return order;
     }
 
     @Override

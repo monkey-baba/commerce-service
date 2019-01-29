@@ -20,4 +20,6 @@ public interface ConsignmentService {
      * @return
      */
     List<ConsignmentModel> getConsignments(Map<String, Object> parameters);
+
+    List<ConsignmentModel> getConsignmentsByOrderId(Long id);
 }

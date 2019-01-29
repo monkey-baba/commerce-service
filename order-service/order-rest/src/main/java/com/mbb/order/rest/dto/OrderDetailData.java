@@ -1,17 +1,10 @@
-package com.mbb.order.biz.model;
+package com.mbb.order.rest.dto;
 
-import com.mbb.common.model.BaseModel;
 import java.util.Date;
-import java.util.List;
-import javax.persistence.Table;
-import javax.persistence.Transient;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 
-@EqualsAndHashCode(callSuper = true)
 @Data
-@Table(name = "`order`")
-public class OrderModel extends BaseModel {
+public class OrderDetailData {
 
     private String ecsOrderId;
     private String code;
@@ -35,21 +28,4 @@ public class OrderModel extends BaseModel {
     private String remark;
     private Long deliveryTypeId;
     private Long carrierId;
-
-
-    @Transient
-    private List<PaymentModel> payments;
-
-    @Transient
-    private List<OrderEntryModel> entries;
-
-    @Transient
-    private List<SellerRemarkModel> sellerRemarks;
-
-    @Transient
-    private InvoiceModel invoice;
-
-    @Transient
-    private List<ConsignmentModel> consignments;
-
 }

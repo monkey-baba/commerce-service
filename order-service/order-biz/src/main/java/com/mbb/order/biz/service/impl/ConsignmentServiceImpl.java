@@ -9,6 +9,9 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Map;
+import tk.mybatis.mapper.entity.Example;
+import tk.mybatis.mapper.entity.Example.Builder;
+import tk.mybatis.mapper.util.Sqls;
 
 /**
  * @author hyx
@@ -26,5 +29,12 @@ public class ConsignmentServiceImpl implements ConsignmentService {
     @Override
     public List<ConsignmentModel> getConsignments(Map<String, Object> parameters) {
         return consignmentMapper.getConsignments(parameters);
+    }
+
+    @Override
+    public List<ConsignmentModel> getConsignmentsByOrderId(Long id) {
+        Builder builder = Example.builder(ConsignmentModel.class);
+        builder.where(Sqls.custom().andEqualTo("orderId",id));
+        return consignmentMapper.selectByExample(builder.build());
     }
 }
