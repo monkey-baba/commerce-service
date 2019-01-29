@@ -24,7 +24,7 @@ public class OrderCreateData {
     private String address;
     private List<String> pcd;
     private String remark;
-    private String buyerRemark;
+    private String sellerRemark;
     private Boolean invoice;
     private Long invoiceType;
     private String invoiceTitle;

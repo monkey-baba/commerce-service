@@ -85,5 +85,9 @@ public enum DictionaryType {
      * 客户状态
      */
     CUS_STATUS,
+    /**
+     * 大仓分类
+     */
+    DC_CLASSIFY
     ;
 }

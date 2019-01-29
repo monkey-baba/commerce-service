@@ -202,6 +202,13 @@
       <column name="name">客户状态</column>
       <column name="editable">0</column>
     </insert>
+    <insert tableName="dictionary">
+      <column name="id">22</column>
+      <column name="version">1</column>
+      <column name="code">DC_CLASSIFY</column>
+      <column name="name">客户状态</column>
+      <column name="editable">0</column>
+    </insert>
 
   </changeSet>
 
@@ -271,6 +278,8 @@
       INSERT INTO `dictionary_value` VALUES (2007, 1, '7', '已取消', '', 20, '', '', '', 1);
       INSERT INTO `dictionary_value` VALUES (2101, 1, '1', '生效', '', 21, '', '', '', 1);
       INSERT INTO `dictionary_value` VALUES (2102, 1, '2', '失效', '', 21, '', '', '', 1);
+      INSERT INTO `dictionary_value` VALUES (2201, 1, 'ZLC', '租赁仓', '', 22, '', '', '', 1);
+      INSERT INTO `dictionary_value` VALUES (2202, 1, 'ZYC', '自有仓', '', 22, '', '', '', 1);
     </sql>
   </changeSet>
 </databaseChangeLog>
