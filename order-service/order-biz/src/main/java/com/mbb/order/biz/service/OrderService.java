@@ -19,10 +19,10 @@ public interface OrderService {
     /**
      * 订单查询
      *
-     * @param orderModel
+     * @param parameters
      * @return
      */
-    List<OrderModel> getOrders(OrderModel orderModel, Map<String, Object> queryMap);
+    List<OrderModel> getOrders(Map<String, Object> parameters);
 
     void createOrder(OrderModel orderModel,
             List<OrderEntryModel> entries,
