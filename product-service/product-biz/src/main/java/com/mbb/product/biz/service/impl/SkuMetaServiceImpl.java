@@ -42,4 +42,9 @@ public class SkuMetaServiceImpl implements SkuMetaService {
         log.info("skuMeta size====" + skuMetaModels.size());
         return skuMetaModels;
     }
+
+    @Override
+    public SkuMetaModel getSkuMetaById(Long id) {
+        return skuMetaMapper.selectByPrimaryKey(id);
+    }
 }
