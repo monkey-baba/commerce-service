@@ -89,4 +89,13 @@ public class DictAdapter {
     public List<DictValueData> getPaymentTypes() {
         return dictValueApi.getPaymentType();
     }
+
+    /**
+     * 获取配货单状态
+     *
+     * @return
+     */
+    public List<DictValueData> getConsignmentStatus() {
+        return dictValueApi.getConsignmentStatus();
+    }
 }

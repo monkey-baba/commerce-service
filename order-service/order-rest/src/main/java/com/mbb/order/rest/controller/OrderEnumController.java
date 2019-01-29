@@ -78,4 +78,11 @@ public class OrderEnumController extends BaseController {
         List<DictValueData> valueDataList = orderServiceAdapter.getPaymentTypes();
         return ResponseEntity.ok(valueDataList);
     }
+
+    @GetMapping("/consignmentstatus")
+    public ResponseEntity getConsignmentStatus() {
+        List<DictValueData> valueDataList = orderServiceAdapter.getConsignmentStatus();
+        return ResponseEntity.ok(valueDataList);
+    }
+
 }

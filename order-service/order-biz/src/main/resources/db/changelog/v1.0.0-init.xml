@@ -116,7 +116,7 @@
       <column name="order_id" type="BIGINT" remarks="订单"/>
       <column name="code" type="VARCHAR(32)" remarks="配货单号"/>
       <column name="date" type="DATETIME" remarks="发货时间"/>
-      <column name="expressNum" type="VARCHAR(32)" remarks="运单号"/>
+      <column name="express_num" type="VARCHAR(32)" remarks="运单号"/>
       <column name="carrier_id" type="BIGINT" remarks="承运商"/>
       <column name="status_id" type="BIGINT" remarks="状态"/>
       <column name="pos_id" type="BIGINT" remarks="发货仓"/>

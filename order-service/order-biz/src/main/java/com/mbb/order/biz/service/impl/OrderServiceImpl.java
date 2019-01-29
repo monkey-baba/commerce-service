@@ -75,6 +75,11 @@ public class OrderServiceImpl implements OrderService {
 
     }
 
+    @Override
+    public OrderModel getOrderById(Long id) {
+        return orderMapper.selectByPrimaryKey(id);
+    }
+
     private Example mapQueryInfo(OrderModel orderModel, Map<String, Object> queryMap) {
         //平台订单号
         String ecsOrderId = orderModel.getEcsOrderId();

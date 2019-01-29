@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.mbb.order.biz.dao.ConsignmentMapper">
+
+    <sql id="Base_Column_List">
+               c.id,
+               c.version,
+               c.order_id,
+               c.code,
+               c.date,
+               c.express_num,
+               c.carrier_id,
+               c.status_id,
+               c.pos_id
+    </sql>
+
+    <resultMap id="BaseResultMap" type="com.mbb.order.biz.model.ConsignmentModel">
+        <result column="order_id" property="orderId"/>
+        <result column="express_num" property="expressNum"/>
+        <result column="carrier_id" property="carrierId"/>
+        <result column="pos_id" property="posId"/>
+        <result column="status_id" property="statusId"/>
+    </resultMap>
+
+    <select id="getConsignments" resultMap="BaseResultMap">
+        <bind name="codeFlag" value="@org.apache.commons.lang.StringUtils@isNotEmpty(code)"/>
+        <bind name="ecsOrderIdFlag" value="@org.apache.commons.lang.StringUtils@isNotEmpty(ecsOrderId)"/>
+        <bind name="orderCodeFlag" value="@org.apache.commons.lang.StringUtils@isNotEmpty(orderCode)"/>
+        <bind name="storeIdFlag" value="storeId != null"/>
+        <bind name="customerIdFlag" value="customerId != null"/>
+        <bind name="receiverFlag" value="@org.apache.commons.lang.StringUtils@isNotEmpty(receiver)"/>
+        <bind name="receiverPhoneFlag" value="@org.apache.commons.lang.StringUtils@isNotEmpty(receiverPhone)"/>
+        <bind name="posIdFlag" value="posId != null"/>
+        <bind name="totalPriceMinFlag" value="totalPriceMin != null"/>
+        <bind name="totalPriceMaxFlag" value="totalPriceMax != null"/>
+        <bind name="carrierIdFlag" value="carrierId != null"/>
+        <bind name="expressNumFlag" value="@org.apache.commons.lang.StringUtils@isNotEmpty(expressNum)"/>
+        <bind name="deliveryTypeIdFlag" value="deliveryTypeId != null"/>
+        <bind name="deliveryStartDateFlag" value="deliveryStartDate != null"/>
+        <bind name="deliveryEndDateFlag" value="deliveryEndDate != null"/>
+        <bind name="startDateFlag" value="startDate != null"/>
+        <bind name="endDateFlag" value="endDate != null"/>
+        <bind name="consignmentStatusIdsFlag" value="@org.apache.commons.collections4.CollectionUtils@isNotEmpty(consignmentStatusIds)"/>
+        select
+        <include refid="Base_Column_List"/>
+        from consignment as c
+        <if test="ecsOrderIdFlag || orderCodeFlag || storeIdFlag || customerIdFlag || receiverFlag || receiverPhoneFlag
+                        || totalPriceMinFlag || totalPriceMaxFlag || deliveryTypeIdFlag || startDateFlag || endDateFlag">
+            join `order` as o on c.order_id = o.id
+        </if>
+        where 1=1
+        <if test="codeFlag">
+            <bind name="code" value="_parameter.code + '%'"/>
+            and c.code like #{code}
+        </if>
+
+        <if test="ecsOrderIdFlag">
+            <bind name="ecsOrderId" value="_parameter.ecsOrderId + '%'"/>
+            and o.ecs_order_id like #{ecsOrderId}
+        </if>
+
+        <if test="orderCodeFlag">
+            <bind name="orderCode" value="_parameter.orderCode + '%'"/>
+            and o.code like #{orderCode}
+        </if>
+
+        <if test="storeIdFlag">
+            and o.store_id = #{storeId}
+        </if>
+
+        <if test="customerIdFlag">
+            and o.customer_id = #{customerId}
+        </if>
+
+        <if test="receiverFlag">
+            and o.receiver = #{receiver}
+        </if>
+
+        <if test="receiverPhoneFlag">
+            and o.receiver_phone = #{receiverPhone}
+        </if>
+
+        <if test="posIdFlag">
+            and c.pos_id = #{posId}
+        </if>
+
+        <if test="totalPriceMinFlag">
+            and o.total_price &gt;= #{totalPriceMin}
+        </if>
+
+        <if test="totalPriceMaxFlag">
+            and o.total_price &lt;= #{totalPriceMax}
+        </if>
+
+        <if test="carrierIdFlag">
+            and c.carrier_id = #{carrierId}
+        </if>
+
+        <if test="expressNumFlag">
+            <bind name="expressNum" value="_parameter.expressNum + '%'"/>
+            and c.express_num like #{expressNum}
+        </if>
+
+        <if test="deliveryTypeIdFlag">
+            and o.delivery_type_id = #{deliveryTypeId}
+        </if>
+
+        <if test="deliveryStartDateFlag">
+            and c.date &gt;= #{deliveryStartDate}
+        </if>
+
+        <if test="deliveryEndDateFlag">
+            and c.date &lt;= #{deliveryEndDate}
+        </if>
+
+        <if test="startDateFlag">
+            and o.date &gt;= #{startDate}
+        </if>
+
+        <if test="endDateFlag">
+            and o.date &lt;= #{endDateFlag}
+        </if>
+
+        <if test="consignmentStatusIdsFlag">
+            and c.status_id in
+            <foreach collection="list" index="index" item="item" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+    </select>
+
+</mapper>

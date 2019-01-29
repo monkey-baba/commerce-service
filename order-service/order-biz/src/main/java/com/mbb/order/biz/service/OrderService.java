@@ -30,4 +30,6 @@ public interface OrderService {
             InvoiceModel invoice,
             SellerRemarkModel sellerRemark);
 
+    OrderModel getOrderById(Long id);
+
 }
