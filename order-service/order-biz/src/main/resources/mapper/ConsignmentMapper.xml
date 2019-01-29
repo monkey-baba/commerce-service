@@ -123,7 +123,7 @@
 
         <if test="consignmentStatusIdsFlag">
             and c.status_id in
-            <foreach collection="list" index="index" item="item" open="(" separator="," close=")">
+            <foreach collection="consignmentStatusIds" index="index" item="item" open="(" separator="," close=")">
                 #{item}
             </foreach>
         </if>
