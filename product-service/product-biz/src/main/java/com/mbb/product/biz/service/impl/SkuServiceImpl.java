@@ -24,9 +24,6 @@ public class SkuServiceImpl implements SkuService {
     @Resource
     private SkuMapper skuMapper;
 
-    @Autowired
-    private SkuMetaMapper skuMetaMapper;
-
     @Override
     public List<SkuModel> getSkus(SkuModel sku) {
 
@@ -70,10 +67,6 @@ public class SkuServiceImpl implements SkuService {
         return sku;
     }
 
-    @Override
-    public SkuMetaModel getSkuMetaById(Long id) {
-        return skuMetaMapper.selectByPrimaryKey(id);
-    }
 
     private Example mapQueryInfo(SkuModel sku) {
         //产品编号

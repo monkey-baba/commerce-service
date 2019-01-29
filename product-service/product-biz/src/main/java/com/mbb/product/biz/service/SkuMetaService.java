@@ -7,4 +7,6 @@ import java.util.List;
 public interface SkuMetaService {
 
     List<SkuMetaModel> getSkuMetaModels(SkuMetaModel productModel);
+
+    SkuMetaModel getSkuMetaById(Long id);
 }
