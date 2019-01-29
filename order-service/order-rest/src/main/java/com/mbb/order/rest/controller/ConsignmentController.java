@@ -2,12 +2,17 @@ package com.mbb.order.rest.controller;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.mbb.basic.common.dto.AddressData;
+import com.mbb.basic.common.dto.DictValueData;
+import com.mbb.order.adapter.AddressAdapter;
+import com.mbb.order.adapter.DictAdapter;
 import com.mbb.order.biz.model.ConsignmentModel;
 import com.mbb.order.biz.model.OrderModel;
 import com.mbb.order.biz.service.ConsignmentService;
 import com.mbb.order.biz.service.OrderService;
 import com.mbb.order.rest.dto.ConsignmentInfoResp;
 import com.mbb.order.rest.dto.ConsignmentListQuery;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -36,6 +41,12 @@ public class ConsignmentController extends BaseController {
 
     @Autowired
     private OrderService orderService;
+
+    @Autowired
+    private DictAdapter dictAdapter;
+
+    @Autowired
+    private AddressAdapter addressAdapter;
 
     @GetMapping("/search")
     public ResponseEntity search(ConsignmentListQuery consignmentListQuery) {
@@ -93,14 +104,24 @@ public class ConsignmentController extends BaseController {
             target.setReceiver(orderModel.getReceiver());
             target.setReceiverPhone(orderModel.getReceiver());
             target.setDate(orderModel.getDate());
+            target.setStoreName(getName(orderModel.getStoreId()));
+            AddressData address = addressAdapter.getAddress(orderModel.getAddressId());
+            if (address != null) {
+                target.setReceiverAddress(address.getDetail());
+            }
         }
         target.setCode(source.getCode());
-        target.setConsignmentStatusName("");
-        target.setStoreName("");
-        target.setPosName("");
+        target.setConsignmentStatusName(getName(source.getStatusId()));
+        target.setPosName(getName(source.getPosId()));
         target.setExpressNum(source.getExpressNum());
-        target.setReceiverAddress("");
         target.setDeliveryDate(source.getDate());
     }
 
+    private String getName(Long id) {
+        DictValueData dictValue = dictAdapter.getDictValue(id);
+        if (dictValue != null) {
+            return dictValue.getName();
+        }
+        return StringUtils.EMPTY;
+    }
 }
