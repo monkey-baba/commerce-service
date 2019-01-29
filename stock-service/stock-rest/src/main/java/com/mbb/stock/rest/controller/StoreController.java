@@ -1,6 +1,5 @@
 package com.mbb.stock.rest.controller;
 
-import com.alibaba.fastjson.JSON;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.mbb.basic.common.dto.AddressData;
@@ -8,7 +7,7 @@ import com.mbb.basic.common.dto.DictValueData;
 import com.mbb.stock.biz.service.StoreService;
 
 import com.mbb.stock.common.dto.StoreInfoDto;
-import com.mbb.stock.rest.dto.StoreDetailData;
+import com.mbb.stock.common.dto.StoreDetailData;
 import com.mbb.stock.rest.dto.StoreUpdateData;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;

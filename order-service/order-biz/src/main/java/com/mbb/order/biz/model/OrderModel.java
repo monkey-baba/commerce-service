@@ -19,6 +19,7 @@ public class OrderModel extends BaseModel {
     private String receiverPhone;
     private Long posId;
     private Double totalPrice;
+    private Double deliveryCost;
     private Double subTotal;
     private Double discount;
     private Date date;

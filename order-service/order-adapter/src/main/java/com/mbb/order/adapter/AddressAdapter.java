@@ -20,4 +20,8 @@ public class AddressAdapter {
     public AddressData getAddress(Long id) {
         return addressApi.getAddress(id);
     }
+
+    public Long saveAddress(AddressData addrData) {
+        return addressApi.saveAddress(addrData);
+    }
 }

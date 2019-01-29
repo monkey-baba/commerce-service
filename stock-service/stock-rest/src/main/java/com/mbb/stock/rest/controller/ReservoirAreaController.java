@@ -10,7 +10,7 @@ import com.mbb.stock.biz.dto.StoreListQuery;
 import com.mbb.stock.biz.model.PointOfServiceModel;
 import com.mbb.stock.biz.service.ReservoirAreaService;
 import com.mbb.stock.common.dto.StoreInfoDto;
-import com.mbb.stock.rest.dto.StoreDetailData;
+import com.mbb.stock.common.dto.StoreDetailData;
 import com.mbb.stock.rest.dto.StoreUpdateData;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;

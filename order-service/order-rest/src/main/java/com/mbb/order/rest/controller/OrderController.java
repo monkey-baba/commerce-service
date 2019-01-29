@@ -11,7 +11,11 @@ import com.mbb.order.adapter.CustomerAdapter;
 import com.mbb.order.adapter.DictAdapter;
 import com.mbb.order.adapter.ProductAdapter;
 import com.mbb.order.adapter.StoreAdapter;
+import com.mbb.order.biz.model.InvoiceModel;
+import com.mbb.order.biz.model.OrderEntryModel;
 import com.mbb.order.biz.model.OrderModel;
+import com.mbb.order.biz.model.PaymentModel;
+import com.mbb.order.biz.model.SellerRemarkModel;
 import com.mbb.order.biz.service.OrderService;
 import com.mbb.order.rest.dto.CustomerQuery;
 import com.mbb.order.rest.dto.OrderCreateData;
@@ -21,10 +25,14 @@ import com.mbb.order.rest.dto.SkuQuery;
 import com.mbb.order.rest.dto.StoreQuery;
 import com.mbb.product.common.dto.SkuData;
 import com.mbb.stock.common.dto.StoreInfoDto;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -41,6 +49,7 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @RestController
 @RequestMapping("/api/v1/order")
+@Slf4j
 public class OrderController extends BaseController {
 
     @Autowired
@@ -54,10 +63,9 @@ public class OrderController extends BaseController {
     @Autowired
     private OrderService orderService;
     @Autowired
-    private StoreAdapter storeAdapter;
-
-    @Autowired
     private ProductAdapter productAdapter;
+    @Autowired
+    private StoreAdapter storeAdapter;
 
     @GetMapping("/info")
     public ResponseEntity getOrders(OrderListQuery orderListQuery) {
@@ -97,23 +105,104 @@ public class OrderController extends BaseController {
     }
 
     @PostMapping("/create")
-    public ResponseEntity createOrder(@RequestBody OrderCreateData orderCreateData) {
-        OrderModel orderModel = new OrderModel();
-        orderModel.setId(idService.genId());
-        orderModel.setEcsOrderId(orderCreateData.getEcsOrderId());
-        orderModel.setCode(orderCreateData.getCode());
-        orderModel.setStoreId(orderCreateData.getStoreId());
-        orderModel.setCustomerId(orderCreateData.getCustomerId());
-        orderModel.setReceiver(orderCreateData.getReceiver());
-        orderModel.setReceiverPhone(orderCreateData.getReceiverPhone());
-        orderModel.setPosId(orderCreateData.getWareId());
-        orderModel.setTotalPrice(orderCreateData.getTotalPrice());
-        orderModel.setStatusId(orderCreateData.getStatusId());
-        orderModel.setOrderTypeId(orderCreateData.getOrderTypeId());
-        orderService.createOrder(orderModel);
-        OrderInfoResp orderInfoResp = new OrderInfoResp();
-        convertOrder(orderModel, orderInfoResp);
-        return ResponseEntity.ok(orderInfoResp);
+    public ResponseEntity createOrder(@RequestBody OrderCreateData data) {
+        // 创建订单
+        OrderModel order = new OrderModel();
+        order.setId(idService.genId());
+        order.setVersion(1);
+        order.setOrderTypeId(data.getOrderType());
+        order.setCode(data.getCode());
+        order.setPlatformId(data.getPlatform());
+        order.setStoreId(data.getStore());
+        order.setDeliveryTypeId(data.getDeliveryType());
+        order.setCarrierId(data.getCarrier());
+        order.setCustomerId(data.getCustomer());
+        order.setPosId(data.getPos());
+        order.setReceiver(data.getReceiver());
+        order.setReceiverPhone(data.getReceiverPhone());
+        order.setRemark(data.getRemark());
+        //订单金额
+        order.setTotalPrice(data.getTotalPrice());
+        order.setDeliveryCost(data.getDeliveryCost());
+        //手工创建
+        order.setOrderSourceId(1401L);
+        order.setDate(new Date());
+        //已保存状态
+        order.setStatusId(1101L);
+//        order.setChannelId();
+
+        //地址
+        AddressData addrData = new AddressData();
+        addrData.setAddress(data.getPcd());
+        addrData.setName(data.getReceiver());
+        addrData.setPhone(data.getReceiverPhone());
+        addrData.setDetail(data.getAddress());
+        // 保存地址 TODO 分布式事务回滚
+        order.setAddressId(addressAdapter.saveAddress(addrData));
+
+        //卖家备注
+        String sellerRemark = data.getBuyerRemark();
+        SellerRemarkModel sellerRemarkModel = null;
+        if (StringUtils.isNotEmpty(sellerRemark)) {
+            sellerRemarkModel = new SellerRemarkModel();
+            sellerRemarkModel.setId(idService.genId());
+            sellerRemarkModel.setVersion(1);
+            sellerRemarkModel.setRemark(sellerRemark);
+            sellerRemarkModel.setDate(new Date());
+            sellerRemarkModel.setOrderId(order.getId());
+            sellerRemarkModel.setUserId(1L);
+        }
+
+        //发票
+        InvoiceModel inv = new InvoiceModel();
+        inv.setId(idService.genId());
+        inv.setVersion(1);
+        inv.setApplied(data.getInvoice());
+        inv.setOrderId(order.getId());
+        if (data.getInvoice() != null && data.getInvoice()) {
+            inv.setTypeId(data.getInvoiceType());
+            inv.setTitle(data.getInvoiceTitle());
+        }
+        inv.setAmount(data.getTotalPrice());
+        //支付
+        List<PaymentModel> paymentModels = null;
+        if (CollectionUtils.isNotEmpty(data.getPayments())) {
+            paymentModels = data.getPayments().stream().map(p -> {
+                PaymentModel payment = new PaymentModel();
+                payment.setAmount(p.getAmount());
+                payment.setDate(new Date());
+                payment.setOrderId(order.getId());
+                payment.setId(idService.genId());
+                payment.setVersion(1);
+                payment.setTypeId(p.getType().getId());
+                return payment;
+            }).collect(Collectors.toList());
+            order.setPaymentDate(new Date());
+        }
+
+        //订单行
+        final Double[] subTotal = {0D};
+        Double[] discount = {0D};
+        List<OrderEntryModel> entries = data.getEntries().stream().map(e -> {
+            OrderEntryModel entry = new OrderEntryModel();
+            entry.setId(idService.genId());
+            entry.setVersion(1);
+            entry.setOrderId(order.getId());
+            entry.setBasePrice(e.getBasePrice());
+            entry.setDiscount(e.getDiscount());
+            entry.setQuantity(e.getQuantity());
+            entry.setShippedQuantity(e.getShippedQuantity());
+            entry.setSkuId(e.getId());
+            entry.setTotalPrice(e.getTotalPrice());
+            subTotal[0] += (e.getBasePrice() * e.getQuantity());
+            discount[0] += (e.getDiscount() * e.getQuantity());
+            return entry;
+        }).collect(Collectors.toList());
+        order.setSubTotal(subTotal[0]);
+        order.setDiscount(discount[0]);
+
+        orderService.createOrder(order,entries,paymentModels,inv,sellerRemarkModel);
+        return ResponseEntity.ok("1");
     }
 
 
@@ -159,7 +248,7 @@ public class OrderController extends BaseController {
         // TODO: 2019/1/25
         Long posId = orderModel.getPosId();
         if (posId != null) {
-            orderInfoResp.setPosName(storeAdapter.getNameById(posId));
+            orderInfoResp.setPosName(storeAdapter.getStoreNameById(posId));
         }
         //订单类型
         Long orderTypeId = orderModel.getOrderTypeId();

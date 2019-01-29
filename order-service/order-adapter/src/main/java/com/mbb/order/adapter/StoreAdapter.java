@@ -27,7 +27,7 @@ public class StoreAdapter {
     }
 
 
-    public String getNameById(Long id) {
-        return "大华仓";
+    public String getStoreNameById(Long id) {
+        return storeApi.getStoreDetailById(id).getName();
     }
 }

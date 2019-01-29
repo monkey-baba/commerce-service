@@ -1,8 +1,7 @@
 package com.mbb.order.rest.dto;
 
+import java.util.List;
 import lombok.Data;
-
-import java.util.Date;
 
 /**
  * ${DESCRIPTION}
@@ -12,17 +11,27 @@ import java.util.Date;
  */
 @Data
 public class OrderCreateData {
-    private String ecsOrderId;
+    private Long orderType;
     private String code;
-    private String consignmentCode;
-    private Long storeId;
-    private Long customerId;
+    private Long platform;
+    private Long store;
+    private Long deliveryType;
+    private Long carrier;
+    private Long customer;
+    private Long pos;
     private String receiver;
     private String receiverPhone;
-    private Long wareId;
+    private String address;
+    private List<String> pcd;
+    private String remark;
+    private String buyerRemark;
+    private Boolean invoice;
+    private Long invoiceType;
+    private String invoiceTitle;
     private Double totalPrice;
-    private Date Date;
-    private Date paymentDate;
-    private Long statusId;
-    private Long orderTypeId;
+    private Double deliveryCost;
+    private Double paymentTotal;
+    private List<OrderPaymentCreateData> payments;
+    private List<OrderEntryCreateData> entries;
+
 }
