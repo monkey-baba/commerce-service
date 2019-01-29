@@ -57,7 +57,7 @@ public class PriceRowServiceImpl implements PriceRowService {
     private Example mapQueryInfo(PriceRowModel priceRowModel) {
         //价目表id
         Long priceId = priceRowModel.getPriceId();
-        Example example = new Example(PriceModel.class);
+        Example example = new Example(PriceRowModel.class);
         Example.Criteria criteria = example.createCriteria();
         if (priceId!=null) {
             criteria.andEqualTo("priceId", priceId);

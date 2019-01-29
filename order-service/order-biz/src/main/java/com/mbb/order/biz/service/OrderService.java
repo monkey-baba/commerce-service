@@ -1,7 +1,11 @@
 package com.mbb.order.biz.service;
 
+import com.mbb.order.biz.model.InvoiceModel;
+import com.mbb.order.biz.model.OrderEntryModel;
 import com.mbb.order.biz.model.OrderModel;
 
+import com.mbb.order.biz.model.PaymentModel;
+import com.mbb.order.biz.model.SellerRemarkModel;
 import java.util.List;
 import java.util.Map;
 
@@ -20,6 +24,10 @@ public interface OrderService {
      */
     List<OrderModel> getOrders(OrderModel orderModel, Map<String, Object> queryMap);
 
-    void createOrder(OrderModel orderModel);
+    void createOrder(OrderModel orderModel,
+            List<OrderEntryModel> entries,
+            List<PaymentModel> payments,
+            InvoiceModel invoice,
+            SellerRemarkModel sellerRemark);
 
 }

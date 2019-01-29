@@ -1,4 +1,4 @@
-package com.mbb.stock.biz.dto;
+package com.mbb.stock.common.dto;
 import java.util.List;
 import lombok.Data;
 

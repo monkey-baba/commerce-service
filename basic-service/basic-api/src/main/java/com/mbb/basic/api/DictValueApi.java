@@ -107,4 +107,8 @@ public interface DictValueApi {
     default List<DictValueData> getCustomerStatus() {
         return getDictValues(DictionaryType.CUS_STATUS.name(), Boolean.TRUE);
     }
+
+    default List<DictValueData> getDcClassify() {
+        return getDictValues(DictionaryType.DC_CLASSIFY.name(), Boolean.TRUE);
+    }
 }

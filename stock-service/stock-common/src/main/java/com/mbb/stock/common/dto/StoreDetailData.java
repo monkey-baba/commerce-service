@@ -1,4 +1,4 @@
-package com.mbb.stock.rest.dto;
+package com.mbb.stock.common.dto;
 
 import lombok.Data;
 
@@ -15,5 +15,5 @@ public class StoreDetailData {
     private Long status;
     private String owner;
     private String contact;
-    private String ClassifyId;
+    private String classifyId;
 }

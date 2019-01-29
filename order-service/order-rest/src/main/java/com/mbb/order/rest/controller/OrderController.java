@@ -7,21 +7,34 @@ import com.mbb.basic.common.dto.AddressData;
 import com.mbb.basic.common.dto.DictValueData;
 import com.mbb.customer.common.dto.CustomerData;
 import com.mbb.order.adapter.AddressAdapter;
-import com.mbb.order.adapter.OrderServiceAdapter;
+import com.mbb.order.adapter.CustomerAdapter;
+import com.mbb.order.adapter.DictAdapter;
+import com.mbb.order.adapter.ProductAdapter;
+import com.mbb.order.adapter.StoreAdapter;
+import com.mbb.order.biz.model.InvoiceModel;
+import com.mbb.order.biz.model.OrderEntryModel;
 import com.mbb.order.biz.model.OrderModel;
+import com.mbb.order.biz.model.PaymentModel;
+import com.mbb.order.biz.model.SellerRemarkModel;
 import com.mbb.order.biz.service.OrderService;
 import com.mbb.order.rest.dto.CustomerQuery;
 import com.mbb.order.rest.dto.OrderCreateData;
 import com.mbb.order.rest.dto.OrderInfoResp;
 import com.mbb.order.rest.dto.OrderListQuery;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
-
+import com.mbb.order.rest.dto.SkuQuery;
+import com.mbb.order.rest.dto.StoreQuery;
+import com.mbb.product.common.dto.SkuData;
+import com.mbb.stock.common.dto.StoreInfoDto;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
-
+import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -36,19 +49,26 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @RestController
 @RequestMapping("/api/v1/order")
+@Slf4j
 public class OrderController extends BaseController {
 
     @Autowired
     private AddressAdapter addressAdapter;
     @Autowired
+    private CustomerAdapter customerAdapter;
+    @Autowired
+    private DictAdapter dictAdapter;
+    @Autowired
     private IdService idService;
     @Autowired
     private OrderService orderService;
     @Autowired
-    private OrderServiceAdapter orderServiceAdapter;
+    private ProductAdapter productAdapter;
+    @Autowired
+    private StoreAdapter storeAdapter;
 
     @GetMapping("/info")
-    public ResponseEntity getStocks(OrderListQuery orderListQuery) {
+    public ResponseEntity getOrders(OrderListQuery orderListQuery) {
         OrderModel orderModel = new OrderModel();
         orderModel.setEcsOrderId(orderListQuery.getEcsOrderId());
         orderModel.setCode(orderListQuery.getCode());
@@ -85,85 +105,128 @@ public class OrderController extends BaseController {
     }
 
     @PostMapping("/create")
-    public ResponseEntity createStock(@RequestBody OrderCreateData orderCreateData) {
-        OrderModel orderModel = new OrderModel();
-        orderModel.setId(idService.genId());
-        orderModel.setEcsOrderId(orderCreateData.getEcsOrderId());
-        orderModel.setCode(orderCreateData.getCode());
-        orderModel.setStoreId(orderCreateData.getStoreId());
-        orderModel.setCustomerId(orderCreateData.getCustomerId());
-        orderModel.setReceiver(orderCreateData.getReceiver());
-        orderModel.setReceiverPhone(orderCreateData.getReceiverPhone());
-        orderModel.setPosId(orderCreateData.getWareId());
-        orderModel.setTotalPrice(orderCreateData.getTotalPrice());
-        orderModel.setStatusId(orderCreateData.getStatusId());
-        orderModel.setOrderTypeId(orderCreateData.getOrderTypeId());
-        orderService.createOrder(orderModel);
-        OrderInfoResp orderInfoResp = new OrderInfoResp();
-        convertOrder(orderModel, orderInfoResp);
-        return ResponseEntity.ok(orderInfoResp);
+    public ResponseEntity createOrder(@RequestBody OrderCreateData data) {
+        // 创建订单
+        OrderModel order = new OrderModel();
+        order.setId(idService.genId());
+        order.setVersion(1);
+        order.setOrderTypeId(data.getOrderType());
+        order.setCode(data.getCode());
+        order.setPlatformId(data.getPlatform());
+        order.setStoreId(data.getStore());
+        order.setDeliveryTypeId(data.getDeliveryType());
+        order.setCarrierId(data.getCarrier());
+        order.setCustomerId(data.getCustomer());
+        order.setPosId(data.getPos());
+        order.setReceiver(data.getReceiver());
+        order.setReceiverPhone(data.getReceiverPhone());
+        order.setRemark(data.getRemark());
+        //订单金额
+        order.setTotalPrice(data.getTotalPrice());
+        order.setDeliveryCost(data.getDeliveryCost());
+        //手工创建
+        order.setOrderSourceId(1401L);
+        order.setDate(new Date());
+        //已保存状态
+        order.setStatusId(1101L);
+//        order.setChannelId();
+
+        //地址
+        AddressData addrData = new AddressData();
+        addrData.setAddress(data.getPcd());
+        addrData.setName(data.getReceiver());
+        addrData.setPhone(data.getReceiverPhone());
+        addrData.setDetail(data.getAddress());
+        // 保存地址 TODO 分布式事务回滚
+        order.setAddressId(addressAdapter.saveAddress(addrData));
+
+        //卖家备注
+        String sellerRemark = data.getBuyerRemark();
+        SellerRemarkModel sellerRemarkModel = null;
+        if (StringUtils.isNotEmpty(sellerRemark)) {
+            sellerRemarkModel = new SellerRemarkModel();
+            sellerRemarkModel.setId(idService.genId());
+            sellerRemarkModel.setVersion(1);
+            sellerRemarkModel.setRemark(sellerRemark);
+            sellerRemarkModel.setDate(new Date());
+            sellerRemarkModel.setOrderId(order.getId());
+            sellerRemarkModel.setUserId(1L);
+        }
+
+        //发票
+        InvoiceModel inv = new InvoiceModel();
+        inv.setId(idService.genId());
+        inv.setVersion(1);
+        inv.setApplied(data.getInvoice());
+        inv.setOrderId(order.getId());
+        if (data.getInvoice() != null && data.getInvoice()) {
+            inv.setTypeId(data.getInvoiceType());
+            inv.setTitle(data.getInvoiceTitle());
+        }
+        inv.setAmount(data.getTotalPrice());
+        //支付
+        List<PaymentModel> paymentModels = null;
+        if (CollectionUtils.isNotEmpty(data.getPayments())) {
+            paymentModels = data.getPayments().stream().map(p -> {
+                PaymentModel payment = new PaymentModel();
+                payment.setAmount(p.getAmount());
+                payment.setDate(new Date());
+                payment.setOrderId(order.getId());
+                payment.setId(idService.genId());
+                payment.setVersion(1);
+                payment.setTypeId(p.getType().getId());
+                return payment;
+            }).collect(Collectors.toList());
+            order.setPaymentDate(new Date());
+        }
+
+        //订单行
+        final Double[] subTotal = {0D};
+        Double[] discount = {0D};
+        List<OrderEntryModel> entries = data.getEntries().stream().map(e -> {
+            OrderEntryModel entry = new OrderEntryModel();
+            entry.setId(idService.genId());
+            entry.setVersion(1);
+            entry.setOrderId(order.getId());
+            entry.setBasePrice(e.getBasePrice());
+            entry.setDiscount(e.getDiscount());
+            entry.setQuantity(e.getQuantity());
+            entry.setShippedQuantity(e.getShippedQuantity());
+            entry.setSkuId(e.getId());
+            entry.setTotalPrice(e.getTotalPrice());
+            subTotal[0] += (e.getBasePrice() * e.getQuantity());
+            discount[0] += (e.getDiscount() * e.getQuantity());
+            return entry;
+        }).collect(Collectors.toList());
+        order.setSubTotal(subTotal[0]);
+        order.setDiscount(discount[0]);
+
+        orderService.createOrder(order,entries,paymentModels,inv,sellerRemarkModel);
+        return ResponseEntity.ok("1");
     }
 
-    @GetMapping("/orderstatus")
-    public ResponseEntity getOrderStatus() {
-        List<DictValueData> orderStatusDataList = orderServiceAdapter.getOrderStatus();
-        return ResponseEntity.ok(orderStatusDataList);
-    }
-
-
-    @GetMapping("/ordertypes")
-    public ResponseEntity getOrderType() {
-        List<DictValueData> orderTypeDataList = orderServiceAdapter.getOrderType();
-        return ResponseEntity.ok(orderTypeDataList);
-    }
-
-    @GetMapping("/stores")
-    public ResponseEntity getBaseStores() {
-        List<DictValueData> baseStoreDataList = orderServiceAdapter.getBaseStores();
-        return ResponseEntity.ok(baseStoreDataList);
-    }
-
-    @GetMapping("/platforms")
-    public ResponseEntity getPlatforms() {
-        List<DictValueData> valueDataList = orderServiceAdapter.getPlatforms();
-        return ResponseEntity.ok(valueDataList);
-    }
-
-    @GetMapping("/deliveryTypes")
-    public ResponseEntity getDeliveryTypes() {
-        List<DictValueData> valueDataList = orderServiceAdapter.getDeliveryTypes();
-        return ResponseEntity.ok(valueDataList);
-    }
-
-    @GetMapping("/carriers")
-    public ResponseEntity getCarriers() {
-        List<DictValueData> valueDataList = orderServiceAdapter.getCarriers();
-        return ResponseEntity.ok(valueDataList);
-    }
-
-    @GetMapping("/invoiceTypes")
-    public ResponseEntity getInvoiceTypes() {
-        List<DictValueData> valueDataList = orderServiceAdapter.getInvoiceTypes();
-        return ResponseEntity.ok(valueDataList);
-    }
-
-
-    @GetMapping("/skuSpecs")
-    public ResponseEntity getSkuSpecs() {
-        List<DictValueData> valueDataList = orderServiceAdapter.getSkuSpecs();
-        return ResponseEntity.ok(valueDataList);
-    }
 
     @GetMapping("/customer/list")
     public ResponseEntity getCustomers(CustomerQuery customerQuery) {
-        PageInfo<CustomerData> customerList = orderServiceAdapter.getCustomers(customerQuery.getCode(), customerQuery.getName(), customerQuery.getPageNum(), customerQuery.getPageSize());
+        PageInfo<CustomerData> customerList = customerAdapter
+                .getCustomers(customerQuery.getCode(), customerQuery.getName(),
+                        customerQuery.getPageNum(), customerQuery.getPageSize());
         return ResponseEntity.ok(customerList);
     }
 
     @GetMapping("/pos/list")
-    public ResponseEntity getPosList(CustomerQuery customerQuery) {
-        // TODO: 2019/1/25 此处暂时调用的客户api,门店api提供出来之后修改
-        PageInfo<CustomerData> customerList = orderServiceAdapter.getCustomers(customerQuery.getCode(), customerQuery.getName(), customerQuery.getPageNum(), customerQuery.getPageSize());
+    public ResponseEntity getPosList(StoreQuery storeQuery) {
+        PageInfo<StoreInfoDto> customerList = storeAdapter
+                .getCustomers(storeQuery.getCode(), storeQuery.getName(), storeQuery.getPageNum(),
+                        storeQuery.getPageSize());
+        return ResponseEntity.ok(customerList);
+    }
+
+    @GetMapping("/sku/list")
+    public ResponseEntity getPosList(SkuQuery skuQuery) {
+        PageInfo<SkuData> customerList = productAdapter
+                .getSkus(skuQuery.getCode(), skuQuery.getName(),
+                        skuQuery.getPageNum(), skuQuery.getPageSize());
         return ResponseEntity.ok(customerList);
     }
 
@@ -175,7 +238,7 @@ public class OrderController extends BaseController {
         //店铺
         Long storeId = orderModel.getStoreId();
         if (storeId != null) {
-            DictValueData baseStoreData = orderServiceAdapter.getDictValue(storeId);
+            DictValueData baseStoreData = dictAdapter.getDictValue(storeId);
             orderInfoResp.setStoreId(storeId);
             orderInfoResp.setStoreName(baseStoreData.getName());
         }
@@ -185,19 +248,19 @@ public class OrderController extends BaseController {
         // TODO: 2019/1/25
         Long posId = orderModel.getPosId();
         if (posId != null) {
-            orderInfoResp.setPosName(orderServiceAdapter.getPosNameById(posId));
+            orderInfoResp.setPosName(storeAdapter.getStoreNameById(posId));
         }
         //订单类型
         Long orderTypeId = orderModel.getOrderTypeId();
         if (orderTypeId != null) {
-            DictValueData orderTypeData = orderServiceAdapter.getDictValue(orderTypeId);
+            DictValueData orderTypeData = dictAdapter.getDictValue(orderTypeId);
             orderInfoResp.setOrderTypeId(orderTypeId);
             orderInfoResp.setOrderTypeName(orderTypeData.getName());
         }
         //订单状态
         Long statusId = orderModel.getStatusId();
         if (statusId != null) {
-            DictValueData statusData = orderServiceAdapter.getDictValue(statusId);
+            DictValueData statusData = dictAdapter.getDictValue(statusId);
             orderInfoResp.setStatusId(statusId);
             orderInfoResp.setStatusName(statusData.getName());
         }

@@ -14,5 +14,5 @@ public class SellerRemarkModel extends BaseModel {
     private Date date;
     private Long userId;
     private String remark;
-    private String orderId;
+    private Long orderId;
 }

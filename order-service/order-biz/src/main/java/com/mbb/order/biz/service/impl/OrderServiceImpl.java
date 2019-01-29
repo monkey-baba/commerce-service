@@ -1,18 +1,26 @@
 package com.mbb.order.biz.service.impl;
 
+import com.mbb.order.biz.dao.InvoiceMapper;
+import com.mbb.order.biz.dao.OrderEntryMapper;
 import com.mbb.order.biz.dao.OrderMapper;
+import com.mbb.order.biz.dao.PaymentMapper;
+import com.mbb.order.biz.dao.SellerRemarkMapper;
+import com.mbb.order.biz.model.InvoiceModel;
+import com.mbb.order.biz.model.OrderEntryModel;
 import com.mbb.order.biz.model.OrderModel;
+import com.mbb.order.biz.model.PaymentModel;
+import com.mbb.order.biz.model.SellerRemarkModel;
 import com.mbb.order.biz.service.OrderService;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 import tk.mybatis.mapper.entity.Example;
-
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
 
 /**
  * ${DESCRIPTION}
@@ -27,6 +35,15 @@ public class OrderServiceImpl implements OrderService {
     @Autowired
     private OrderMapper orderMapper;
 
+    @Autowired
+    private OrderEntryMapper orderEntryMapper;
+    @Autowired
+    private InvoiceMapper invoiceMapper;
+    @Autowired
+    private PaymentMapper paymentMapper;
+    @Autowired
+    private SellerRemarkMapper sellerRemarkMapper;
+
     @Override
     public List<OrderModel> getOrders(OrderModel orderModel, Map<String, Object> queryMap) {
         Example example = mapQueryInfo(orderModel, queryMap);
@@ -36,10 +53,26 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public void createOrder(OrderModel orderModel) {
-        if (orderModel != null) {
-            orderMapper.insert(orderModel);
+    @Transactional(rollbackFor = Exception.class)
+    public void createOrder(OrderModel orderModel,
+            List<OrderEntryModel> entries,
+            List<PaymentModel> payments,
+            InvoiceModel invoice,
+            SellerRemarkModel sellerRemark) {
+        //保存订单
+        orderMapper.insert(orderModel);
+        //保存订单行
+        if (!CollectionUtils.isEmpty(entries)){
+            orderEntryMapper.insertList(entries);
         }
+        if (!CollectionUtils.isEmpty(payments)){
+            paymentMapper.insertList(payments);
+        }
+        invoiceMapper.insert(invoice);
+        if (sellerRemark!=null){
+            sellerRemarkMapper.insert(sellerRemark);
+        }
+
     }
 
     private Example mapQueryInfo(OrderModel orderModel, Map<String, Object> queryMap) {

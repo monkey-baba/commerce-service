@@ -33,6 +33,18 @@
       <version>${project.version}</version>
     </dependency>
 
+    <dependency>
+      <groupId>com.mbb</groupId>
+      <artifactId>stock-api</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+
+    <dependency>
+      <groupId>com.mbb</groupId>
+      <artifactId>product-api</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+
 
   </dependencies>
 

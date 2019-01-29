@@ -33,7 +33,7 @@ public class WebConfiguration implements WebMvcConfigurer {
         fastJsonConfig.setDateFormat("yyyy-MM-dd HH:mm:ss");
         fastJsonConfig.setCharset(Charset.defaultCharset());
         //设定json格式且编码为UTF-8
-        converter.setSupportedMediaTypes(Collections.singletonList(MediaType.ALL));
+        converter.setSupportedMediaTypes(Collections.singletonList(MediaType.APPLICATION_JSON_UTF8));
 
         //规则赋予转换对象
         converter.setFastJsonConfig(fastJsonConfig);

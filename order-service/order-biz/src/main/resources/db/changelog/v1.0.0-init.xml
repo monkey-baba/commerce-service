@@ -19,6 +19,7 @@
       <column name="total_price" type="DECIMAL(32,8)" remarks="订单金额"/>
       <column name="sub_total" type="DECIMAL(32,8)" remarks="订单总额"/>
       <column name="discount" type="DECIMAL(32,8)" remarks="订单折扣"/>
+      <column name="delivery_cost" type="DECIMAL(32,8)" remarks="运费金额"/>
       <column name="date" type="DATETIME" remarks="下单日期"/>
       <column name="payment_date" type="DATETIME" remarks="付款日期"/>
       <column name="status_id" type="BIGINT" remarks="订单状态"/>
@@ -32,6 +33,9 @@
       <column name="carrier_id" type="BIGINT" remarks="指定承运商"/>
     </createTable>
     <addPrimaryKey tableName="order" columnNames="id" />
+    <createIndex tableName="order" indexName="code_idx" unique="true">
+      <column name="code"/>
+    </createIndex>
   </changeSet>
 
   <changeSet id="2" author="ZQian">

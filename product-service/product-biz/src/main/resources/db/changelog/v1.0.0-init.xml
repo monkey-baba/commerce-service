@@ -55,8 +55,8 @@
       <column name="price_type_id" type="BIGINT" remarks="价格类型"/>
       <column name="price" type="DECIMAL(32,8)" remarks="价格"/>
       <column name="price_id" type="BIGINT" remarks="价目表id"/>
-      <column name="startTime" type="DATETIME" remarks="有效期起"/>
-      <column name="endTime" type="DATETIME" remarks="有效期止"/>
+      <column name="start_time" type="DATETIME" remarks="有效期起"/>
+      <column name="end_time" type="DATETIME" remarks="有效期止"/>
     </createTable>
     <addPrimaryKey tableName="price_row" columnNames="id" />
   </changeSet>

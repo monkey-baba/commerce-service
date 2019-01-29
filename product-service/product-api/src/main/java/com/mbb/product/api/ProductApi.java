@@ -1,5 +1,6 @@
 package com.mbb.product.api;
 
+import com.github.pagehelper.PageInfo;
 import com.mbb.product.common.dto.SkuData;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -25,6 +26,12 @@ public interface ProductApi {
      * @return result
      */
     @GetMapping("/api/v1/product/sku/list")
-    List<SkuData> getSkus(@RequestParam("skuId") String skuId, @RequestParam("skuName") String skuName);
+    List<SkuData> getSkus(@RequestParam("code") String skuId, @RequestParam("name") String skuName);
+
+
+    @GetMapping("/api/v1/sku/page")
+    PageInfo<SkuData> getSkuPage(@RequestParam("code") String code, @RequestParam("name") String name,
+            @RequestParam("pageNum") Integer pageNum,@RequestParam("pageSize") Integer pageSize);
+
 
 }
