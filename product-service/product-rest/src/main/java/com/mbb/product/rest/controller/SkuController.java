@@ -80,8 +80,7 @@ public class SkuController extends BaseController {
     }
 
     private List<SkuData> dealResult(List<SkuModel> skus) {
-        List<SkuData> skuDataList = skus.stream().map(skuModel -> dealResult(skuModel)).collect(Collectors.toList());
-        return skuDataList;
+        return skus.stream().map(skuModel -> dealResult(skuModel)).collect(Collectors.toList());
     }
 
     private SkuData dealResult(SkuModel skuModel) {
