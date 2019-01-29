@@ -62,7 +62,7 @@ public class StockServiceImpl implements StockService {
         Example example = new Example(StockModel.class);
         Example.Criteria criteria = example.createCriteria();
         if (skuId != null) {
-            criteria.andEqualTo("skuId", skuId);
+            criteria.andEqualTo("code", skuId);
         }
         if (warehouseId != null) {
             criteria.andEqualTo("warehouseId", warehouseId);

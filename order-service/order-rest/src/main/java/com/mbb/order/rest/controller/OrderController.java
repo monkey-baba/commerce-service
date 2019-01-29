@@ -7,21 +7,31 @@ import com.mbb.basic.common.dto.AddressData;
 import com.mbb.basic.common.dto.DictValueData;
 import com.mbb.customer.common.dto.CustomerData;
 import com.mbb.order.adapter.AddressAdapter;
-import com.mbb.order.adapter.OrderServiceAdapter;
+import com.mbb.order.adapter.CustomerAdapter;
+import com.mbb.order.adapter.DictAdapter;
+import com.mbb.order.adapter.ProductAdapter;
+import com.mbb.order.adapter.StoreAdapter;
 import com.mbb.order.biz.model.OrderModel;
 import com.mbb.order.biz.service.OrderService;
 import com.mbb.order.rest.dto.CustomerQuery;
 import com.mbb.order.rest.dto.OrderCreateData;
 import com.mbb.order.rest.dto.OrderInfoResp;
 import com.mbb.order.rest.dto.OrderListQuery;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-
+import com.mbb.order.rest.dto.SkuQuery;
+import com.mbb.order.rest.dto.StoreQuery;
+import com.mbb.product.common.dto.SkuData;
+import com.mbb.stock.common.dto.StoreInfoDto;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 /**
  * ${DESCRIPTION}
@@ -36,11 +46,18 @@ public class OrderController extends BaseController {
     @Autowired
     private AddressAdapter addressAdapter;
     @Autowired
+    private CustomerAdapter customerAdapter;
+    @Autowired
+    private DictAdapter dictAdapter;
+    @Autowired
     private IdService idService;
     @Autowired
     private OrderService orderService;
     @Autowired
-    private OrderServiceAdapter orderServiceAdapter;
+    private StoreAdapter storeAdapter;
+
+    @Autowired
+    private ProductAdapter productAdapter;
 
     @GetMapping("/info")
     public ResponseEntity getOrders(OrderListQuery orderListQuery) {
@@ -99,66 +116,28 @@ public class OrderController extends BaseController {
         return ResponseEntity.ok(orderInfoResp);
     }
 
-    @GetMapping("/orderstatus")
-    public ResponseEntity getOrderStatus() {
-        List<DictValueData> orderStatusDataList = orderServiceAdapter.getOrderStatus();
-        return ResponseEntity.ok(orderStatusDataList);
-    }
-
-
-    @GetMapping("/ordertypes")
-    public ResponseEntity getOrderType() {
-        List<DictValueData> orderTypeDataList = orderServiceAdapter.getOrderType();
-        return ResponseEntity.ok(orderTypeDataList);
-    }
-
-    @GetMapping("/stores")
-    public ResponseEntity getBaseStores() {
-        List<DictValueData> baseStoreDataList = orderServiceAdapter.getBaseStores();
-        return ResponseEntity.ok(baseStoreDataList);
-    }
-
-    @GetMapping("/platforms")
-    public ResponseEntity getPlatforms() {
-        List<DictValueData> valueDataList = orderServiceAdapter.getPlatforms();
-        return ResponseEntity.ok(valueDataList);
-    }
-
-    @GetMapping("/deliveryTypes")
-    public ResponseEntity getDeliveryTypes() {
-        List<DictValueData> valueDataList = orderServiceAdapter.getDeliveryTypes();
-        return ResponseEntity.ok(valueDataList);
-    }
-
-    @GetMapping("/carriers")
-    public ResponseEntity getCarriers() {
-        List<DictValueData> valueDataList = orderServiceAdapter.getCarriers();
-        return ResponseEntity.ok(valueDataList);
-    }
-
-    @GetMapping("/invoiceTypes")
-    public ResponseEntity getInvoiceTypes() {
-        List<DictValueData> valueDataList = orderServiceAdapter.getInvoiceTypes();
-        return ResponseEntity.ok(valueDataList);
-    }
-
-
-    @GetMapping("/skuSpecs")
-    public ResponseEntity getSkuSpecs() {
-        List<DictValueData> valueDataList = orderServiceAdapter.getSkuSpecs();
-        return ResponseEntity.ok(valueDataList);
-    }
 
     @GetMapping("/customer/list")
     public ResponseEntity getCustomers(CustomerQuery customerQuery) {
-        PageInfo<CustomerData> customerList = orderServiceAdapter.getCustomers(customerQuery.getCode(), customerQuery.getName(), customerQuery.getPageNum(), customerQuery.getPageSize());
+        PageInfo<CustomerData> customerList = customerAdapter
+                .getCustomers(customerQuery.getCode(), customerQuery.getName(),
+                        customerQuery.getPageNum(), customerQuery.getPageSize());
         return ResponseEntity.ok(customerList);
     }
 
     @GetMapping("/pos/list")
-    public ResponseEntity getPosList(CustomerQuery customerQuery) {
-        // TODO: 2019/1/25 此处暂时调用的客户api,门店api提供出来之后修改
-        PageInfo<CustomerData> customerList = orderServiceAdapter.getCustomers(customerQuery.getCode(), customerQuery.getName(), customerQuery.getPageNum(), customerQuery.getPageSize());
+    public ResponseEntity getPosList(StoreQuery storeQuery) {
+        PageInfo<StoreInfoDto> customerList = storeAdapter
+                .getCustomers(storeQuery.getCode(), storeQuery.getName(), storeQuery.getPageNum(),
+                        storeQuery.getPageSize());
+        return ResponseEntity.ok(customerList);
+    }
+
+    @GetMapping("/sku/list")
+    public ResponseEntity getPosList(SkuQuery skuQuery) {
+        PageInfo<SkuData> customerList = productAdapter
+                .getSkus(skuQuery.getCode(), skuQuery.getName(),
+                        skuQuery.getPageNum(), skuQuery.getPageSize());
         return ResponseEntity.ok(customerList);
     }
 
@@ -170,7 +149,7 @@ public class OrderController extends BaseController {
         //店铺
         Long storeId = orderModel.getStoreId();
         if (storeId != null) {
-            DictValueData baseStoreData = orderServiceAdapter.getDictValue(storeId);
+            DictValueData baseStoreData = dictAdapter.getDictValue(storeId);
             orderInfoResp.setStoreId(storeId);
             orderInfoResp.setStoreName(baseStoreData.getName());
         }
@@ -180,19 +159,19 @@ public class OrderController extends BaseController {
         // TODO: 2019/1/25
         Long posId = orderModel.getPosId();
         if (posId != null) {
-            orderInfoResp.setPosName(orderServiceAdapter.getPosNameById(posId));
+            orderInfoResp.setPosName(storeAdapter.getNameById(posId));
         }
         //订单类型
         Long orderTypeId = orderModel.getOrderTypeId();
         if (orderTypeId != null) {
-            DictValueData orderTypeData = orderServiceAdapter.getDictValue(orderTypeId);
+            DictValueData orderTypeData = dictAdapter.getDictValue(orderTypeId);
             orderInfoResp.setOrderTypeId(orderTypeId);
             orderInfoResp.setOrderTypeName(orderTypeData.getName());
         }
         //订单状态
         Long statusId = orderModel.getStatusId();
         if (statusId != null) {
-            DictValueData statusData = orderServiceAdapter.getDictValue(statusId);
+            DictValueData statusData = dictAdapter.getDictValue(statusId);
             orderInfoResp.setStatusId(statusId);
             orderInfoResp.setStatusName(statusData.getName());
         }

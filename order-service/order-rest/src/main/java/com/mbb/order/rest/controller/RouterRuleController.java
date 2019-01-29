@@ -3,7 +3,8 @@ package com.mbb.order.rest.controller;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.mbb.basic.common.dto.DictValueData;
-import com.mbb.order.adapter.OrderServiceAdapter;
+import com.mbb.order.adapter.AccountAdapter;
+import com.mbb.order.adapter.DictAdapter;
 import com.mbb.order.biz.model.RouterRuleModel;
 import com.mbb.order.biz.service.RouterRuleService;
 import com.mbb.order.rest.dto.RouterRuleBaseData;
@@ -33,7 +34,10 @@ public class RouterRuleController extends BaseController {
     private RouterRuleService routerRuleService;
 
     @Autowired
-    private OrderServiceAdapter orderServiceAdapter;
+    private DictAdapter dictAdapter;
+
+    @Autowired
+    private AccountAdapter accountAdapter;
 
     @GetMapping("/search")
     public ResponseEntity search(RouterRuleListQuery routerRuleListQuery) {
@@ -70,11 +74,11 @@ public class RouterRuleController extends BaseController {
         target.setName(source.getName());
         target.setEnabled(source.getEnabled());
         target.setPriority(source.getPriority());
-        DictValueData routerRuleTypeValue = orderServiceAdapter.getRouterRuleTypeValue(source.getTypeId());
+        DictValueData routerRuleTypeValue = dictAdapter.getRouterRuleTypeValue(source.getTypeId());
         if (routerRuleTypeValue != null) {
             target.setRouterRuleDisplayName(routerRuleTypeValue.getName());
         }
-        Map<String, String> userInfo = orderServiceAdapter.getUserInfo(source.getModifyUserId());
+        Map<String, String> userInfo = accountAdapter.getUserInfo(source.getModifyUserId());
         if (userInfo != null) {
             target.setModifyUserName(userInfo.get("name"));
         }

@@ -6,10 +6,10 @@ import com.mbb.basic.common.dto.AddressData;
 import com.mbb.basic.common.dto.DictValueData;
 import com.mbb.stock.adapter.PosAddressAdapter;
 import com.mbb.stock.adapter.PosServiceAdapter;
-import com.mbb.stock.biz.dto.StoreInfoDto;
 import com.mbb.stock.biz.dto.StoreListQuery;
 import com.mbb.stock.biz.model.PointOfServiceModel;
 import com.mbb.stock.biz.service.ReservoirAreaService;
+import com.mbb.stock.common.dto.StoreInfoDto;
 import com.mbb.stock.rest.dto.StoreDetailData;
 import com.mbb.stock.rest.dto.StoreUpdateData;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -98,6 +98,7 @@ public class ReservoirAreaController extends BaseController{
             Long status=store.getStatusId();
             //大仓id
             storeInfoResp.setId(store.getId());
+            storeInfoResp.setCode(store.getCode());
             //大仓联系方式
             storeInfoResp.setContact(store.getContact());
             storeInfoResp.setStatus(status);

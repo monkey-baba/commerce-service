@@ -1,10 +1,12 @@
 package com.mbb.product.biz.model;
 
+import com.mbb.common.handler.MapTypeHandler;
 import com.mbb.common.model.BaseModel;
 import java.util.Map;
 import javax.persistence.Table;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import tk.mybatis.mapper.annotation.ColumnType;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
@@ -17,7 +19,8 @@ public class SkuModel extends BaseModel {
     /**
      * 规格对应的值
      */
-    private Map<Long,Long> meta;
+    @ColumnType(typeHandler = MapTypeHandler.class)
+    private Map<String,String> meta;
 
 
 }

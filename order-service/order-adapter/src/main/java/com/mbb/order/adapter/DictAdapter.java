@@ -19,13 +19,10 @@ import java.util.Map;
  * @date 2019/1/22
  */
 @Component
-public class OrderServiceAdapter {
+public class DictAdapter {
 
     @Autowired
     private DictValueApi dictValueApi;
-
-    @Autowired
-    private CustomerApi customerApi;
 
     /**
      * 根据id获取路由规则枚举值
@@ -37,15 +34,6 @@ public class OrderServiceAdapter {
         return dictValueApi.getDictValue(id);
     }
 
-    /**
-     * 根据id获得用户信息
-     *
-     * @param id 用户id
-     * @return 用户信息
-     */
-    public Map<String, String> getUserInfo(Long id) {
-        return Collections.singletonMap("name", "管理员");
-    }
 
     /**
      * 获取订单状态
@@ -94,16 +82,11 @@ public class OrderServiceAdapter {
         return dictValueApi.getInvoiceType();
     }
 
-    public PageInfo<CustomerData> getCustomers(String code, String name, Integer pageNum, Integer pageSize) {
-        return customerApi.getCustomers(code, name, pageNum, pageSize);
-    }
-
-    public String getPosNameById(Long id) {
-        // TODO: 2019/1/25 门店api提供出来替换
-        return "大华仓";
-    }
-
     public List<DictValueData> getSkuSpecs() {
         return dictValueApi.getSkuSpec();
+    }
+
+    public List<DictValueData> getPaymentTypes() {
+        return dictValueApi.getPaymentType();
     }
 }
