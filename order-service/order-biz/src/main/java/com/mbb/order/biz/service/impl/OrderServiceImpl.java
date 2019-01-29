@@ -1,16 +1,16 @@
 package com.mbb.order.biz.service.impl;
 
-import com.mbb.order.biz.dao.InvoiceMapper;
-import com.mbb.order.biz.dao.OrderEntryMapper;
 import com.mbb.order.biz.dao.OrderMapper;
-import com.mbb.order.biz.dao.PaymentMapper;
-import com.mbb.order.biz.dao.SellerRemarkMapper;
 import com.mbb.order.biz.model.InvoiceModel;
 import com.mbb.order.biz.model.OrderEntryModel;
 import com.mbb.order.biz.model.OrderModel;
 import com.mbb.order.biz.model.PaymentModel;
 import com.mbb.order.biz.model.SellerRemarkModel;
+import com.mbb.order.biz.service.InvoiceService;
+import com.mbb.order.biz.service.OrderEntryService;
 import com.mbb.order.biz.service.OrderService;
+import com.mbb.order.biz.service.PaymentService;
+import com.mbb.order.biz.service.RemarkService;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -33,16 +33,15 @@ import tk.mybatis.mapper.entity.Example;
 public class OrderServiceImpl implements OrderService {
 
     @Autowired
+    private InvoiceService invoiceService;
+    @Autowired
+    private OrderEntryService orderEntryService;
+    @Autowired
     private OrderMapper orderMapper;
-
     @Autowired
-    private OrderEntryMapper orderEntryMapper;
+    private PaymentService paymentService;
     @Autowired
-    private InvoiceMapper invoiceMapper;
-    @Autowired
-    private PaymentMapper paymentMapper;
-    @Autowired
-    private SellerRemarkMapper sellerRemarkMapper;
+    private RemarkService remarkService;
 
     @Override
     public List<OrderModel> getOrders(OrderModel orderModel, Map<String, Object> queryMap) {
@@ -62,17 +61,22 @@ public class OrderServiceImpl implements OrderService {
         //保存订单
         orderMapper.insert(orderModel);
         //保存订单行
-        if (!CollectionUtils.isEmpty(entries)){
-            orderEntryMapper.insertList(entries);
+        if (!CollectionUtils.isEmpty(entries)) {
+            orderEntryService.insertEntries(entries);
         }
-        if (!CollectionUtils.isEmpty(payments)){
-            paymentMapper.insertList(payments);
+        if (!CollectionUtils.isEmpty(payments)) {
+            paymentService.insertPayments(payments);
         }
-        invoiceMapper.insert(invoice);
-        if (sellerRemark!=null){
-            sellerRemarkMapper.insert(sellerRemark);
+        invoiceService.insert(invoice);
+        if (sellerRemark != null) {
+            remarkService.insert(sellerRemark);
         }
 
+    }
+
+    @Override
+    public OrderModel findOrderDetailById(Long id) {
+        return null;
     }
 
     @Override

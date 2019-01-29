@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.mbb.order.biz.dao.OrderMapper">
+
+
+  <sql id="Order_Column_List">
+     o.id id,
+     o.version version,
+     o.ecs_order_id ecsOrderId,
+     o.code code,
+     o.store_id storeId,
+     o.customer_id customerId,
+     o.receiver receiver,
+     o.receiver_phone receiverPhone,
+     o.pos_id posId,
+     o.total_price totalPrice,
+     o.sub_total subTotal,
+     o.discount discount,
+     o.delivery_cost deliveryCost,
+     o.date `date`,
+     o.payment_date paymentDate,
+     o.status_id statusId,
+     o.order_type_id orderTypeId,
+     o.address_id addressId,
+     o.platform_id platformId,
+     o.order_source_id orderSourceId,
+     o.channel_id channelId,
+     o.remark remark,
+     o.delivery_type_id deliveryTypeId,
+     o.carrier_id carrierId
+   </sql>
+  <sql id="Remark_Column_List">
+     r.id r_id,
+     r.version r_version,
+     r.user_id r_userId,
+     r.date r_date,
+     r.remark r_remark
+   </sql>
+  <sql id="Payment_Column_List">
+     p.id p_id,
+     p.version p_version,
+     p.type_id p_typeId,
+     p.amount p_amount,
+     p.date p_date,
+     p.serial_number p_serialNumber
+   </sql>
+  <!-- 留着备用 -->
+
+
+</mapper>
