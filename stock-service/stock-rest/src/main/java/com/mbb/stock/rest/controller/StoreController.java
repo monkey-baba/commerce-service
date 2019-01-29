@@ -77,7 +77,7 @@ public class StoreController extends BaseController{
     }
 
     @PostMapping("/add")
-    public ResponseEntity addStock(@RequestBody StoreInfoDto stockInfoDtoList) {
+    public ResponseEntity addStore(@RequestBody StoreInfoDto stockInfoDtoList) {
         AddressData addressData=new AddressData();
         addressData.setAddress(stockInfoDtoList.getPaddress());
         addressData.setDetail(stockInfoDtoList.getDetailaddress());
@@ -122,7 +122,8 @@ public class StoreController extends BaseController{
     }
 
     @PostMapping("/update")
-    public ResponseEntity updateUser(@RequestBody StoreUpdateData data)  {
+    public ResponseEntity updateStore(@RequestBody StoreUpdateData data)  {
+
         AddressData addressData=new AddressData();
         addressData.setAddress(data.getPaddress());
         addressData.setDetail(data.getDetailaddress());
@@ -140,7 +141,7 @@ public class StoreController extends BaseController{
     }
 
     @GetMapping("/detail")
-    public ResponseEntity childRole(@RequestParam Long id) {
+    public ResponseEntity detailStore(@RequestParam Long id) {
         PointOfServiceModel store=  storeService.findById(id);
         StoreDetailData storeDetailData=new StoreDetailData();
         storeDetailData.setCode(store.getCode());

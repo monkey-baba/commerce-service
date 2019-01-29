@@ -45,7 +45,7 @@ public class ReservoirAreaController extends BaseController{
     }
 
     @PostMapping("/info")
-    public ResponseEntity getStores(@RequestBody StoreListQuery storeListQuery) {
+    public ResponseEntity getReservoirAreas(@RequestBody StoreListQuery storeListQuery) {
         PointOfServiceModel reservoirAreaModel = new PointOfServiceModel();
         reservoirAreaModel.setName(storeListQuery.getName());
         reservoirAreaModel.setCode(storeListQuery.getCode());
@@ -71,7 +71,7 @@ public class ReservoirAreaController extends BaseController{
     }
 
     @PostMapping("/add")
-    public ResponseEntity addStock(@RequestBody StoreInfoDto stockInfoDtoList) {
+    public ResponseEntity addReservoirArea(@RequestBody StoreInfoDto stockInfoDtoList) {
         AddressData addressData=new AddressData();
         addressData.setAddress(stockInfoDtoList.getPaddress());
         addressData.setDetail(stockInfoDtoList.getDetailaddress());
@@ -116,7 +116,7 @@ public class ReservoirAreaController extends BaseController{
     }
 
     @PostMapping("/update")
-    public ResponseEntity updateUser(@RequestBody StoreUpdateData data)  {
+    public ResponseEntity updateReservoirArea(@RequestBody StoreUpdateData data)  {
         AddressData addressData=new AddressData();
         addressData.setAddress(data.getPaddress());
         addressData.setDetail(data.getDetailaddress());
@@ -133,7 +133,7 @@ public class ReservoirAreaController extends BaseController{
     }
 
     @GetMapping("/detail")
-    public ResponseEntity childRole(@RequestParam Long id) {
+    public ResponseEntity detailReservoirArea(@RequestParam Long id) {
         PointOfServiceModel store=  reservoirAreaService.findById(id);
         StoreDetailData storeDetailData=new StoreDetailData();
         storeDetailData.setCode(store.getCode());
