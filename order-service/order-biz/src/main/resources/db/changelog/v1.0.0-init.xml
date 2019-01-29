@@ -49,6 +49,7 @@
       <column name="total_price" type="DECIMAL(32,8)" remarks="总价"/>
       <column name="discount" type="DECIMAL(32,8)" remarks="折扣"/>
       <column name="order_id" type="BIGINT" remarks="订单"/>
+      <column name="entry_num" type="INT" remarks="行号"/>
     </createTable>
     <addPrimaryKey tableName="order_entry" columnNames="id" />
   </changeSet>

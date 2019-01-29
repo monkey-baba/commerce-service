@@ -141,7 +141,7 @@ public class OrderController extends BaseController {
         order.setAddressId(addressAdapter.saveAddress(addrData));
 
         //卖家备注
-        String sellerRemark = data.getBuyerRemark();
+        String sellerRemark = data.getSellerRemark();
         SellerRemarkModel sellerRemarkModel = null;
         if (StringUtils.isNotEmpty(sellerRemark)) {
             sellerRemarkModel = new SellerRemarkModel();
@@ -183,6 +183,7 @@ public class OrderController extends BaseController {
         //订单行
         final Double[] subTotal = {0D};
         Double[] discount = {0D};
+        final Integer[] lineNum = {0};
         List<OrderEntryModel> entries = data.getEntries().stream().map(e -> {
             OrderEntryModel entry = new OrderEntryModel();
             entry.setId(idService.genId());
@@ -194,6 +195,7 @@ public class OrderController extends BaseController {
             entry.setShippedQuantity(e.getShippedQuantity());
             entry.setSkuId(e.getId());
             entry.setTotalPrice(e.getTotalPrice());
+            entry.setEntryNum(++lineNum[0]);
             subTotal[0] += (e.getBasePrice() * e.getQuantity());
             discount[0] += (e.getDiscount() * e.getQuantity());
             return entry;
