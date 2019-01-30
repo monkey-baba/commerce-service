@@ -6,6 +6,7 @@ import com.lxm.idgenerator.service.intf.IdService;
 import com.mbb.basic.common.dto.AddressData;
 import com.mbb.basic.common.dto.DictValueData;
 import com.mbb.customer.common.dto.CustomerData;
+import com.mbb.order.adapter.AccountAdapter;
 import com.mbb.order.adapter.AddressAdapter;
 import com.mbb.order.adapter.CustomerAdapter;
 import com.mbb.order.adapter.DictAdapter;
@@ -18,10 +19,12 @@ import com.mbb.order.biz.model.PaymentModel;
 import com.mbb.order.biz.model.SellerRemarkModel;
 import com.mbb.order.biz.service.OrderService;
 import com.mbb.order.rest.dto.CustomerQuery;
+import com.mbb.order.rest.dto.InvoiceData;
 import com.mbb.order.rest.dto.OrderCreateData;
 import com.mbb.order.rest.dto.OrderDetailData;
 import com.mbb.order.rest.dto.OrderInfoResp;
 import com.mbb.order.rest.dto.OrderListQuery;
+import com.mbb.order.rest.dto.SellerRemarkData;
 import com.mbb.order.rest.dto.SkuQuery;
 import com.mbb.order.rest.dto.StoreQuery;
 import com.mbb.product.common.dto.SkuData;
@@ -68,6 +71,9 @@ public class OrderController extends BaseController {
     private ProductAdapter productAdapter;
     @Autowired
     private PosAdapter posAdapter;
+
+    @Autowired
+    private AccountAdapter accountAdapter;
 
     @GetMapping("/info")
     public ResponseEntity getOrders(OrderListQuery orderListQuery) {
@@ -289,6 +295,28 @@ public class OrderController extends BaseController {
 
         data.setAddress(addressAdapter.getAddress(order.getAddressId()));
         data.setPointPos(posAdapter.getPosDetail(order.getPointPosId()));
+
+        InvoiceModel invoice = order.getInvoice();
+        InvoiceData invoiceData=new InvoiceData();
+        invoiceData.setApplied(invoice.getApplied());
+        if (invoice.getApplied()){
+            invoiceData.setAmount(invoice.getAmount());
+            invoiceData.setTitle(invoice.getTitle());
+            invoiceData.setType(dictAdapter.getDictValueName(invoice.getTypeId()));
+        }
+        data.setInvoice(invoiceData);
+
+        List<SellerRemarkModel> sellerRemarks = order.getSellerRemarks();
+        if (CollectionUtils.isNotEmpty(sellerRemarks)){
+            List<SellerRemarkData> remarkDataList = sellerRemarks.stream().map(r -> {
+                SellerRemarkData sellerRemarkData = new SellerRemarkData();
+                sellerRemarkData.setDate(r.getDate());
+                sellerRemarkData.setRemark(r.getRemark());
+                sellerRemarkData.setUser(accountAdapter.getUserInfo(r.getUserId()).get("name"));
+                return sellerRemarkData;
+            }).collect(Collectors.toList());
+            data.setSellerRemarks(remarkDataList);
+        }
 
         return ResponseEntity.ok(data);
     }

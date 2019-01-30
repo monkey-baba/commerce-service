@@ -33,4 +33,7 @@ public class OrderDetailData {
     private String carrier;
 
     private PosDetailData pointPos;
+    private InvoiceData invoice;
+
+    private List<SellerRemarkData> sellerRemarks;
 }
