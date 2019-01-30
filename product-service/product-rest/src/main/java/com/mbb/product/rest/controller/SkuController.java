@@ -60,7 +60,17 @@ public class SkuController extends BaseController {
         return ResponseEntity.ok(result);
     }
 
+    @GetMapping("/list/{productid}")
+    public ResponseEntity getSkus(@PathVariable("productid") Long productId) {
+        SkuModel sku = new SkuModel();
+        sku.setProductId(productId);
+        //查询数据
+        List<SkuModel> skus = skuService.getSkus(sku);
+        //从model转data
+        List<SkuData> result = dealResult(skus);
 
+        return ResponseEntity.ok(result);
+    }
     /**
      * 分页获取SKU详情
      */
@@ -175,8 +185,7 @@ public class SkuController extends BaseController {
 
         //转化成long string 用来展示
         if (metaModels != null && !metaModels.isEmpty()){
-            metaModels.stream().forEach(meta->{
-            meta.forEach((specId, metaId) -> {
+            metaModels.stream().forEach(meta-> meta.forEach((specId, metaId) -> {
                 SkuMetaData metaData = new SkuMetaData();
                 metaData.setSpecId(String.valueOf(specId));
                 metaData.setMetaId(String.valueOf(metaId));
@@ -185,8 +194,7 @@ public class SkuController extends BaseController {
                     metaData.setMeta(model.getName());
                 }
                 metas.add(metaData);
-            });
-            });
+            }));
         }
 
         return skuData;

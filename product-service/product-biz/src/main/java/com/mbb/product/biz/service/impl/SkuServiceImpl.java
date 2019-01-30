@@ -73,6 +73,8 @@ public class SkuServiceImpl implements SkuService {
         String code = sku.getCode();
         //产品名称
         String name = sku.getName();
+        //产品名称
+        Long productId = sku.getProductId();
         Example example = new Example(SkuModel.class);
         Example.Criteria criteria = example.createCriteria();
         if (StringUtils.isNotBlank(code)) {
@@ -80,6 +82,9 @@ public class SkuServiceImpl implements SkuService {
         }
         if (StringUtils.isNotBlank(name)) {
             criteria.andLike("name", "%" + name + "%");
+        }
+        if (productId!=null) {
+            criteria.andEqualTo("productId", productId);
         }
         return example;
     }
