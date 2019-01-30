@@ -18,6 +18,9 @@ public class AddressAdapter {
     private AddressApi addressApi;
 
     public AddressData getAddress(Long id) {
+        if (id == null) {
+            return new AddressData();
+        }
         return addressApi.getAddress(id);
     }
 

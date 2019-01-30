@@ -6,11 +6,12 @@ import com.lxm.idgenerator.service.intf.IdService;
 import com.mbb.basic.common.dto.AddressData;
 import com.mbb.basic.common.dto.DictValueData;
 import com.mbb.customer.common.dto.CustomerData;
+import com.mbb.order.adapter.AccountAdapter;
 import com.mbb.order.adapter.AddressAdapter;
 import com.mbb.order.adapter.CustomerAdapter;
 import com.mbb.order.adapter.DictAdapter;
 import com.mbb.order.adapter.ProductAdapter;
-import com.mbb.order.adapter.StoreAdapter;
+import com.mbb.order.adapter.PosAdapter;
 import com.mbb.order.biz.model.InvoiceModel;
 import com.mbb.order.biz.model.OrderEntryModel;
 import com.mbb.order.biz.model.OrderModel;
@@ -18,13 +19,16 @@ import com.mbb.order.biz.model.PaymentModel;
 import com.mbb.order.biz.model.SellerRemarkModel;
 import com.mbb.order.biz.service.OrderService;
 import com.mbb.order.rest.dto.CustomerQuery;
+import com.mbb.order.rest.dto.InvoiceData;
 import com.mbb.order.rest.dto.OrderCreateData;
 import com.mbb.order.rest.dto.OrderDetailData;
 import com.mbb.order.rest.dto.OrderInfoResp;
 import com.mbb.order.rest.dto.OrderListQuery;
+import com.mbb.order.rest.dto.SellerRemarkData;
 import com.mbb.order.rest.dto.SkuQuery;
 import com.mbb.order.rest.dto.StoreQuery;
 import com.mbb.product.common.dto.SkuData;
+import com.mbb.stock.common.dto.PosDetailData;
 import com.mbb.stock.common.dto.StoreInfoDto;
 
 import java.util.*;
@@ -66,7 +70,10 @@ public class OrderController extends BaseController {
     @Autowired
     private ProductAdapter productAdapter;
     @Autowired
-    private StoreAdapter storeAdapter;
+    private PosAdapter posAdapter;
+
+    @Autowired
+    private AccountAdapter accountAdapter;
 
     @GetMapping("/info")
     public ResponseEntity getOrders(OrderListQuery orderListQuery) {
@@ -203,8 +210,8 @@ public class OrderController extends BaseController {
 
     @GetMapping("/pos/list")
     public ResponseEntity getPosList(StoreQuery storeQuery) {
-        PageInfo<StoreInfoDto> customerList = storeAdapter
-                .getCustomers(storeQuery.getCode(), storeQuery.getName(), storeQuery.getPageNum(),
+        PageInfo<StoreInfoDto> customerList = posAdapter
+                .getStores(storeQuery.getCode(), storeQuery.getName(), storeQuery.getPageNum(),
                         storeQuery.getPageSize());
         return ResponseEntity.ok(customerList);
     }
@@ -234,7 +241,7 @@ public class OrderController extends BaseController {
         //门店
         Long posId = orderModel.getPosId();
         if (posId != null) {
-            orderInfoResp.setPosName(storeAdapter.getStoreNameById(posId));
+            orderInfoResp.setPosName(posAdapter.getStoreNameById(posId));
         }
         //订单类型
         Long orderTypeId = orderModel.getOrderTypeId();
@@ -276,6 +283,40 @@ public class OrderController extends BaseController {
         OrderDetailData data = new OrderDetailData();
         BeanCopier.create(OrderModel.class, OrderDetailData.class, false)
                 .copy(order, data, null);
+        data.setStatus(dictAdapter.getDictValueName(order.getStatusId()));
+        data.setOrderType(dictAdapter.getDictValueName(order.getOrderTypeId()));
+        data.setDeliveryType(dictAdapter.getDictValueName(order.getDeliveryTypeId()));
+        data.setCustomer(customerAdapter.getCustomerName(order.getCustomerId()));
+        data.setPlatform(dictAdapter.getDictValueName(order.getPlatformId()));
+        data.setStore(dictAdapter.getDictValueName(order.getStoreId()));
+        data.setPos(posAdapter.getStoreNameById(order.getPosId()));
+        data.setOrderSource(dictAdapter.getDictValueName(order.getOrderSourceId()));
+        data.setChannel(dictAdapter.getDictValueName(order.getChannelId()));
+
+        data.setAddress(addressAdapter.getAddress(order.getAddressId()));
+        data.setPointPos(posAdapter.getPosDetail(order.getPointPosId()));
+
+        InvoiceModel invoice = order.getInvoice();
+        InvoiceData invoiceData=new InvoiceData();
+        invoiceData.setApplied(invoice.getApplied());
+        if (invoice.getApplied()){
+            invoiceData.setAmount(invoice.getAmount());
+            invoiceData.setTitle(invoice.getTitle());
+            invoiceData.setType(dictAdapter.getDictValueName(invoice.getTypeId()));
+        }
+        data.setInvoice(invoiceData);
+
+        List<SellerRemarkModel> sellerRemarks = order.getSellerRemarks();
+        if (CollectionUtils.isNotEmpty(sellerRemarks)){
+            List<SellerRemarkData> remarkDataList = sellerRemarks.stream().map(r -> {
+                SellerRemarkData sellerRemarkData = new SellerRemarkData();
+                sellerRemarkData.setDate(r.getDate());
+                sellerRemarkData.setRemark(r.getRemark());
+                sellerRemarkData.setUser(accountAdapter.getUserInfo(r.getUserId()).get("name"));
+                return sellerRemarkData;
+            }).collect(Collectors.toList());
+            data.setSellerRemarks(remarkDataList);
+        }
 
         return ResponseEntity.ok(data);
     }

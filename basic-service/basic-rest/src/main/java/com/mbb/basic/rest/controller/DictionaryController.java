@@ -20,6 +20,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cglib.beans.BeanCopier;
 import org.springframework.http.ResponseEntity;
@@ -33,6 +34,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api/v1/dict")
+@Slf4j
 public class DictionaryController {
 
     @Autowired
@@ -67,6 +69,9 @@ public class DictionaryController {
     @GetMapping("/value")
     public ResponseEntity value(@RequestParam Long id) {
         DictionaryValueModel value = dictionaryValueService.findById(id);
+        if (value == null){
+            log.error("Wrong Dict Value Id:"+id);
+        }
         DictValueData dictValueData = new DictValueData();
         BeanCopier.create(DictionaryValueModel.class, DictValueData.class, false)
                 .copy(value, dictValueData, null);

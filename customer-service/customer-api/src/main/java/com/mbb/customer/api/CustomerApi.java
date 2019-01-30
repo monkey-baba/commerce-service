@@ -25,4 +25,7 @@ public interface CustomerApi {
     @GetMapping("/api/v1/customer/list")
     PageInfo<CustomerData> getCustomers(@RequestParam("code") String code, @RequestParam("name") String name,
                                         @RequestParam("pageNum") Integer pageNum, @RequestParam("pageSize") Integer pageSize);
+
+    @GetMapping("/api/v1/customer/data")
+    CustomerData getCustomerData(@RequestParam("id") Long id);
 }

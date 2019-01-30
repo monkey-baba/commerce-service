@@ -102,8 +102,8 @@ public class ReservoirAreaController extends BaseController{
             //大仓联系方式
             storeInfoResp.setContact(store.getContact());
             storeInfoResp.setStatus(status);
-            DictValueData dictValueData =posServiceAdapter.getDictValue(status);
-            storeInfoResp.setPstatus(dictValueData.getName());
+            String name =posServiceAdapter.getDictValueName(status);
+            storeInfoResp.setPstatus(name);
             //大仓负责人
             storeInfoResp.setOwner(String.valueOf(store.getOwner() == null ? "" : store.getOwner()));
             return storeInfoResp;
