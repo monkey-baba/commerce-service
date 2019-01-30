@@ -12,4 +12,5 @@ public interface StoreService {
     void updateStore(PointOfServiceModel var1);
     PointOfServiceModel findById(Long var1);
     PointOfServiceModel findPosById(Long id);
+    List<PointOfServiceModel> getPos(PointOfServiceModel storeModel);
 }

@@ -23,7 +23,7 @@ public class SkuModel extends BaseModel {
      * 规格对应的值
      */
     @ColumnType(typeHandler = ListTypeHandler.class)
-    private List<Map<Long,Long>> meta;
+    private List<Map<String,String>> meta;
 
 
 }
