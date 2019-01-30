@@ -16,6 +16,9 @@
       <column name="status_id" type="BIGINT" remarks="状态"/>
     </createTable>
     <addPrimaryKey tableName="customer" columnNames="id"/>
+    <createIndex tableName="customer" indexName="code_idx" unique="true">
+      <column name="code"/>
+    </createIndex>
   </changeSet>
 
 

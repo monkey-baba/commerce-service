@@ -14,7 +14,9 @@ public class PosAddressAdapter {
         return addressApi.saveAddress(data);
     };
     public  AddressData getAddress(Long id){
-
+        if (id == null){
+            return new AddressData();
+        }
         return addressApi.getAddress(id);
     };
 }

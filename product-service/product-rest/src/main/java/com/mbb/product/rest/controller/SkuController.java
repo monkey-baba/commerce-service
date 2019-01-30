@@ -7,6 +7,7 @@ import com.mbb.basic.common.dto.DictValueData;
 import com.mbb.product.adapter.ProductServiceAdapter;
 import com.mbb.product.biz.model.SkuMetaModel;
 import com.mbb.product.biz.model.SkuModel;
+import com.mbb.product.biz.service.SkuMetaService;
 import com.mbb.product.biz.service.SkuService;
 import com.mbb.product.common.dto.SkuData;
 import com.mbb.product.common.dto.SkuMetaData;
@@ -41,6 +42,9 @@ public class SkuController extends BaseController {
     private ProductServiceAdapter productServiceAdapter;
     @Resource
     private SkuService skuService;
+
+    @Autowired
+    private SkuMetaService skuMetaService;
 
     @GetMapping("/list")
     public ResponseEntity getSkus(@RequestParam("code") String skuId,
@@ -176,8 +180,8 @@ public class SkuController extends BaseController {
                 SkuMetaData metaData = new SkuMetaData();
                 metaData.setSpecId(String.valueOf(specId));
                 metaData.setMetaId(String.valueOf(metaId));
-                SkuMetaModel model = skuService.getSkuMetaById(Long.valueOf(metaId));
-                if (model != null) {
+                SkuMetaModel model = skuMetaService.getSkuMetaById(Long.valueOf(metaId));
+                if (model!=null){
                     metaData.setMeta(model.getName());
                 }
                 metas.add(metaData);

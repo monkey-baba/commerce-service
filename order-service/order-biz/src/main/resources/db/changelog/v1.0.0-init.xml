@@ -19,6 +19,7 @@
       <column name="total_price" type="DECIMAL(32,8)" remarks="订单金额"/>
       <column name="sub_total" type="DECIMAL(32,8)" remarks="订单总额"/>
       <column name="discount" type="DECIMAL(32,8)" remarks="订单折扣"/>
+      <column name="delivery_cost" type="DECIMAL(32,8)" remarks="运费金额"/>
       <column name="date" type="DATETIME" remarks="下单日期"/>
       <column name="payment_date" type="DATETIME" remarks="付款日期"/>
       <column name="status_id" type="BIGINT" remarks="订单状态"/>
@@ -30,8 +31,12 @@
       <column name="remark" type="VARCHAR(4096)" remarks="买家备注"/>
       <column name="delivery_type_id" type="BIGINT" remarks="配送方式"/>
       <column name="carrier_id" type="BIGINT" remarks="指定承运商"/>
+      <column name="point_pos_id" type="BIGINT" remarks="指定发货点"/>
     </createTable>
     <addPrimaryKey tableName="order" columnNames="id" />
+    <createIndex tableName="order" indexName="code_idx" unique="true">
+      <column name="code"/>
+    </createIndex>
   </changeSet>
 
   <changeSet id="2" author="ZQian">
@@ -45,6 +50,7 @@
       <column name="total_price" type="DECIMAL(32,8)" remarks="总价"/>
       <column name="discount" type="DECIMAL(32,8)" remarks="折扣"/>
       <column name="order_id" type="BIGINT" remarks="订单"/>
+      <column name="entry_num" type="INT" remarks="行号"/>
     </createTable>
     <addPrimaryKey tableName="order_entry" columnNames="id" />
   </changeSet>
@@ -101,6 +107,9 @@
       <column name="modify_date" type="DATETIME" remarks="修改时间"/>
     </createTable>
     <addPrimaryKey tableName="router_rule" columnNames="id" />
+    <createIndex tableName="router_rule" indexName="code_idx" unique="true">
+      <column name="code"/>
+    </createIndex>
   </changeSet>
 
 
@@ -111,12 +120,15 @@
       <column name="order_id" type="BIGINT" remarks="订单"/>
       <column name="code" type="VARCHAR(32)" remarks="配货单号"/>
       <column name="date" type="DATETIME" remarks="发货时间"/>
-      <column name="expressNum" type="VARCHAR(32)" remarks="运单号"/>
+      <column name="express_num" type="VARCHAR(32)" remarks="运单号"/>
       <column name="carrier_id" type="BIGINT" remarks="承运商"/>
       <column name="status_id" type="BIGINT" remarks="状态"/>
       <column name="pos_id" type="BIGINT" remarks="发货仓"/>
     </createTable>
     <addPrimaryKey tableName="consignment" columnNames="id" />
+    <createIndex tableName="consignment" indexName="code_idx" unique="true">
+      <column name="code"/>
+    </createIndex>
   </changeSet>
 
 

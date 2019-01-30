@@ -5,6 +5,7 @@ import com.mbb.basic.api.DictValueApi;
 import com.mbb.basic.common.dto.DictValueData;
 import com.mbb.customer.api.CustomerApi;
 import com.mbb.customer.common.dto.CustomerData;
+import org.apache.logging.log4j.util.Strings;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -66,8 +67,20 @@ public class DictAdapter {
         return dictValueApi.getPlatform();
     }
 
+    public String getDictValueName(Long id) {
+        if (id == null){
+            return Strings.EMPTY;
+        }
+        DictValueData dictValue = dictValueApi.getDictValue(id);
+        if (dictValue!=null){
+            return dictValue.getName();
+        }
+        return String.valueOf(id);
+    }
+
     public DictValueData getDictValue(Long id) {
-        return dictValueApi.getDictValue(id);
+        DictValueData dictValue = dictValueApi.getDictValue(id);
+        return dictValue;
     }
 
     public List<DictValueData> getDeliveryTypes() {
@@ -88,5 +101,14 @@ public class DictAdapter {
 
     public List<DictValueData> getPaymentTypes() {
         return dictValueApi.getPaymentType();
+    }
+
+    /**
+     * 获取配货单状态
+     *
+     * @return
+     */
+    public List<DictValueData> getConsignmentStatus() {
+        return dictValueApi.getConsignmentStatus();
     }
 }

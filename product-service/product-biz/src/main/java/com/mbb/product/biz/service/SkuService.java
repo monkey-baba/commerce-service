@@ -18,5 +18,4 @@ public interface SkuService {
 
     SkuModel createSku(SkuModel sku);
 
-    SkuMetaModel getSkuMetaById(Long id);
 }

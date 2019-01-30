@@ -2,7 +2,9 @@ package com.mbb.order.biz.model;
 
 import com.mbb.common.model.BaseModel;
 import java.util.Date;
+import java.util.List;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -19,6 +21,7 @@ public class OrderModel extends BaseModel {
     private String receiverPhone;
     private Long posId;
     private Double totalPrice;
+    private Double deliveryCost;
     private Double subTotal;
     private Double discount;
     private Date date;
@@ -32,6 +35,22 @@ public class OrderModel extends BaseModel {
     private String remark;
     private Long deliveryTypeId;
     private Long carrierId;
+    private Long pointPosId;
 
+
+    @Transient
+    private List<PaymentModel> payments;
+
+    @Transient
+    private List<OrderEntryModel> entries;
+
+    @Transient
+    private List<SellerRemarkModel> sellerRemarks;
+
+    @Transient
+    private InvoiceModel invoice;
+
+    @Transient
+    private List<ConsignmentModel> consignments;
 
 }

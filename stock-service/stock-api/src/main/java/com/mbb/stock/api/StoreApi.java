@@ -1,6 +1,7 @@
 package com.mbb.stock.api;
 
 import com.github.pagehelper.PageInfo;
+import com.mbb.stock.common.dto.StoreDetailData;
 import com.mbb.stock.common.dto.StoreInfoDto;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -27,5 +28,8 @@ public interface StoreApi {
             @RequestParam("status") String status,
             @RequestParam("pageNum") Integer pageNum,
             @RequestParam("pageSize") Integer pageSize);
+
+    @GetMapping("/api/v1/store/detail")
+    StoreDetailData getStoreDetailById(@RequestParam("id") Long id);
 
 }

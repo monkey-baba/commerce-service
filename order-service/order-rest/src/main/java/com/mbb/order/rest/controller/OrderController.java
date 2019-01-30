@@ -6,31 +6,53 @@ import com.lxm.idgenerator.service.intf.IdService;
 import com.mbb.basic.common.dto.AddressData;
 import com.mbb.basic.common.dto.DictValueData;
 import com.mbb.customer.common.dto.CustomerData;
+import com.mbb.order.adapter.AccountAdapter;
 import com.mbb.order.adapter.AddressAdapter;
 import com.mbb.order.adapter.CustomerAdapter;
 import com.mbb.order.adapter.DictAdapter;
+import com.mbb.order.adapter.PosAdapter;
 import com.mbb.order.adapter.ProductAdapter;
-import com.mbb.order.adapter.StoreAdapter;
+import com.mbb.order.biz.model.ConsignmentModel;
+import com.mbb.order.biz.model.InvoiceModel;
+import com.mbb.order.biz.model.OrderEntryModel;
 import com.mbb.order.biz.model.OrderModel;
+import com.mbb.order.biz.model.PaymentModel;
+import com.mbb.order.biz.model.SellerRemarkModel;
 import com.mbb.order.biz.service.OrderService;
+import com.mbb.order.biz.service.RemarkService;
+import com.mbb.order.rest.dto.AddRemarkData;
+import com.mbb.order.rest.dto.ConsignmentData;
 import com.mbb.order.rest.dto.CustomerQuery;
+import com.mbb.order.rest.dto.InvoiceData;
 import com.mbb.order.rest.dto.OrderCreateData;
+import com.mbb.order.rest.dto.OrderDetailData;
+import com.mbb.order.rest.dto.OrderEntryData;
 import com.mbb.order.rest.dto.OrderInfoResp;
 import com.mbb.order.rest.dto.OrderListQuery;
+import com.mbb.order.rest.dto.PaymentData;
+import com.mbb.order.rest.dto.SellerRemarkData;
 import com.mbb.order.rest.dto.SkuQuery;
 import com.mbb.order.rest.dto.StoreQuery;
 import com.mbb.product.common.dto.SkuData;
+import com.mbb.product.common.dto.SkuMetaData;
 import com.mbb.stock.common.dto.StoreInfoDto;
+import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cglib.beans.BeanCopier;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
@@ -41,6 +63,7 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @RestController
 @RequestMapping("/api/v1/order")
+@Slf4j
 public class OrderController extends BaseController {
 
     @Autowired
@@ -54,34 +77,23 @@ public class OrderController extends BaseController {
     @Autowired
     private OrderService orderService;
     @Autowired
-    private StoreAdapter storeAdapter;
+    private ProductAdapter productAdapter;
+    @Autowired
+    private PosAdapter posAdapter;
 
     @Autowired
-    private ProductAdapter productAdapter;
+    private AccountAdapter accountAdapter;
+
+    @Autowired
+    private RemarkService remarkService;
 
     @GetMapping("/info")
     public ResponseEntity getOrders(OrderListQuery orderListQuery) {
-        OrderModel orderModel = new OrderModel();
-        orderModel.setEcsOrderId(orderListQuery.getEcsOrderId());
-        orderModel.setCode(orderListQuery.getCode());
-        orderModel.setStoreId(orderListQuery.getStoreId());
-        orderModel.setCustomerId(orderListQuery.getCustomerId());
-        orderModel.setReceiver(orderListQuery.getReceiver());
-        orderModel.setReceiverPhone(orderListQuery.getReceiverPhone());
-        orderModel.setPosId(orderListQuery.getPosId());
-        Map<String, Object> queryMap = new HashMap<>();
-        queryMap.put("startDate", orderListQuery.getStartDate());
-        queryMap.put("endDate", orderListQuery.getEndDate());
-        queryMap.put("paymentStartDate", orderListQuery.getPaymentStartDate());
-        queryMap.put("paymentEndDate", orderListQuery.getPaymentEndDate());
-        queryMap.put("totalPriceMin", orderListQuery.getTotalPriceMin());
-        queryMap.put("totalPriceMax", orderListQuery.getTotalPriceMax());
-        queryMap.put("statusId", orderListQuery.getStatusId());
-        queryMap.put("orderTypeId", orderListQuery.getOrderTypeId());
+        Map<String, Object> parameters = buildParameters(orderListQuery);
         //开启分页
         PageHelper.startPage(orderListQuery.getPageNum(), orderListQuery.getPageSize());
         //查询数据
-        List<OrderModel> orders = orderService.getOrders(orderModel, queryMap);
+        List<OrderModel> orders = orderService.getOrders(parameters);
         //获取页码等信息
         PageInfo<OrderModel> origin = PageInfo.of(orders);
         //从model转data
@@ -97,23 +109,106 @@ public class OrderController extends BaseController {
     }
 
     @PostMapping("/create")
-    public ResponseEntity createOrder(@RequestBody OrderCreateData orderCreateData) {
-        OrderModel orderModel = new OrderModel();
-        orderModel.setId(idService.genId());
-        orderModel.setEcsOrderId(orderCreateData.getEcsOrderId());
-        orderModel.setCode(orderCreateData.getCode());
-        orderModel.setStoreId(orderCreateData.getStoreId());
-        orderModel.setCustomerId(orderCreateData.getCustomerId());
-        orderModel.setReceiver(orderCreateData.getReceiver());
-        orderModel.setReceiverPhone(orderCreateData.getReceiverPhone());
-        orderModel.setPosId(orderCreateData.getWareId());
-        orderModel.setTotalPrice(orderCreateData.getTotalPrice());
-        orderModel.setStatusId(orderCreateData.getStatusId());
-        orderModel.setOrderTypeId(orderCreateData.getOrderTypeId());
-        orderService.createOrder(orderModel);
-        OrderInfoResp orderInfoResp = new OrderInfoResp();
-        convertOrder(orderModel, orderInfoResp);
-        return ResponseEntity.ok(orderInfoResp);
+    public ResponseEntity createOrder(@RequestBody OrderCreateData data) {
+        // 创建订单
+        OrderModel order = new OrderModel();
+        order.setId(idService.genId());
+        order.setVersion(1);
+        order.setOrderTypeId(data.getOrderType());
+        order.setCode(data.getCode());
+        order.setPlatformId(data.getPlatform());
+        order.setStoreId(data.getStore());
+        order.setDeliveryTypeId(data.getDeliveryType());
+        order.setCarrierId(data.getCarrier());
+        order.setCustomerId(data.getCustomer());
+        order.setPosId(data.getPos());
+        order.setReceiver(data.getReceiver());
+        order.setReceiverPhone(data.getReceiverPhone());
+        order.setRemark(data.getRemark());
+        //订单金额
+        order.setTotalPrice(data.getTotalPrice());
+        order.setDeliveryCost(data.getDeliveryCost());
+        //手工创建
+        order.setOrderSourceId(1401L);
+        order.setDate(new Date());
+        //已保存状态
+        order.setStatusId(1101L);
+//        order.setChannelId();
+
+        //地址
+        AddressData addrData = new AddressData();
+        addrData.setAddress(data.getPcd());
+        addrData.setName(data.getReceiver());
+        addrData.setPhone(data.getReceiverPhone());
+        addrData.setDetail(data.getAddress());
+        // 保存地址 TODO 分布式事务回滚
+        order.setAddressId(addressAdapter.saveAddress(addrData));
+
+        //卖家备注
+        String sellerRemark = data.getSellerRemark();
+        SellerRemarkModel sellerRemarkModel = null;
+        if (StringUtils.isNotEmpty(sellerRemark)) {
+            sellerRemarkModel = new SellerRemarkModel();
+            sellerRemarkModel.setId(idService.genId());
+            sellerRemarkModel.setVersion(1);
+            sellerRemarkModel.setRemark(sellerRemark);
+            sellerRemarkModel.setDate(new Date());
+            sellerRemarkModel.setOrderId(order.getId());
+            sellerRemarkModel.setUserId(1L);
+        }
+
+        //发票
+        InvoiceModel inv = new InvoiceModel();
+        inv.setId(idService.genId());
+        inv.setVersion(1);
+        inv.setApplied(data.getInvoice());
+        inv.setOrderId(order.getId());
+        if (data.getInvoice() != null && data.getInvoice()) {
+            inv.setTypeId(data.getInvoiceType());
+            inv.setTitle(data.getInvoiceTitle());
+        }
+        inv.setAmount(data.getTotalPrice());
+        //支付
+        List<PaymentModel> paymentModels = null;
+        if (CollectionUtils.isNotEmpty(data.getPayments())) {
+            paymentModels = data.getPayments().stream().map(p -> {
+                PaymentModel payment = new PaymentModel();
+                payment.setAmount(p.getAmount());
+                payment.setDate(new Date());
+                payment.setOrderId(order.getId());
+                payment.setId(idService.genId());
+                payment.setVersion(1);
+                payment.setTypeId(p.getType().getId());
+                return payment;
+            }).collect(Collectors.toList());
+            order.setPaymentDate(new Date());
+        }
+
+        //订单行
+        final Double[] subTotal = {0D};
+        Double[] discount = {0D};
+        final Integer[] lineNum = {0};
+        List<OrderEntryModel> entries = data.getEntries().stream().map(e -> {
+            OrderEntryModel entry = new OrderEntryModel();
+            entry.setId(idService.genId());
+            entry.setVersion(1);
+            entry.setOrderId(order.getId());
+            entry.setBasePrice(e.getBasePrice());
+            entry.setDiscount(e.getDiscount());
+            entry.setQuantity(e.getQuantity());
+            entry.setShippedQuantity(e.getShippedQuantity());
+            entry.setSkuId(e.getId());
+            entry.setTotalPrice(e.getTotalPrice());
+            entry.setEntryNum(++lineNum[0]);
+            subTotal[0] += (e.getBasePrice() * e.getQuantity());
+            discount[0] += (e.getDiscount() * e.getQuantity());
+            return entry;
+        }).collect(Collectors.toList());
+        order.setSubTotal(subTotal[0]);
+        order.setDiscount(discount[0]);
+
+        orderService.createOrder(order,entries,paymentModels,inv,sellerRemarkModel);
+        return ResponseEntity.ok("1");
     }
 
 
@@ -127,8 +222,8 @@ public class OrderController extends BaseController {
 
     @GetMapping("/pos/list")
     public ResponseEntity getPosList(StoreQuery storeQuery) {
-        PageInfo<StoreInfoDto> customerList = storeAdapter
-                .getCustomers(storeQuery.getCode(), storeQuery.getName(), storeQuery.getPageNum(),
+        PageInfo<StoreInfoDto> customerList = posAdapter
+                .getStores(storeQuery.getCode(), storeQuery.getName(), storeQuery.getPageNum(),
                         storeQuery.getPageSize());
         return ResponseEntity.ok(customerList);
     }
@@ -156,10 +251,9 @@ public class OrderController extends BaseController {
         //订单编号
         orderInfoResp.setCode(orderModel.getCode());
         //门店
-        // TODO: 2019/1/25
         Long posId = orderModel.getPosId();
         if (posId != null) {
-            orderInfoResp.setPosName(storeAdapter.getNameById(posId));
+            orderInfoResp.setPosName(posAdapter.getStoreNameById(posId));
         }
         //订单类型
         Long orderTypeId = orderModel.getOrderTypeId();
@@ -193,4 +287,146 @@ public class OrderController extends BaseController {
         //支付时间
         orderInfoResp.setPaymentDate(orderModel.getPaymentDate());
     }
+
+
+    @GetMapping("/detail")
+    public ResponseEntity detail(@RequestParam Long id){
+        OrderModel order = orderService.getOrderDetailById(id);
+        OrderDetailData data = new OrderDetailData();
+        BeanCopier.create(OrderModel.class, OrderDetailData.class, false)
+                .copy(order, data, null);
+        data.setStatus(dictAdapter.getDictValueName(order.getStatusId()));
+        data.setOrderType(dictAdapter.getDictValueName(order.getOrderTypeId()));
+        data.setDeliveryType(dictAdapter.getDictValueName(order.getDeliveryTypeId()));
+        data.setCustomer(customerAdapter.getCustomerName(order.getCustomerId()));
+        data.setPlatform(dictAdapter.getDictValueName(order.getPlatformId()));
+        data.setStore(dictAdapter.getDictValueName(order.getStoreId()));
+        data.setPos(posAdapter.getStoreNameById(order.getPosId()));
+        data.setOrderSource(dictAdapter.getDictValueName(order.getOrderSourceId()));
+        data.setChannel(dictAdapter.getDictValueName(order.getChannelId()));
+
+        data.setAddress(addressAdapter.getAddress(order.getAddressId()));
+        data.setPointPos(posAdapter.getPosDetail(order.getPointPosId()));
+
+        InvoiceModel invoice = order.getInvoice();
+        InvoiceData invoiceData=new InvoiceData();
+        invoiceData.setApplied(invoice.getApplied());
+        if (invoice.getApplied()){
+            invoiceData.setAmount(invoice.getAmount());
+            invoiceData.setTitle(invoice.getTitle());
+            invoiceData.setType(dictAdapter.getDictValueName(invoice.getTypeId()));
+        }
+        data.setInvoice(invoiceData);
+
+        List<SellerRemarkModel> sellerRemarks = order.getSellerRemarks();
+        if (CollectionUtils.isNotEmpty(sellerRemarks)){
+            List<SellerRemarkData> remarkDataList = sellerRemarks.stream().map(r -> {
+                SellerRemarkData sellerRemarkData = new SellerRemarkData();
+                sellerRemarkData.setDate(r.getDate());
+                sellerRemarkData.setRemark(r.getRemark());
+                sellerRemarkData.setUser(accountAdapter.getUserInfo(r.getUserId()).get("name"));
+                return sellerRemarkData;
+            }).collect(Collectors.toList());
+            data.setSellerRemarks(remarkDataList);
+        }
+
+
+        List<OrderEntryModel> entries = order.getEntries();
+        if (CollectionUtils.isNotEmpty(entries)){
+            List<OrderEntryData> entryDataList = entries.stream().map(e -> {
+                OrderEntryData orderEntryData = new OrderEntryData();
+                orderEntryData.setSkuId(e.getSkuId());
+                SkuData skuData = productAdapter.getSkuById(e.getSkuId());
+                orderEntryData.setName(skuData.getName());
+                orderEntryData.setCode(skuData.getCode());
+                HashMap<String, String> meta = new HashMap<>();
+                for (SkuMetaData skuMetaData : skuData.getMeta()) {
+                    meta.put(skuMetaData.getSpecId(),skuMetaData.getMeta());
+                }
+                orderEntryData.setMeta(meta);
+
+                orderEntryData.setQuantity(e.getQuantity());
+                orderEntryData.setShippedQuantity(e.getShippedQuantity());
+                orderEntryData.setBasePrice(e.getBasePrice());
+                orderEntryData.setDiscount(e.getDiscount());
+                orderEntryData.setTotalPrice(e.getTotalPrice());
+                orderEntryData.setSellPrice(e.getBasePrice()-e.getDiscount());
+                return orderEntryData;
+            }).collect(Collectors.toList());
+            data.setEntries(entryDataList);
+        }
+
+        List<PaymentModel> payments = order.getPayments();
+        if (CollectionUtils.isNotEmpty(payments)){
+            List<PaymentData> paymentDataList = payments.stream().map(p -> {
+                PaymentData paymentData = new PaymentData();
+                paymentData.setAmount(p.getAmount());
+                paymentData.setType(dictAdapter.getDictValueName(p.getTypeId()));
+                return paymentData;
+            }).collect(Collectors.toList());
+            data.setPayments(paymentDataList);
+        }
+
+        List<ConsignmentModel> consignments = order.getConsignments();
+        if (CollectionUtils.isNotEmpty(consignments)){
+            List<ConsignmentData> consignmentDataList = consignments.stream().map(c -> {
+                ConsignmentData consignmentData = new ConsignmentData();
+                consignmentData.setCode(c.getCode());
+                consignmentData.setCarrier(dictAdapter.getDictValueName(c.getCarrierId()));
+                consignmentData.setStatus(dictAdapter.getDictValueName(c.getStatusId()));
+                consignmentData.setExpressNum(c.getExpressNum());
+                return consignmentData;
+            }).collect(Collectors.toList());
+            data.setConsignments(consignmentDataList);
+        }
+
+
+        return ResponseEntity.ok(data);
+    }
+
+    @PostMapping("/addRemark")
+    public ResponseEntity addRemark(@RequestBody AddRemarkData data){
+        if (data.getOrderId() ==null ||StringUtils.isEmpty(data.getRemark())){
+            return ResponseEntity.badRequest().body("参数不完整");
+        }
+        SellerRemarkModel model=new SellerRemarkModel();
+        model.setUserId(1L);
+        model.setDate(new Date());
+        model.setVersion(1);
+        model.setRemark(data.getRemark());
+        model.setOrderId(data.getOrderId());
+        model.setId(idService.genId());
+        remarkService.insert(model);
+
+        SellerRemarkData remarkData=new SellerRemarkData();
+        remarkData.setUser(accountAdapter.getUserInfo(model.getUserId()).get("name"));
+        remarkData.setRemark(model.getRemark());
+        remarkData.setDate(model.getDate());
+        return ResponseEntity.ok(remarkData);
+    }
+
+    private Map<String, Object> buildParameters(OrderListQuery orderListQuery) {
+        if (orderListQuery == null) {
+            return Collections.emptyMap();
+        }
+        Map<String, Object> parameters = new HashMap<>(18);
+        parameters.put("ecsOrderId", orderListQuery.getEcsOrderId());
+        parameters.put("code", orderListQuery.getCode());
+        parameters.put("consignmentCode", orderListQuery.getConsignmentCode());
+        parameters.put("storeId", orderListQuery.getStoreId());
+        parameters.put("customerId", orderListQuery.getCustomerId());
+        parameters.put("receiver", orderListQuery.getReceiver());
+        parameters.put("receiverPhone", orderListQuery.getReceiverPhone());
+        parameters.put("posId", orderListQuery.getPosId());
+        parameters.put("totalPriceMin", orderListQuery.getTotalPriceMin());
+        parameters.put("totalPriceMax", orderListQuery.getTotalPriceMax());
+        parameters.put("startDate", orderListQuery.getStartDate());
+        parameters.put("endDate", orderListQuery.getEndDate());
+        parameters.put("paymentStartDate", orderListQuery.getPaymentStartDate());
+        parameters.put("paymentEndDate", orderListQuery.getPaymentEndDate());
+        parameters.put("statusId", orderListQuery.getStatusId());
+        parameters.put("orderTypeId", orderListQuery.getOrderTypeId());
+        return parameters;
+    }
+
 }

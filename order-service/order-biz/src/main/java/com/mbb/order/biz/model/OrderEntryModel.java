@@ -17,4 +17,5 @@ public class OrderEntryModel extends BaseModel {
     private Double basePrice;
     private Double discount;
     private Long orderId;
+    private Integer entryNum;
 }

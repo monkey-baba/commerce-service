@@ -19,6 +19,9 @@
       <column name="status_id" type="BIGINT" remarks="门店状态"/>
     </createTable>
     <addPrimaryKey tableName="pointofservice" columnNames="id"/>
+    <createIndex tableName="pointofservice" indexName="code_idx" unique="true">
+      <column name="code"/>
+    </createIndex>
   </changeSet>
 
   <changeSet id="2" author="ZQian">
@@ -31,6 +34,9 @@
       <column name="pos_id" type="BIGINT" remarks="大仓ID"/>
     </createTable>
     <addPrimaryKey tableName="warehouse" columnNames="id"/>
+    <createIndex tableName="warehouse" indexName="code_idx" unique="true">
+      <column name="code"/>
+    </createIndex>
   </changeSet>
 
   <changeSet id="3" author="ZQian">

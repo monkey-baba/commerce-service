@@ -10,7 +10,7 @@ import com.mbb.stock.biz.dto.StoreListQuery;
 import com.mbb.stock.biz.model.PointOfServiceModel;
 import com.mbb.stock.biz.service.ReservoirAreaService;
 import com.mbb.stock.common.dto.StoreInfoDto;
-import com.mbb.stock.rest.dto.StoreDetailData;
+import com.mbb.stock.common.dto.StoreDetailData;
 import com.mbb.stock.rest.dto.StoreUpdateData;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -33,19 +33,19 @@ public class ReservoirAreaController extends BaseController{
 
 
     @GetMapping("/classify")
-    public ResponseEntity storeClassification() {
-        List<DictValueData> dictValueDataList = posServiceAdapter.getPosClassify();
+    public ResponseEntity reservoirAreaClassification() {
+        List<DictValueData> dictValueDataList = posServiceAdapter.getDcClassify();
         return ResponseEntity.ok(dictValueDataList);
     }
 
     @GetMapping("/status")
-    public ResponseEntity storeStatus() {
+    public ResponseEntity reservoirAreaStatus() {
         List<DictValueData> dictValueDataList = posServiceAdapter.getPosStatus();
         return ResponseEntity.ok(dictValueDataList);
     }
 
     @PostMapping("/info")
-    public ResponseEntity getStores(@RequestBody StoreListQuery storeListQuery) {
+    public ResponseEntity getReservoirAreas(@RequestBody StoreListQuery storeListQuery) {
         PointOfServiceModel reservoirAreaModel = new PointOfServiceModel();
         reservoirAreaModel.setName(storeListQuery.getName());
         reservoirAreaModel.setCode(storeListQuery.getCode());
@@ -71,7 +71,7 @@ public class ReservoirAreaController extends BaseController{
     }
 
     @PostMapping("/add")
-    public ResponseEntity addStock(@RequestBody StoreInfoDto stockInfoDtoList) {
+    public ResponseEntity addReservoirArea(@RequestBody StoreInfoDto stockInfoDtoList) {
         AddressData addressData=new AddressData();
         addressData.setAddress(stockInfoDtoList.getPaddress());
         addressData.setDetail(stockInfoDtoList.getDetailaddress());
@@ -102,12 +102,8 @@ public class ReservoirAreaController extends BaseController{
             //大仓联系方式
             storeInfoResp.setContact(store.getContact());
             storeInfoResp.setStatus(status);
-            List<DictValueData> dictValueDataList = posServiceAdapter.getPosStatus();
-            for(DictValueData dictValueData:dictValueDataList){
-                if(status.equals(dictValueData.getId())){
-                    storeInfoResp.setPstatus(dictValueData.getName());
-                }
-            }
+            String name =posServiceAdapter.getDictValueName(status);
+            storeInfoResp.setPstatus(name);
             //大仓负责人
             storeInfoResp.setOwner(String.valueOf(store.getOwner() == null ? "" : store.getOwner()));
             return storeInfoResp;
@@ -116,7 +112,7 @@ public class ReservoirAreaController extends BaseController{
     }
 
     @PostMapping("/update")
-    public ResponseEntity updateUser(@RequestBody StoreUpdateData data)  {
+    public ResponseEntity updateReservoirArea(@RequestBody StoreUpdateData data)  {
         AddressData addressData=new AddressData();
         addressData.setAddress(data.getPaddress());
         addressData.setDetail(data.getDetailaddress());
@@ -133,7 +129,7 @@ public class ReservoirAreaController extends BaseController{
     }
 
     @GetMapping("/detail")
-    public ResponseEntity childRole(@RequestParam Long id) {
+    public ResponseEntity detailReservoirArea(@RequestParam Long id) {
         PointOfServiceModel store=  reservoirAreaService.findById(id);
         StoreDetailData storeDetailData=new StoreDetailData();
         storeDetailData.setCode(store.getCode());

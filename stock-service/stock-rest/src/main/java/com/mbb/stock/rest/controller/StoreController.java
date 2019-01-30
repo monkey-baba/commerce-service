@@ -1,6 +1,5 @@
 package com.mbb.stock.rest.controller;
 
-import com.alibaba.fastjson.JSON;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.mbb.basic.common.dto.AddressData;
@@ -8,7 +7,7 @@ import com.mbb.basic.common.dto.DictValueData;
 import com.mbb.stock.biz.service.StoreService;
 
 import com.mbb.stock.common.dto.StoreInfoDto;
-import com.mbb.stock.rest.dto.StoreDetailData;
+import com.mbb.stock.common.dto.StoreDetailData;
 import com.mbb.stock.rest.dto.StoreUpdateData;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -78,7 +77,7 @@ public class StoreController extends BaseController{
     }
 
     @PostMapping("/add")
-    public ResponseEntity addStock(@RequestBody StoreInfoDto stockInfoDtoList) {
+    public ResponseEntity addStore(@RequestBody StoreInfoDto stockInfoDtoList) {
         AddressData addressData=new AddressData();
         addressData.setAddress(stockInfoDtoList.getPaddress());
         addressData.setDetail(stockInfoDtoList.getDetailaddress());
@@ -91,39 +90,39 @@ public class StoreController extends BaseController{
     }
 
     private List<StoreInfoDto> dealResult(PageInfo<PointOfServiceModel> stores) {
-        List<StoreInfoDto> storeInfoRespList = stores.getList().stream().map(store -> {
-            StoreInfoDto storeInfoResp = new StoreInfoDto();
-            //门店地址
-            Long address=store.getAddressId();
-            AddressData addressData  =  posAddressAdapter.getAddress(address);
-            storeInfoResp.setPaddress(addressData.getAddress());
-            storeInfoResp.setDetailaddress(addressData.getDetail());
-            storeInfoResp.setAddress(address);
-            //门店名字
-            storeInfoResp.setName(store.getName());
-            //门店状态
-            Long status=store.getStatusId();
-            //门店id
-            storeInfoResp.setId(store.getId());
-            storeInfoResp.setCode(store.getCode());
-            //门店联系方式
-            storeInfoResp.setContact(store.getContact());
-            storeInfoResp.setStatus(status);
-            List<DictValueData> dictValueDataList = posServiceAdapter.getPosStatus();
-            for(DictValueData dictValueData:dictValueDataList){
-                if(status.equals(dictValueData.getId())){
-                    storeInfoResp.setPstatus(dictValueData.getName());
-                }
-            }
-            //门店负责人
-            storeInfoResp.setOwner(String.valueOf(store.getOwner() == null ? "" : store.getOwner()));
-            return storeInfoResp;
-        }).collect(Collectors.toList());
+        List<StoreInfoDto> storeInfoRespList=null;
+        if(stores.getList().size()>0){
+                storeInfoRespList = stores.getList().stream().map(store -> {
+                StoreInfoDto storeInfoResp = new StoreInfoDto();
+                //门店地址
+                Long address=store.getAddressId();
+                AddressData addressData  =  posAddressAdapter.getAddress(address);
+                storeInfoResp.setPaddress(addressData.getAddress());
+                storeInfoResp.setDetailaddress(addressData.getDetail());
+                storeInfoResp.setAddress(address);
+                //门店名字
+                storeInfoResp.setName(store.getName());
+                //门店状态
+                Long status=store.getStatusId();
+                //门店id
+                storeInfoResp.setId(store.getId());
+                storeInfoResp.setCode(store.getCode());
+                //门店联系方式
+                storeInfoResp.setContact(store.getContact());
+                storeInfoResp.setStatus(status);
+                DictValueData dictValueData =posServiceAdapter.getDictValue(status);
+                storeInfoResp.setPstatus(dictValueData.getName());
+                //门店负责人
+                storeInfoResp.setOwner(String.valueOf(store.getOwner() == null ? "" : store.getOwner()));
+                return storeInfoResp;
+            }).collect(Collectors.toList());
+        };
         return storeInfoRespList;
     }
 
     @PostMapping("/update")
-    public ResponseEntity updateUser(@RequestBody StoreUpdateData data)  {
+    public ResponseEntity updateStore(@RequestBody StoreUpdateData data)  {
+
         AddressData addressData=new AddressData();
         addressData.setAddress(data.getPaddress());
         addressData.setDetail(data.getDetailaddress());
@@ -141,7 +140,7 @@ public class StoreController extends BaseController{
     }
 
     @GetMapping("/detail")
-    public ResponseEntity childRole(@RequestParam Long id) {
+    public ResponseEntity detailStore(@RequestParam Long id) {
         PointOfServiceModel store=  storeService.findById(id);
         StoreDetailData storeDetailData=new StoreDetailData();
         storeDetailData.setCode(store.getCode());
