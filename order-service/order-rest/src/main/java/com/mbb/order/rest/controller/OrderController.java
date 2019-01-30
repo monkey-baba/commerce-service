@@ -10,28 +10,37 @@ import com.mbb.order.adapter.AccountAdapter;
 import com.mbb.order.adapter.AddressAdapter;
 import com.mbb.order.adapter.CustomerAdapter;
 import com.mbb.order.adapter.DictAdapter;
-import com.mbb.order.adapter.ProductAdapter;
 import com.mbb.order.adapter.PosAdapter;
+import com.mbb.order.adapter.ProductAdapter;
+import com.mbb.order.biz.model.ConsignmentModel;
 import com.mbb.order.biz.model.InvoiceModel;
 import com.mbb.order.biz.model.OrderEntryModel;
 import com.mbb.order.biz.model.OrderModel;
 import com.mbb.order.biz.model.PaymentModel;
 import com.mbb.order.biz.model.SellerRemarkModel;
 import com.mbb.order.biz.service.OrderService;
+import com.mbb.order.biz.service.RemarkService;
+import com.mbb.order.rest.dto.AddRemarkData;
+import com.mbb.order.rest.dto.ConsignmentData;
 import com.mbb.order.rest.dto.CustomerQuery;
 import com.mbb.order.rest.dto.InvoiceData;
 import com.mbb.order.rest.dto.OrderCreateData;
 import com.mbb.order.rest.dto.OrderDetailData;
+import com.mbb.order.rest.dto.OrderEntryData;
 import com.mbb.order.rest.dto.OrderInfoResp;
 import com.mbb.order.rest.dto.OrderListQuery;
+import com.mbb.order.rest.dto.PaymentData;
 import com.mbb.order.rest.dto.SellerRemarkData;
 import com.mbb.order.rest.dto.SkuQuery;
 import com.mbb.order.rest.dto.StoreQuery;
 import com.mbb.product.common.dto.SkuData;
-import com.mbb.stock.common.dto.PosDetailData;
+import com.mbb.product.common.dto.SkuMetaData;
 import com.mbb.stock.common.dto.StoreInfoDto;
-
-import java.util.*;
+import java.util.Collections;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
@@ -74,6 +83,9 @@ public class OrderController extends BaseController {
 
     @Autowired
     private AccountAdapter accountAdapter;
+
+    @Autowired
+    private RemarkService remarkService;
 
     @GetMapping("/info")
     public ResponseEntity getOrders(OrderListQuery orderListQuery) {
@@ -318,9 +330,80 @@ public class OrderController extends BaseController {
             data.setSellerRemarks(remarkDataList);
         }
 
+
+        List<OrderEntryModel> entries = order.getEntries();
+        if (CollectionUtils.isNotEmpty(entries)){
+            List<OrderEntryData> entryDataList = entries.stream().map(e -> {
+                OrderEntryData orderEntryData = new OrderEntryData();
+                orderEntryData.setSkuId(e.getSkuId());
+                SkuData skuData = productAdapter.getSkuById(e.getSkuId());
+                orderEntryData.setName(skuData.getName());
+                orderEntryData.setCode(skuData.getCode());
+                HashMap<String, String> meta = new HashMap<>();
+                for (SkuMetaData skuMetaData : skuData.getMeta()) {
+                    meta.put(skuMetaData.getSpecId(),skuMetaData.getMeta());
+                }
+                orderEntryData.setMeta(meta);
+
+                orderEntryData.setQuantity(e.getQuantity());
+                orderEntryData.setShippedQuantity(e.getShippedQuantity());
+                orderEntryData.setBasePrice(e.getBasePrice());
+                orderEntryData.setDiscount(e.getDiscount());
+                orderEntryData.setTotalPrice(e.getTotalPrice());
+                orderEntryData.setSellPrice(e.getBasePrice()-e.getDiscount());
+                return orderEntryData;
+            }).collect(Collectors.toList());
+            data.setEntries(entryDataList);
+        }
+
+        List<PaymentModel> payments = order.getPayments();
+        if (CollectionUtils.isNotEmpty(payments)){
+            List<PaymentData> paymentDataList = payments.stream().map(p -> {
+                PaymentData paymentData = new PaymentData();
+                paymentData.setAmount(p.getAmount());
+                paymentData.setType(dictAdapter.getDictValueName(p.getTypeId()));
+                return paymentData;
+            }).collect(Collectors.toList());
+            data.setPayments(paymentDataList);
+        }
+
+        List<ConsignmentModel> consignments = order.getConsignments();
+        if (CollectionUtils.isNotEmpty(consignments)){
+            List<ConsignmentData> consignmentDataList = consignments.stream().map(c -> {
+                ConsignmentData consignmentData = new ConsignmentData();
+                consignmentData.setCode(c.getCode());
+                consignmentData.setCarrier(dictAdapter.getDictValueName(c.getCarrierId()));
+                consignmentData.setStatus(dictAdapter.getDictValueName(c.getStatusId()));
+                consignmentData.setExpressNum(c.getExpressNum());
+                return consignmentData;
+            }).collect(Collectors.toList());
+            data.setConsignments(consignmentDataList);
+        }
+
+
         return ResponseEntity.ok(data);
     }
 
+    @PostMapping("/addRemark")
+    public ResponseEntity addRemark(@RequestBody AddRemarkData data){
+        if (data.getOrderId() ==null ||StringUtils.isEmpty(data.getRemark())){
+            return ResponseEntity.badRequest().body("参数不完整");
+        }
+        SellerRemarkModel model=new SellerRemarkModel();
+        model.setUserId(1L);
+        model.setDate(new Date());
+        model.setVersion(1);
+        model.setRemark(data.getRemark());
+        model.setOrderId(data.getOrderId());
+        model.setId(idService.genId());
+        remarkService.insert(model);
+
+        SellerRemarkData remarkData=new SellerRemarkData();
+        remarkData.setUser(accountAdapter.getUserInfo(model.getUserId()).get("name"));
+        remarkData.setRemark(model.getRemark());
+        remarkData.setDate(model.getDate());
+        return ResponseEntity.ok(remarkData);
+    }
 
     private Map<String, Object> buildParameters(OrderListQuery orderListQuery) {
         if (orderListQuery == null) {

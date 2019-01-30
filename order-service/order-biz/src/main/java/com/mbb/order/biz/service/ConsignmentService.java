@@ -22,4 +22,6 @@ public interface ConsignmentService {
     List<ConsignmentModel> getConsignments(Map<String, Object> parameters);
 
     List<ConsignmentModel> getConsignmentsByOrderId(Long id);
+
+    ConsignmentModel getConsignmentById(Long id);
 }

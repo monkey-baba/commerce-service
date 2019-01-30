@@ -206,7 +206,7 @@
       <column name="id">22</column>
       <column name="version">1</column>
       <column name="code">DC_CLASSIFY</column>
-      <column name="name">客户状态</column>
+      <column name="name">大仓分类</column>
       <column name="editable">0</column>
     </insert>
 

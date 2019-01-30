@@ -107,6 +107,9 @@
       <column name="modify_date" type="DATETIME" remarks="修改时间"/>
     </createTable>
     <addPrimaryKey tableName="router_rule" columnNames="id" />
+    <createIndex tableName="router_rule" indexName="code_idx" unique="true">
+      <column name="code"/>
+    </createIndex>
   </changeSet>
 
 
@@ -123,6 +126,9 @@
       <column name="pos_id" type="BIGINT" remarks="发货仓"/>
     </createTable>
     <addPrimaryKey tableName="consignment" columnNames="id" />
+    <createIndex tableName="consignment" indexName="code_idx" unique="true">
+      <column name="code"/>
+    </createIndex>
   </changeSet>
 
 

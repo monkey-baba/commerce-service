@@ -1,7 +1,10 @@
 package com.mbb.product.biz.model;
 
+import com.mbb.common.handler.ListTypeHandler;
 import com.mbb.common.handler.MapTypeHandler;
 import com.mbb.common.model.BaseModel;
+
+import java.util.List;
 import java.util.Map;
 import javax.persistence.Table;
 import lombok.Data;
@@ -19,8 +22,8 @@ public class SkuModel extends BaseModel {
     /**
      * 规格对应的值
      */
-    @ColumnType(typeHandler = MapTypeHandler.class)
-    private Map<String,String> meta;
+    @ColumnType(typeHandler = ListTypeHandler.class)
+    private List<Map<Long,Long>> meta;
 
 
 }
