@@ -33,13 +33,13 @@ public class ReservoirAreaController extends BaseController{
 
 
     @GetMapping("/classify")
-    public ResponseEntity storeClassification() {
-        List<DictValueData> dictValueDataList = posServiceAdapter.getPosClassify();
+    public ResponseEntity reservoirAreaClassification() {
+        List<DictValueData> dictValueDataList = posServiceAdapter.getDcClassify();
         return ResponseEntity.ok(dictValueDataList);
     }
 
     @GetMapping("/status")
-    public ResponseEntity storeStatus() {
+    public ResponseEntity reservoirAreaStatus() {
         List<DictValueData> dictValueDataList = posServiceAdapter.getPosStatus();
         return ResponseEntity.ok(dictValueDataList);
     }
@@ -102,12 +102,8 @@ public class ReservoirAreaController extends BaseController{
             //大仓联系方式
             storeInfoResp.setContact(store.getContact());
             storeInfoResp.setStatus(status);
-            List<DictValueData> dictValueDataList = posServiceAdapter.getPosStatus();
-            for(DictValueData dictValueData:dictValueDataList){
-                if(status.equals(dictValueData.getId())){
-                    storeInfoResp.setPstatus(dictValueData.getName());
-                }
-            }
+            String name =posServiceAdapter.getDictValueName(status);
+            storeInfoResp.setPstatus(name);
             //大仓负责人
             storeInfoResp.setOwner(String.valueOf(store.getOwner() == null ? "" : store.getOwner()));
             return storeInfoResp;
