@@ -118,10 +118,6 @@ public class ConsignmentController extends BaseController {
     }
 
     private String getName(Long id) {
-        DictValueData dictValue = dictAdapter.getDictValue(id);
-        if (dictValue != null) {
-            return dictValue.getName();
-        }
-        return StringUtils.EMPTY;
+        return dictAdapter.getDictValueName(id);
     }
 }

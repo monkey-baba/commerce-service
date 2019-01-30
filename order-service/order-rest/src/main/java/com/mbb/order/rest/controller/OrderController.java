@@ -10,7 +10,7 @@ import com.mbb.order.adapter.AddressAdapter;
 import com.mbb.order.adapter.CustomerAdapter;
 import com.mbb.order.adapter.DictAdapter;
 import com.mbb.order.adapter.ProductAdapter;
-import com.mbb.order.adapter.StoreAdapter;
+import com.mbb.order.adapter.PosAdapter;
 import com.mbb.order.biz.model.InvoiceModel;
 import com.mbb.order.biz.model.OrderEntryModel;
 import com.mbb.order.biz.model.OrderModel;
@@ -25,6 +25,7 @@ import com.mbb.order.rest.dto.OrderListQuery;
 import com.mbb.order.rest.dto.SkuQuery;
 import com.mbb.order.rest.dto.StoreQuery;
 import com.mbb.product.common.dto.SkuData;
+import com.mbb.stock.common.dto.PosDetailData;
 import com.mbb.stock.common.dto.StoreInfoDto;
 import java.util.Date;
 import java.util.HashMap;
@@ -68,7 +69,7 @@ public class OrderController extends BaseController {
     @Autowired
     private ProductAdapter productAdapter;
     @Autowired
-    private StoreAdapter storeAdapter;
+    private PosAdapter posAdapter;
 
     @GetMapping("/info")
     public ResponseEntity getOrders(OrderListQuery orderListQuery) {
@@ -221,8 +222,8 @@ public class OrderController extends BaseController {
 
     @GetMapping("/pos/list")
     public ResponseEntity getPosList(StoreQuery storeQuery) {
-        PageInfo<StoreInfoDto> customerList = storeAdapter
-                .getCustomers(storeQuery.getCode(), storeQuery.getName(), storeQuery.getPageNum(),
+        PageInfo<StoreInfoDto> customerList = posAdapter
+                .getStores(storeQuery.getCode(), storeQuery.getName(), storeQuery.getPageNum(),
                         storeQuery.getPageSize());
         return ResponseEntity.ok(customerList);
     }
@@ -253,7 +254,7 @@ public class OrderController extends BaseController {
         // TODO: 2019/1/25
         Long posId = orderModel.getPosId();
         if (posId != null) {
-            orderInfoResp.setPosName(storeAdapter.getStoreNameById(posId));
+            orderInfoResp.setPosName(posAdapter.getStoreNameById(posId));
         }
         //订单类型
         Long orderTypeId = orderModel.getOrderTypeId();
@@ -295,6 +296,18 @@ public class OrderController extends BaseController {
         OrderDetailData data = new OrderDetailData();
         BeanCopier.create(OrderModel.class, OrderDetailData.class, false)
                 .copy(order, data, null);
+        data.setStatus(dictAdapter.getDictValueName(order.getStatusId()));
+        data.setOrderType(dictAdapter.getDictValueName(order.getOrderTypeId()));
+        data.setDeliveryType(dictAdapter.getDictValueName(order.getDeliveryTypeId()));
+        data.setCustomer(customerAdapter.getCustomerName(order.getCustomerId()));
+        data.setPlatform(dictAdapter.getDictValueName(order.getPlatformId()));
+        data.setStore(dictAdapter.getDictValueName(order.getStoreId()));
+        data.setPos(posAdapter.getStoreNameById(order.getPosId()));
+        data.setOrderSource(dictAdapter.getDictValueName(order.getOrderSourceId()));
+        data.setChannel(dictAdapter.getDictValueName(order.getChannelId()));
+
+        data.setAddress(addressAdapter.getAddress(order.getAddressId()));
+        data.setPointPos(posAdapter.getPosDetail(order.getPointPosId()));
 
         return ResponseEntity.ok(data);
     }

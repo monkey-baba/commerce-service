@@ -133,6 +133,15 @@ public class CustomerController extends BaseController {
         return ResponseEntity.ok(result);
     }
 
+    @GetMapping("/data")
+    public ResponseEntity getCustomerData(@RequestParam("id") Long id) {
+        CustomerModel customerModel = customerService.findById(id);
+        CustomerData data=new CustomerData();
+        data.setCode(customerModel.getCode());
+        data.setName(customerModel.getName());
+        return ResponseEntity.ok(data);
+    }
+
     private void convertCustomer(CustomerModel customerModel, CustomerInfoResp customerInfoResp) {
         //主键
         customerInfoResp.setId(customerModel.getId());

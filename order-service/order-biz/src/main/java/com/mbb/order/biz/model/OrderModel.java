@@ -35,6 +35,7 @@ public class OrderModel extends BaseModel {
     private String remark;
     private Long deliveryTypeId;
     private Long carrierId;
+    private Long pointPosId;
 
 
     @Transient
