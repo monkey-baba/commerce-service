@@ -22,12 +22,14 @@ import com.mbb.order.rest.dto.CustomerQuery;
 import com.mbb.order.rest.dto.InvoiceData;
 import com.mbb.order.rest.dto.OrderCreateData;
 import com.mbb.order.rest.dto.OrderDetailData;
+import com.mbb.order.rest.dto.OrderEntryData;
 import com.mbb.order.rest.dto.OrderInfoResp;
 import com.mbb.order.rest.dto.OrderListQuery;
 import com.mbb.order.rest.dto.SellerRemarkData;
 import com.mbb.order.rest.dto.SkuQuery;
 import com.mbb.order.rest.dto.StoreQuery;
 import com.mbb.product.common.dto.SkuData;
+import com.mbb.product.common.dto.SkuMetaData;
 import com.mbb.stock.common.dto.PosDetailData;
 import com.mbb.stock.common.dto.StoreInfoDto;
 
@@ -317,6 +319,34 @@ public class OrderController extends BaseController {
             }).collect(Collectors.toList());
             data.setSellerRemarks(remarkDataList);
         }
+
+
+        List<OrderEntryModel> entries = order.getEntries();
+        if (CollectionUtils.isNotEmpty(entries)){
+            List<OrderEntryData> entryDataList = entries.stream().map(e -> {
+                OrderEntryData orderEntryData = new OrderEntryData();
+                orderEntryData.setSkuId(e.getSkuId());
+                SkuData skuData = productAdapter.getSkuById(e.getSkuId());
+                orderEntryData.setName(skuData.getName());
+                orderEntryData.setCode(skuData.getCode());
+                HashMap<String, String> meta = new HashMap<>();
+                for (SkuMetaData skuMetaData : skuData.getMeta()) {
+                    meta.put(skuMetaData.getSpecId(),skuMetaData.getMeta());
+                }
+                orderEntryData.setMeta(meta);
+
+                orderEntryData.setQuantity(e.getQuantity());
+                orderEntryData.setShippedQuantity(e.getShippedQuantity());
+                orderEntryData.setBasePrice(e.getBasePrice());
+                orderEntryData.setDiscount(e.getDiscount());
+                orderEntryData.setTotalPrice(e.getTotalPrice());
+                orderEntryData.setSellPrice(e.getBasePrice()-e.getDiscount());
+                return orderEntryData;
+            }).collect(Collectors.toList());
+            data.setEntries(entryDataList);
+        }
+
+
 
         return ResponseEntity.ok(data);
     }

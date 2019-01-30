@@ -33,5 +33,6 @@ public interface ProductApi {
     PageInfo<SkuData> getSkuPage(@RequestParam("code") String code, @RequestParam("name") String name,
             @RequestParam("pageNum") Integer pageNum,@RequestParam("pageSize") Integer pageSize);
 
-
+    @GetMapping("/api/v1/sku/{skuId}")
+    SkuData getSkuById(@PathVariable("skuId") Long id);
 }

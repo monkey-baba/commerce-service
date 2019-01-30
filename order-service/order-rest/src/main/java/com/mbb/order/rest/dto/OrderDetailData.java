@@ -36,4 +36,6 @@ public class OrderDetailData {
     private InvoiceData invoice;
 
     private List<SellerRemarkData> sellerRemarks;
+
+    private List<OrderEntryData> entries;
 }

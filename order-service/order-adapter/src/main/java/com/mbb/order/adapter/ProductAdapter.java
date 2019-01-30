@@ -18,4 +18,9 @@ public class ProductAdapter {
     }
 
 
+
+    public SkuData getSkuById(Long id) {
+        return productApi.getSkuById(id);
+    }
+
 }
