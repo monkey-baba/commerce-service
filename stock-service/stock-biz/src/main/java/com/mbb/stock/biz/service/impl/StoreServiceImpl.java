@@ -2,13 +2,17 @@ package com.mbb.stock.biz.service.impl;
 
 import com.lxm.idgenerator.service.intf.IdService;
 import com.mbb.stock.biz.dao.StoreMapper;
+import com.mbb.stock.biz.dao.StorePosMapper;
 import com.mbb.stock.biz.dto.StoreListQuery;
 import com.mbb.stock.biz.model.PointOfServiceModel;
+import com.mbb.stock.biz.model.StorePosModel;
 import com.mbb.stock.biz.service.StoreService;
 import com.mbb.stock.common.dto.StoreInfoDto;
 import com.mbb.stock.common.enumation.PosType;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.ibatis.session.RowBounds;
@@ -29,6 +33,8 @@ public class StoreServiceImpl implements StoreService {
     @Autowired
     private IdService idService;
 
+    @Autowired
+    private StorePosMapper storePosMapper;
 
     @Override
     public List<PointOfServiceModel> getStores(PointOfServiceModel storeModel) {
@@ -63,6 +69,7 @@ public class StoreServiceImpl implements StoreService {
                 storeModel.setStatusId(status);
                 String owner = storeInfoDto.getOwner();
                 storeModel.setOwner(StringUtils.isBlank(owner) ? null : owner);
+                storeModel.setVersion(0);
                 storeMapper.insert(storeModel);
         }
     }
@@ -80,11 +87,32 @@ public class StoreServiceImpl implements StoreService {
         return storeMapper.selectByPrimaryKey(id);
     }
 
+
+
     @Override
     public List<PointOfServiceModel> getPos(PointOfServiceModel storeModel) {
         Example example = mapPosQueryInfo(storeModel);
         List<PointOfServiceModel> storeModels = storeMapper.selectByExample(example);
         return storeModels;
+    }
+
+    @Override
+    public void addStorePos(StorePosModel storePosModel) {
+        storePosModel.setId(idService.genId());
+        storePosModel.setVersion(0);
+        storePosMapper.insert(storePosModel);
+    }
+
+    @Override
+    public List<StorePosModel> getStorePos(Map<String, Object> parameters) {
+        Example example = mapStorePosQueryInfo(parameters);
+        List<StorePosModel> storeModels = storePosMapper.selectByExample(example);
+        return storeModels;
+    }
+
+    @Override
+    public void deleteStorePos(Long id) {
+        storePosMapper.deleteByPrimaryKey(id);
     }
 
     private List<StoreInfoDto> dealResult(List<PointOfServiceModel> storeModels) {
@@ -126,6 +154,7 @@ public class StoreServiceImpl implements StoreService {
         String owner = storeModel.getOwner();
         Example example = new Example(PointOfServiceModel.class);
         Example.Criteria criteria = example.createCriteria();
+
         if (StringUtils.isNotBlank(code)) {
             criteria.andLike("code", "%" + code + "%");
         }
@@ -147,15 +176,26 @@ public class StoreServiceImpl implements StoreService {
     }
 
     private Example mapPosQueryInfo(PointOfServiceModel storeModel) {
-        //门店名称
+        //供货点名称
         String name = storeModel.getName();
-        //门店编码
+        //供货点编码
         String code = storeModel.getCode();
         Example example = new Example(PointOfServiceModel.class);
         Example.Criteria criteria = example.createCriteria();
         if (StringUtils.isNotBlank(code)) {
             criteria.andLike("code", "%" + code + "%");
         }
+        if (StringUtils.isNotBlank(name)) {
+            criteria.andLike("name", "%" + name + "%");
+        }
+        return example;
+    }
+
+    private Example mapStorePosQueryInfo(Map<String, Object> parameters) {
+
+        Example example = new Example(PointOfServiceModel.class);
+        Example.Criteria criteria = example.createCriteria();
+
         return example;
     }
 }

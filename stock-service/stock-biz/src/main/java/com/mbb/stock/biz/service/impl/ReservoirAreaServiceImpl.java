@@ -54,6 +54,7 @@ public class ReservoirAreaServiceImpl implements ReservoirAreaService {
             reservoirAreaModel.setAddressId(address);
             Long status = storeInfoDto.getStatus();
             reservoirAreaModel.setStatusId(status);
+            reservoirAreaModel.setVersion(0);
             String owner = storeInfoDto.getOwner();
             reservoirAreaModel.setOwner(StringUtils.isBlank(owner) ? null : owner);
             storeMapper.insert(reservoirAreaModel);

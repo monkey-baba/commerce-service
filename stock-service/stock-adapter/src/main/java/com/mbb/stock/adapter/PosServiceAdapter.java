@@ -37,6 +37,16 @@ public class PosServiceAdapter {
         //远程调用
         return dictValueApi.getDictValue(id);
     }
+    public List<DictValueData> getBaseStore(){
+        //远程调用
+        return dictValueApi.getBaseStore();
+    }
+
+    public List<DictValueData> getPosType() {
+        //远程调用
+        return dictValueApi.getPosType();
+    }
+
     public String getDictValueName(Long id) {
         if (id == null){
             return Strings.EMPTY;
