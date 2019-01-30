@@ -47,5 +47,117 @@
    </sql>
   <!-- 留着备用 -->
 
+   <resultMap id="OrderResultMap" type="com.mbb.order.biz.model.OrderModel">
+      <result column="ecsOrderId" property="ecsOrderId"/>
+      <result column="storeId" property="storeId"/>
+      <result column="posId" property="posId"/>
+      <result column="orderTypeId" property="orderTypeId"/>
+      <result column="statusId" property="statusId"/>
+      <result column="totalPrice" property="totalPrice"/>
+      <result column="receiverPhone" property="receiverPhone"/>
+      <result column="addressId" property="addressId"/>
+      <result column="paymentDate" property="paymentDate"/>
+   </resultMap>
+
+   <select id="getOrders" resultMap="OrderResultMap">
+      <bind name="ecsOrderIdFlag" value="@org.apache.commons.lang.StringUtils@isNotEmpty(ecsOrderId)"/>
+      <bind name="codeFlag" value="@org.apache.commons.lang.StringUtils@isNotEmpty(code)"/>
+      <bind name="consignmentFlag" value="@org.apache.commons.lang.StringUtils@isNotEmpty(consignmentCode)"/>
+      <bind name="storeIdFlag" value="storeId != null"/>
+      <bind name="customerIdFlag" value="customerId != null"/>
+      <bind name="receiverFlag" value="@org.apache.commons.lang.StringUtils@isNotEmpty(receiver)"/>
+      <bind name="receiverPhoneFlag" value="@org.apache.commons.lang.StringUtils@isNotEmpty(receiverPhone)"/>
+      <bind name="posIdFlag" value="posId != null"/>
+      <bind name="totalPriceMinFlag" value="totalPriceMin != null"/>
+      <bind name="totalPriceMaxFlag" value="totalPriceMax != null"/>
+      <bind name="startDateFlag" value="startDate != null"/>
+      <bind name="endDateFlag" value="endDate != null"/>
+      <bind name="paymentStartDateFlag" value="paymentStartDate != null"/>
+      <bind name="paymentEndDateFlag" value="paymentEndDate != null"/>
+      <bind name="statusIdFlag" value="@org.apache.commons.collections4.CollectionUtils@isNotEmpty(statusId)"/>
+      <bind name="orderTypeIdFlag" value="@org.apache.commons.collections4.CollectionUtils@isNotEmpty(orderTypeId)"/>
+      select
+      <include refid="Order_Column_List"/>
+      from `order` as o
+      <if test="consignmentFlag">
+         join consignment as c on c.order_id = o.id
+      </if>
+      where 1=1
+      <if test="codeFlag">
+         <bind name="code" value="_parameter.code + '%'"/>
+         and o.code like #{code}
+      </if>
+
+      <if test="ecsOrderIdFlag">
+         <bind name="ecsOrderId" value="_parameter.ecsOrderId + '%'"/>
+         and o.ecs_order_id like #{ecsOrderId}
+      </if>
+
+      <if test="consignmentFlag">
+         <bind name="consignmentCode" value="_parameter.consignmentCode + '%'"/>
+         and c.code like #{consignmentCode}
+      </if>
+
+      <if test="storeIdFlag">
+         and o.store_id = #{storeId}
+      </if>
+
+      <if test="customerIdFlag">
+         and o.customer_id = #{customerId}
+      </if>
+
+      <if test="receiverFlag">
+         <bind name="receiver" value="_parameter.receiver + '%'"/>
+         and o.receiver like #{receiver}
+      </if>
+
+      <if test="receiverPhoneFlag">
+         <bind name="receiverPhone" value="_parameter.receiverPhone + '%'"/>
+         and o.receiver_phone like #{receiverPhone}
+      </if>
+
+      <if test="posIdFlag">
+         and c.pos_id = #{posId}
+      </if>
+
+      <if test="totalPriceMinFlag">
+         and o.total_price &gt;= #{totalPriceMin}
+      </if>
+
+      <if test="totalPriceMaxFlag">
+         and o.total_price &lt;= #{totalPriceMax}
+      </if>
+
+      <if test="startDateFlag">
+         and o.date &gt;= #{startDate}
+      </if>
+
+      <if test="endDateFlag">
+         and o.date &lt;= #{endDate}
+      </if>
+
+      <if test="paymentStartDateFlag">
+         and o.payment_date &gt;= #{paymentStartDate}
+      </if>
+
+      <if test="paymentEndDateFlag">
+         and o.payment_date &lt;= #{paymentEndDate}
+      </if>
+
+      <if test="statusIdFlag">
+         and o.status_id in
+         <foreach collection="statusId" index="index" item="item" open="(" separator="," close=")">
+            #{item}
+         </foreach>
+      </if>
+
+      <if test="orderTypeIdFlag">
+         and o.order_type_id in
+         <foreach collection="orderTypeId" index="index" item="item" open="(" separator="," close=")">
+            #{item}
+         </foreach>
+      </if>
+   </select>
+
 
 </mapper>

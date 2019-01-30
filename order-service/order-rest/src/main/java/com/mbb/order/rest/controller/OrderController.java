@@ -27,10 +27,8 @@ import com.mbb.order.rest.dto.StoreQuery;
 import com.mbb.product.common.dto.SkuData;
 import com.mbb.stock.common.dto.PosDetailData;
 import com.mbb.stock.common.dto.StoreInfoDto;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+
+import java.util.*;
 import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
@@ -73,27 +71,11 @@ public class OrderController extends BaseController {
 
     @GetMapping("/info")
     public ResponseEntity getOrders(OrderListQuery orderListQuery) {
-        OrderModel orderModel = new OrderModel();
-        orderModel.setEcsOrderId(orderListQuery.getEcsOrderId());
-        orderModel.setCode(orderListQuery.getCode());
-        orderModel.setStoreId(orderListQuery.getStoreId());
-        orderModel.setCustomerId(orderListQuery.getCustomerId());
-        orderModel.setReceiver(orderListQuery.getReceiver());
-        orderModel.setReceiverPhone(orderListQuery.getReceiverPhone());
-        orderModel.setPosId(orderListQuery.getPosId());
-        Map<String, Object> queryMap = new HashMap<>();
-        queryMap.put("startDate", orderListQuery.getStartDate());
-        queryMap.put("endDate", orderListQuery.getEndDate());
-        queryMap.put("paymentStartDate", orderListQuery.getPaymentStartDate());
-        queryMap.put("paymentEndDate", orderListQuery.getPaymentEndDate());
-        queryMap.put("totalPriceMin", orderListQuery.getTotalPriceMin());
-        queryMap.put("totalPriceMax", orderListQuery.getTotalPriceMax());
-        queryMap.put("statusId", orderListQuery.getStatusId());
-        queryMap.put("orderTypeId", orderListQuery.getOrderTypeId());
+        Map<String, Object> parameters = buildParameters(orderListQuery);
         //开启分页
         PageHelper.startPage(orderListQuery.getPageNum(), orderListQuery.getPageSize());
         //查询数据
-        List<OrderModel> orders = orderService.getOrders(orderModel, queryMap);
+        List<OrderModel> orders = orderService.getOrders(parameters);
         //获取页码等信息
         PageInfo<OrderModel> origin = PageInfo.of(orders);
         //从model转data
@@ -251,7 +233,6 @@ public class OrderController extends BaseController {
         //订单编号
         orderInfoResp.setCode(orderModel.getCode());
         //门店
-        // TODO: 2019/1/25
         Long posId = orderModel.getPosId();
         if (posId != null) {
             orderInfoResp.setPosName(posAdapter.getStoreNameById(posId));
@@ -312,5 +293,29 @@ public class OrderController extends BaseController {
         return ResponseEntity.ok(data);
     }
 
+
+    private Map<String, Object> buildParameters(OrderListQuery orderListQuery) {
+        if (orderListQuery == null) {
+            return Collections.emptyMap();
+        }
+        Map<String, Object> parameters = new HashMap<>(18);
+        parameters.put("ecsOrderId", orderListQuery.getEcsOrderId());
+        parameters.put("code", orderListQuery.getCode());
+        parameters.put("consignmentCode", orderListQuery.getConsignmentCode());
+        parameters.put("storeId", orderListQuery.getStoreId());
+        parameters.put("customerId", orderListQuery.getCustomerId());
+        parameters.put("receiver", orderListQuery.getReceiver());
+        parameters.put("receiverPhone", orderListQuery.getReceiverPhone());
+        parameters.put("posId", orderListQuery.getPosId());
+        parameters.put("totalPriceMin", orderListQuery.getTotalPriceMin());
+        parameters.put("totalPriceMax", orderListQuery.getTotalPriceMax());
+        parameters.put("startDate", orderListQuery.getStartDate());
+        parameters.put("endDate", orderListQuery.getEndDate());
+        parameters.put("paymentStartDate", orderListQuery.getPaymentStartDate());
+        parameters.put("paymentEndDate", orderListQuery.getPaymentEndDate());
+        parameters.put("statusId", orderListQuery.getStatusId());
+        parameters.put("orderTypeId", orderListQuery.getOrderTypeId());
+        return parameters;
+    }
 
 }
