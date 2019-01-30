@@ -98,6 +98,16 @@ public class SkuController extends BaseController {
         return ResponseEntity.ok(result);
     }
 
+    @GetMapping("/getById")
+    public ResponseEntity getById(@RequestParam("id") Long id) {
+        //查询数据
+        SkuModel skuModel = skuService.findSkuById(id);
+        //从model转data
+        SkuData result = dealResult(skuModel);
+
+        return ResponseEntity.ok(result);
+    }
+
     @GetMapping("/speclist")
     public ResponseEntity getSkuSpecList() {
         List<DictValueData> skuSpecList = productServiceAdapter.getSkuSpec();
