@@ -12,21 +12,6 @@ import java.util.List;
 
 @FeignClient(name = "product")
 public interface ProductApi {
-    /**
-     * 根据skuId查询sku信息
-     *
-     * @return result
-     */
-    @GetMapping("/api/v1/product/sku/{skuId}")
-    SkuData getSku(@PathVariable(name = "skuId") String skuId);
-
-    /**
-     * 根据skuId查询sku信息
-     *
-     * @return result
-     */
-    @GetMapping("/api/v1/product/sku/list")
-    List<SkuData> getSkus(@RequestParam("code") String skuId, @RequestParam("name") String skuName);
 
 
     @GetMapping("/api/v1/sku/page")
