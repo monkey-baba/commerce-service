@@ -80,6 +80,13 @@ public class StoreServiceImpl implements StoreService {
         return storeMapper.selectByPrimaryKey(id);
     }
 
+    @Override
+    public List<PointOfServiceModel> getPos(PointOfServiceModel storeModel) {
+        Example example = mapPosQueryInfo(storeModel);
+        List<PointOfServiceModel> storeModels = storeMapper.selectByExample(example);
+        return storeModels;
+    }
+
     private List<StoreInfoDto> dealResult(List<PointOfServiceModel> storeModels) {
         List<StoreInfoDto> storeInfoDtoList = new ArrayList<>();
         if (!CollectionUtils.isEmpty(storeModels)) {
@@ -136,6 +143,19 @@ public class StoreServiceImpl implements StoreService {
             criteria.andEqualTo("statusId", status);
         }
         criteria.andEqualTo("posType", PosType.STORE);
+        return example;
+    }
+
+    private Example mapPosQueryInfo(PointOfServiceModel storeModel) {
+        //门店名称
+        String name = storeModel.getName();
+        //门店编码
+        String code = storeModel.getCode();
+        Example example = new Example(PointOfServiceModel.class);
+        Example.Criteria criteria = example.createCriteria();
+        if (StringUtils.isNotBlank(code)) {
+            criteria.andLike("code", "%" + code + "%");
+        }
         return example;
     }
 }
