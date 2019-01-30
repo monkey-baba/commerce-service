@@ -61,6 +61,9 @@ public class ConsignmentController extends BaseController {
     @Autowired
     private AccountAdapter accountAdapter;
 
+    @Autowired
+    private PosAdapter posAdapter;
+
     @GetMapping("/search")
     public ResponseEntity search(ConsignmentListQuery consignmentListQuery) {
         Map<String, Object> parameters = buildParameters(consignmentListQuery);
@@ -133,7 +136,7 @@ public class ConsignmentController extends BaseController {
         }
         target.setCode(source.getCode());
         target.setConsignmentStatusName(dictAdapter.getDictValueName((source.getStatusId())));
-        target.setPosName(dictAdapter.getDictValueName((source.getPosId())));
+        target.setPosName(posAdapter.getStoreNameById((source.getPosId())));
         target.setExpressNum(source.getExpressNum());
         target.setDeliveryDate(source.getDate());
     }
@@ -168,7 +171,7 @@ public class ConsignmentController extends BaseController {
         target.setConsignmentCode(source.getCode());
         target.setConsignmentStatusName(dictAdapter.getDictValueName(source.getStatusId()));
         target.setPosId(source.getPosId());
-        target.setPosName(dictAdapter.getDictValueName(source.getPosId()));
+        target.setPosName(posAdapter.getStoreNameById(source.getPosId()));
         target.setCarrierName(dictAdapter.getDictValueName(source.getCarrierId()));
         target.setExpressNum(source.getExpressNum());
         target.setDeliveryDate(source.getDate());
