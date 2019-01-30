@@ -90,34 +90,33 @@ public class StoreController extends BaseController{
     }
 
     private List<StoreInfoDto> dealResult(PageInfo<PointOfServiceModel> stores) {
-        List<StoreInfoDto> storeInfoRespList = stores.getList().stream().map(store -> {
-            StoreInfoDto storeInfoResp = new StoreInfoDto();
-            //门店地址
-            Long address=store.getAddressId();
-            AddressData addressData  =  posAddressAdapter.getAddress(address);
-            storeInfoResp.setPaddress(addressData.getAddress());
-            storeInfoResp.setDetailaddress(addressData.getDetail());
-            storeInfoResp.setAddress(address);
-            //门店名字
-            storeInfoResp.setName(store.getName());
-            //门店状态
-            Long status=store.getStatusId();
-            //门店id
-            storeInfoResp.setId(store.getId());
-            storeInfoResp.setCode(store.getCode());
-            //门店联系方式
-            storeInfoResp.setContact(store.getContact());
-            storeInfoResp.setStatus(status);
-            List<DictValueData> dictValueDataList = posServiceAdapter.getPosStatus();
-            for(DictValueData dictValueData:dictValueDataList){
-                if(status.equals(dictValueData.getId())){
-                    storeInfoResp.setPstatus(dictValueData.getName());
-                }
-            }
-            //门店负责人
-            storeInfoResp.setOwner(String.valueOf(store.getOwner() == null ? "" : store.getOwner()));
-            return storeInfoResp;
-        }).collect(Collectors.toList());
+        List<StoreInfoDto> storeInfoRespList=null;
+        if(stores.getList().size()>0){
+                storeInfoRespList = stores.getList().stream().map(store -> {
+                StoreInfoDto storeInfoResp = new StoreInfoDto();
+                //门店地址
+                Long address=store.getAddressId();
+                AddressData addressData  =  posAddressAdapter.getAddress(address);
+                storeInfoResp.setPaddress(addressData.getAddress());
+                storeInfoResp.setDetailaddress(addressData.getDetail());
+                storeInfoResp.setAddress(address);
+                //门店名字
+                storeInfoResp.setName(store.getName());
+                //门店状态
+                Long status=store.getStatusId();
+                //门店id
+                storeInfoResp.setId(store.getId());
+                storeInfoResp.setCode(store.getCode());
+                //门店联系方式
+                storeInfoResp.setContact(store.getContact());
+                storeInfoResp.setStatus(status);
+                DictValueData dictValueData =posServiceAdapter.getDictValue(status);
+                storeInfoResp.setPstatus(dictValueData.getName());
+                //门店负责人
+                storeInfoResp.setOwner(String.valueOf(store.getOwner() == null ? "" : store.getOwner()));
+                return storeInfoResp;
+            }).collect(Collectors.toList());
+        };
         return storeInfoRespList;
     }
 
