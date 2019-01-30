@@ -38,4 +38,8 @@ public class OrderDetailData {
     private List<SellerRemarkData> sellerRemarks;
 
     private List<OrderEntryData> entries;
+
+    private List<PaymentData> payments;
+
+    private List<ConsignmentData> consignments;
 }
