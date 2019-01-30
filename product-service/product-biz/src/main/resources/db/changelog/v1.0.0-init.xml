@@ -18,6 +18,9 @@
       <column name="attribute" type="JSON" remarks="商品属性"/>
     </createTable>
     <addPrimaryKey columnNames="id" tableName="product"/>
+    <createIndex tableName="product" indexName="code_idx" unique="true">
+      <column name="code"/>
+    </createIndex>
   </changeSet>
 
   <changeSet id="2" author="ZQian" >
@@ -30,6 +33,9 @@
       <column name="meta" type="JSON" remarks="规格信息"/>
     </createTable>
     <addPrimaryKey tableName="sku" columnNames="id" />
+    <createIndex tableName="sku" indexName="code_idx" unique="true">
+      <column name="code"/>
+    </createIndex>
   </changeSet>
 
   <changeSet id="3" author="ZQian" >
@@ -80,6 +86,9 @@
       <column name="parent_id" type="BIGINT" remarks="父类别"/>
     </createTable>
     <addPrimaryKey tableName="category" columnNames="id" />
+    <createIndex tableName="category" indexName="code_idx" unique="true">
+      <column name="code"/>
+    </createIndex>
   </changeSet>
 
   <changeSet id="7" author="ZQian">
