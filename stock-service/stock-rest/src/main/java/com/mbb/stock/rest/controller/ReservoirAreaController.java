@@ -136,20 +136,13 @@ public class ReservoirAreaController extends BaseController{
         storeDetailData.setName(store.getName());
         //库区状态
         Long status=store.getStatusId();
-        List<DictValueData> dictValueDataList = posServiceAdapter.getPosStatus();
-        for(DictValueData dictValueData:dictValueDataList){
-            if(status.equals(dictValueData.getId())){
-                storeDetailData.setPstatus(dictValueData.getName());
-            }
-        }
+        String name =posServiceAdapter.getDictValueName(status);
+        storeDetailData.setPstatus(name);
         //大仓分类
         Long classifyId=store.getClassifyId();
+        String classify =posServiceAdapter.getDictValueName(classifyId);
+        storeDetailData.setClassifyId(classify);
         List<DictValueData> posClassifyDataList = posServiceAdapter.getPosClassify();
-        for(DictValueData dictValueData:posClassifyDataList){
-            if(classifyId.equals(dictValueData.getId())){
-                storeDetailData.setClassifyId(dictValueData.getName());
-            }
-        }
         storeDetailData.setOwner(store.getOwner());
         storeDetailData.setContact(store.getContact());
 
