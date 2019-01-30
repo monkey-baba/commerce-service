@@ -12,12 +12,14 @@ import com.mbb.product.common.dto.SkuData;
 import com.mbb.product.common.dto.SkuMetaData;
 import com.mbb.product.rest.data.SkuCreateData;
 import com.mbb.product.rest.data.SkuUpdateData;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+
+import java.util.*;
 import java.util.stream.Collectors;
 import javax.annotation.Resource;
+
+import com.mbb.product.rest.data.sku.SkuSaveData;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -118,6 +120,37 @@ public class SkuController extends BaseController {
         return ResponseEntity.ok(dealResult(skuModel));
     }
 
+
+    @PostMapping("/savesku/{productid}")
+    public ResponseEntity create(@PathVariable("productid") Long productId,@RequestBody List<SkuSaveData> dataList) {
+        if (productId != null) {
+            dataList.stream().forEach(
+                    data -> {
+                        if (StringUtils.isNotEmpty(data.getSkuId()) && StringUtils.isNotEmpty(data.getSkuName())) {
+                            if ( data.getMeta()!=null&& !data.getMeta().isEmpty()) {
+                                SkuModel skuModel = new SkuModel();
+                                skuModel.setCode(data.getSkuId());
+                                skuModel.setProductId(productId);
+                                skuModel.setName(data.getSkuName());
+                                List<Map<Long,Long>> metas = new ArrayList<>();
+                                data.getMeta().forEach(skuMetaData ->{
+                                        Map<Long,Long> map = new HashMap<>();
+                                        map.put(Long.valueOf(skuMetaData.getSpecId()),Long.valueOf(skuMetaData.getMetaId()));
+                                    metas.add(map);
+                                        }
+                                );
+                                skuModel.setMeta(metas);
+                                skuModel.setId(idService.genId());
+                                skuService.createSku(skuModel);
+                            }
+                        }
+
+                    } );
+        }
+            return ResponseEntity.ok("保存成功");
+        }
+
+
     private List<SkuData> dealResult(List<SkuModel> skus) {
         return skus.stream().map(this::dealResult).collect(Collectors.toList());
     }
@@ -134,18 +167,21 @@ public class SkuController extends BaseController {
         ArrayList<SkuMetaData> metas = new ArrayList<>();
         skuData.setMeta(metas);
         //Meta
-        Map<String, String> meta = skuModel.getMeta();
+        List<Map<Long, Long>> metaModels = skuModel.getMeta();
+
         //转化成long string 用来展示
-        if (meta != null && !meta.isEmpty()){
+        if (metaModels != null && !metaModels.isEmpty()){
+            metaModels.stream().forEach(meta->{
             meta.forEach((specId, metaId) -> {
                 SkuMetaData metaData = new SkuMetaData();
-                metaData.setSpecId(specId);
-                metaData.setMetaId(metaId);
+                metaData.setSpecId(String.valueOf(specId));
+                metaData.setMetaId(String.valueOf(metaId));
                 SkuMetaModel model = skuService.getSkuMetaById(Long.valueOf(metaId));
-                if (model!=null){
+                if (model != null) {
                     metaData.setMeta(model.getName());
                 }
                 metas.add(metaData);
+            });
             });
         }
 
