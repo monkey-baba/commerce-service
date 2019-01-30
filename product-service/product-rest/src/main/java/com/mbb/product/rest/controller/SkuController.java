@@ -18,6 +18,9 @@ import java.util.*;
 import java.util.stream.Collectors;
 import javax.annotation.Resource;
 
+import com.mbb.product.rest.data.sku.SkuBasicData;
+import com.mbb.product.rest.data.sku.SkuDetailData;
+import com.mbb.product.rest.data.sku.SkuMeataDetailData;
 import com.mbb.product.rest.data.sku.SkuSaveData;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -60,7 +63,48 @@ public class SkuController extends BaseController {
         return ResponseEntity.ok(result);
     }
 
+    @GetMapping("/list/{productid}")
+    public ResponseEntity getSkus(@PathVariable("productid") Long productId) {
+        SkuModel sku = new SkuModel();
+        sku.setProductId(productId);
+        //查询数据
+        List<SkuModel> skus = skuService.getSkus(sku);
+        //从model转data
+        List<SkuData> result = dealResult(skus);
+        List<SkuDetailData> list = new ArrayList<>();
+        result.forEach(s->{
+            s.getMeta().forEach(m->{
+                SkuDetailData skuDetailData=null;
+                for (SkuDetailData sd: list) {
+                    if (sd.getName().equals(m.getSpecId())){
+                        skuDetailData=sd;
+                        break;
+                    }
+                }
+                if (skuDetailData==null){
+                    skuDetailData=new SkuDetailData();
+                    skuDetailData.setName(m.getSpecId());
+                    list.add(skuDetailData);
+                }
+                List<SkuMeataDetailData> list2= skuDetailData.getValue();
+                if (list2==null){
+                    list2=new ArrayList();
+                    skuDetailData.setValue(list2);
+                }
 
+                        SkuMeataDetailData smd = new SkuMeataDetailData();
+                        smd.setSpecvalueid(Long.parseLong(m.getSpecId()));
+                        smd.setSpecParamName(m.getMeta());
+                        SkuBasicData skuBasicData = new SkuBasicData();
+                        skuBasicData.setSkuId(s.getCode());
+                        skuBasicData.setSkuName(s.getName());
+                        smd.setSpacVoc(skuBasicData);
+                list2.add(smd);
+                    }
+            );
+        });
+        return ResponseEntity.ok(list);
+    }
     /**
      * 分页获取SKU详情
      */
@@ -92,6 +136,16 @@ public class SkuController extends BaseController {
         sku.setCode(skuId);
         //查询数据
         SkuModel skuModel = skuService.findSkuByCode(skuId);
+        //从model转data
+        SkuData result = dealResult(skuModel);
+
+        return ResponseEntity.ok(result);
+    }
+
+    @GetMapping("/getById")
+    public ResponseEntity getById(@RequestParam("id") Long id) {
+        //查询数据
+        SkuModel skuModel = skuService.findSkuById(id);
         //从model转data
         SkuData result = dealResult(skuModel);
 
@@ -136,10 +190,10 @@ public class SkuController extends BaseController {
                                 skuModel.setCode(data.getSkuId());
                                 skuModel.setProductId(productId);
                                 skuModel.setName(data.getSkuName());
-                                List<Map<Long,Long>> metas = new ArrayList<>();
+                                List<Map<String,String>> metas = new ArrayList<>();
                                 data.getMeta().forEach(skuMetaData ->{
-                                        Map<Long,Long> map = new HashMap<>();
-                                        map.put(Long.valueOf(skuMetaData.getSpecId()),Long.valueOf(skuMetaData.getMetaId()));
+                                        Map<String,String> map = new HashMap<>();
+                                        map.put(skuMetaData.getSpecId(), skuMetaData.getMetaId());
                                     metas.add(map);
                                         }
                                 );
@@ -171,22 +225,20 @@ public class SkuController extends BaseController {
         ArrayList<SkuMetaData> metas = new ArrayList<>();
         skuData.setMeta(metas);
         //Meta
-        List<Map<Long, Long>> metaModels = skuModel.getMeta();
+        List<Map<String, String>> metaModels = skuModel.getMeta();
 
         //转化成long string 用来展示
         if (metaModels != null && !metaModels.isEmpty()){
-            metaModels.stream().forEach(meta->{
-            meta.forEach((specId, metaId) -> {
+            metaModels.forEach(meta-> meta.forEach((specId, metaId) -> {
                 SkuMetaData metaData = new SkuMetaData();
-                metaData.setSpecId(String.valueOf(specId));
-                metaData.setMetaId(String.valueOf(metaId));
+                metaData.setSpecId(specId);
+                metaData.setMetaId(metaId);
                 SkuMetaModel model = skuMetaService.getSkuMetaById(Long.valueOf(metaId));
                 if (model!=null){
                     metaData.setMeta(model.getName());
                 }
                 metas.add(metaData);
-            });
-            });
+            }));
         }
 
         return skuData;

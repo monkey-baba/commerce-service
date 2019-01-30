@@ -12,27 +12,12 @@ import java.util.List;
 
 @FeignClient(name = "product")
 public interface ProductApi {
-    /**
-     * 根据skuId查询sku信息
-     *
-     * @return result
-     */
-    @GetMapping("/api/v1/product/sku/{skuId}")
-    SkuData getSku(@PathVariable(name = "skuId") String skuId);
-
-    /**
-     * 根据skuId查询sku信息
-     *
-     * @return result
-     */
-    @GetMapping("/api/v1/product/sku/list")
-    List<SkuData> getSkus(@RequestParam("code") String skuId, @RequestParam("name") String skuName);
 
 
     @GetMapping("/api/v1/sku/page")
     PageInfo<SkuData> getSkuPage(@RequestParam("code") String code, @RequestParam("name") String name,
             @RequestParam("pageNum") Integer pageNum,@RequestParam("pageSize") Integer pageSize);
 
-    @GetMapping("/api/v1/sku/{skuId}")
-    SkuData getSkuById(@PathVariable("skuId") Long id);
+    @GetMapping("/api/v1/sku/getById")
+    SkuData getSkuById(@RequestParam("id") Long id);
 }
