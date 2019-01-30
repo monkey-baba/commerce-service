@@ -18,6 +18,9 @@ import java.util.*;
 import java.util.stream.Collectors;
 import javax.annotation.Resource;
 
+import com.mbb.product.rest.data.sku.SkuBasicData;
+import com.mbb.product.rest.data.sku.SkuDetailData;
+import com.mbb.product.rest.data.sku.SkuMeataDetailData;
 import com.mbb.product.rest.data.sku.SkuSaveData;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -68,8 +71,39 @@ public class SkuController extends BaseController {
         List<SkuModel> skus = skuService.getSkus(sku);
         //从model转data
         List<SkuData> result = dealResult(skus);
+        List<SkuDetailData> list = new ArrayList<>();
+        result.forEach(s->{
+            s.getMeta().forEach(m->{
+                SkuDetailData skuDetailData=null;
+                for (SkuDetailData sd: list) {
+                    if (sd.getName().equals(m.getSpecId())){
+                        skuDetailData=sd;
+                        break;
+                    }
+                }
+                if (skuDetailData==null){
+                    skuDetailData=new SkuDetailData();
+                    skuDetailData.setName(m.getSpecId());
+                    list.add(skuDetailData);
+                }
+                List<SkuMeataDetailData> list2= skuDetailData.getValue();
+                if (list2==null){
+                    list2=new ArrayList();
+                    skuDetailData.setValue(list2);
+                }
 
-        return ResponseEntity.ok(result);
+                        SkuMeataDetailData smd = new SkuMeataDetailData();
+                        smd.setSpecvalueid(Long.parseLong(m.getSpecId()));
+                        smd.setSpecParamName(m.getMeta());
+                        SkuBasicData skuBasicData = new SkuBasicData();
+                        skuBasicData.setSkuId(s.getCode());
+                        skuBasicData.setSkuName(s.getName());
+                        smd.setSpacVoc(skuBasicData);
+                list2.add(smd);
+                    }
+            );
+        });
+        return ResponseEntity.ok(list);
     }
     /**
      * 分页获取SKU详情
