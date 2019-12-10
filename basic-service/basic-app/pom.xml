@@ -25,13 +25,13 @@
         <enabled>true</enabled>
       </releases>
     </repository>
-    <repository>
-      <id>snapshot</id>
-      <url>https://oss.sonatype.org/content/repositories/snapshots/</url>
-      <snapshots>
-        <enabled>true</enabled>
-      </snapshots>
-    </repository>
+<!--    <repository>-->
+<!--      <id>snapshot</id>-->
+<!--      <url>https://oss.sonatype.org/content/repositories/snapshots/</url>-->
+<!--      <snapshots>-->
+<!--        <enabled>true</enabled>-->
+<!--      </snapshots>-->
+<!--    </repository>-->
   </repositories>
 
   <pluginRepositories>
@@ -42,13 +42,13 @@
         <enabled>true</enabled>
       </releases>
     </pluginRepository>
-    <pluginRepository>
-      <id>snapshot</id>
-      <url>https://oss.sonatype.org/content/repositories/snapshots/</url>
-      <snapshots>
-        <enabled>true</enabled>
-      </snapshots>
-    </pluginRepository>
+<!--    <pluginRepository>-->
+<!--      <id>snapshot</id>-->
+<!--      <url>https://oss.sonatype.org/content/repositories/snapshots/</url>-->
+<!--      <snapshots>-->
+<!--        <enabled>true</enabled>-->
+<!--      </snapshots>-->
+<!--    </pluginRepository>-->
   </pluginRepositories>
 
   <dependencies>
