@@ -118,7 +118,7 @@
         </if>
 
         <if test="endDateFlag">
-            and o.date &lt;= #{endDateFlag}
+            and o.date &lt;= #{endDate}
         </if>
 
         <if test="consignmentStatusIdsFlag">
