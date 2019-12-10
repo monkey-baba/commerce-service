@@ -1,14 +1,4 @@
-FROM zqiannnn/commerce-suit-base:20190116
-MAINTAINER ZQian<zqiannnn@gmail.com>
+FROM zqiannnn/spring-boot-base:v1.0
 
-COPY . /app/
-
-WORKDIR /app
-
-RUN mvn clean package -U -DskipTests
-
-
-ENV JAVA_OPTS="-Xmx256M -Xms256M"
-ENTRYPOINT [ "sh", "-c", "java $JAVA_OPTS -Djava.security.egd=file:/dev/./urandom -jar /app/target/*.jar"]
-
+ADD . /opt/app
 
